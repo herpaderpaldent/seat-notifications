@@ -1,0 +1,31 @@
+{
+    "name": "herpaderpaldent/seat-notifications",
+    "description": "A proof of concept for new notification settings",
+    "autoload": {
+        "psr-4": {
+            "Herpaderpaldent\\Seat\\SeatNotifications\\": "src/"
+        }
+    },
+    "type": "seat-plugin",
+    "require": {
+        "php": ">=7.1",
+        "laravel/framework": "5.5.*",
+        "eveseat/web": "3.0.*"
+    },
+
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Felix Huber",
+            "email": "felix.a.huber@gmx.net"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Herpaderpaldent\\Seat\\SeatNotifications\\SeatNotificationsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "alpha"
+}

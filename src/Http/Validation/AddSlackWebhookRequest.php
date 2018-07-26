@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
- * Date: 11.07.2018
- * Time: 22:03
+ * Date: 26.07.2018
+ * Time: 14:49
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validation;
@@ -11,7 +11,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validation;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddWebhookValidation extends FormRequest
+class AddSlackWebhookRequest extends FormRequest
 {
     /**
      * Authorize the request by default.
@@ -33,9 +33,7 @@ class AddWebhookValidation extends FormRequest
     {
 
         return [
-            'webhook'=>'required',
-            'notification'=>'required',
-            'method'=>'required'
+            'webhook'=>'required'
         ];
     }
 

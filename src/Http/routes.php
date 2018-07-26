@@ -19,9 +19,24 @@ Route::group([
                 'as'   => 'seatnotifications.index',
                 'uses' => 'SeatNotificationsController@index'
                 ]);
-            Route::post('/webhook', [
-                'as'   => 'seatnotifications.post.webhook',
-                'uses' => 'SeatNotificationsController@postWebhook'
+            Route::post('/seatnotification', [
+                'as'   => 'seatnotifications.post.seat.notification',
+                'uses' => 'SeatNotificationsController@postSeatNotification'
+            ]);
+            Route::get('/seatnotification/{method}/{notification}/delete', [
+                'as'   => 'seatnotifications.delete.seat.notification',
+                'uses' => 'SeatNotificationsController@deleteSeatNotification',
+                'middleware' => 'bouncer:superuser'
+            ]);
+            Route::post('/webhook/slack', [
+                'as'   => 'seatnotifications.post.slack.webhook',
+                'uses' => 'SeatNotificationsController@postSlackWebhook',
+                'middleware' => 'bouncer:superuser'
+            ]);
+            Route::get('/webhook/slack/delete', [
+                'as'   => 'seatnotifications.remove.slack.webhook',
+                'uses' => 'SeatNotificationsController@removeSlackWebhook',
+                'middleware' => 'bouncer:superuser'
             ]);
             }
         );

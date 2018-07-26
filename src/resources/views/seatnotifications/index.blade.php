@@ -6,147 +6,129 @@
 
 @section('content')
 
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Character Notifications</h3>
-        </div>
-
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default disabled">
-                <div class="panel-heading clearfix">
-                    <h3 class="panel-title">Industry Jobs</h3>
-                </div>
-                <div class="panel-body">
-                    Get notified if your industry job has run to completion
-                    <p class="margin">Slack user id f.e. U5KRYEK1V</p>
-                    <div class="input-group input-group">
-                        <input type="text" class="form-control">
-                        <span class="input-group-btn">
-                      <button type="button" class="btn btn-info btn-flat">Go!</button>
-                    </span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-md-4">
-            <div class="panel panel-default disabled">
-                <div class="panel-heading clearfix">
-                    <h3 class="panel-title">PI Notification</h3>
-                </div>
-                <div class="panel-body">
-                    Get notified if your extractor has run to completion
-                    <p class="margin">Slack user id f.e. U5KRYEK1V</p>
-                    <div class="input-group input-group">
-                        <input type="text" class="form-control disabled">
-                        <span class="input-group-btn">
-                      <button type="button" class="btn btn-info btn-flat">Go!</button>
-                    </span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-
 
     <div class="row">
         <div class="col-md-12">
-            <h3>Corporation Notifications</h3>
-        </div>
+            <div class="box box-primary">
+                <div class="box-header">
+                    <i class="fa fa-comment"></i>
 
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading clearfix">
-                    <h3 class="panel-title">Test</h3>
+                    <h3 class="box-title">Notifications</h3>
                 </div>
-                <div class="panel-body">
-                    Get notified when a structure in your corporation unanchors
-                    <div class="input-group input-group-sm">
-                        <input type="text" class="form-control">
-                        <span class="input-group-btn">
-                      <button type="button" class="btn btn-info btn-flat">Go!</button>
-                    </span>
-                    </div>
+                <div class="box-body pad table-responsive">
+                    <p>Various types of notifications and channels</p>
+                    <table class="table table-bordered text-center">
+                        <tbody><tr>
+                            <th>Notification</th>
+                            <th>Discord</th>
+                            <th>Slack</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                Refresh Token Deleted
+                            </td>
+                            <td>
+                                @if(true )
+                                <button type="button" class="btn btn-block btn-default">Default</button>
+                                @endif
+                            </td>
+                            <td>
+                                @if(empty(\Seat\Services\Settings\Seat::get('slack_webhook')))
+                                    <button type="button" class="btn btn-block btn-default disabled" data-toggle="tooltip" data-placement="bottom" title="Ask a superuser to add a slack webhook">Subscribe</button>
+                                @elseif (\Herpaderpaldent\Seat\SeatNotifications\Models\Seatnotification::where('notification','RefreshTokenDeleted')->where('method','slack')->get()->count() === 0)
+                                    <button type="button" class="btn btn-block btn-default" data-toggle="modal" data-target="#modal-refreshtokendeleted">Subscribe</button>
+                                @else
+                                    <a href="{{route('seatnotifications.delete.seat.notification', ['method' => 'slack', 'notification' => 'RefreshTokenDeleted'])}}" type="button" class="btn btn-danger">Unsubscribe</a>
+                                @endif
+                            </td>
+                        </tr></tbody>
+                    </table>
                 </div>
+                <!-- /.box -->
             </div>
-
         </div>
 
-    </div>
+        <div class="modal fade" id="modal-refreshtokendeleted" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">Slack Setting</h4>
+                    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <h3>SeAT Notifications</h3>
-        </div>
-
-    </div>
-
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading clearfix">
-                    <h3 class="panel-title">Refresh Token removed</h3>
-                </div>
-                <div class="panel-body">
-                    Submit your Webhook to get notified immediately as soon as SeAT detects someone removing his
-                    refresh token from your SeAT installation.
-                    <form method="post" action="{{route('seatnotifications.post.webhook')}}">
+                    <form method="post" action="{{route('seatnotifications.post.seat.notification')}}">
                         {{csrf_field()}}
-                        <input name="_method3" type="hidden" value="PATCH">
-                        <input type="hidden" name="method" value="discord">
-                        <input type="hidden" name="notification" value="RefreshTokenDeleted">
-                        Enter your Webhook, note only the channel can be notified via Discord Webhook. No PM's possible.
-                        <p class="margin">Discord Webhook</p>
-                        <div class="input-group input-group-sm">
-                            <input type="text" name="webhook" class="form-control" placeholder="if set show url....">
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-info btn-flat">Go!</button>
-                            </span>
-                        </div>
-                    </form>
-                    <form method="post" action="{{route('seatnotifications.post.webhook')}}">
-                        {{csrf_field()}}
-                        <input name="_method3" type="hidden" value="PATCH">
-                        <input type="hidden" name="method" value="email">
-                        <input type="hidden" name="notification" value="RefreshTokenDeleted">
-                        Enter your email that you want the notifications to be delivered to.
-                        <p class="margin">E-Mail</p>
-                        <div class="input-group input-group-sm">
-                            <input type="text" name="webhook" class="form-control" placeholder="if set show url....">
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-info btn-flat">Go!</button>
-                            </span>
-                        </div>
-                    </form>
-                    <form method="post" action="{{route('seatnotifications.post.webhook')}}">
-                        {{csrf_field()}}
-                        <input name="_method3" type="hidden" value="PATCH">
+                        <input type="hidden" name="character_id" value="{{auth()->user()->id}}">
+                        <input type="hidden" name="corporation_id" value="">
                         <input type="hidden" name="method" value="slack">
                         <input type="hidden" name="notification" value="RefreshTokenDeleted">
-                        <p class="margin">Slack Channel</p>
-                        <div class="input-group input-group-sm">
-                            <input type="text" name="webhook" class="form-control" placeholder="if set show url....">
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-info btn-flat">Go!</button>
-                            </span>
+
+                        <div class="modal-body">
+                            <p>You might add your personal SlackID or the Channel ID here, to which the Notification should be delivered to. This will be solved via oAuth Button in final. If you leave it empty, the notification wil be delivered to the default channel. </p>
+                            <label>Slack ID</label>
+                            <input type="text" name="webhook" class="form-control" placeholder="Enter your SlackID f.e.U5KRYEK1V">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </form>
-                </div>
-            </div>
 
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
         </div>
 
     </div>
 
-@endsection
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Add Webhooks</h3>
+                </div>
 
+                <div class="box-body">
+                    @if(!empty(\Seat\Services\Settings\Seat::get('slack_webhook')))
+                        <a href="{{route('seatnotifications.remove.slack.webhook')}}" type="button" class="btn btn-danger">Remove Slack Integration</a>
+                    @else
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-slack">
+                            Add Slack Webhook
+                        </button>
+                        @endif
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-slack" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">Slack Webhook</h4>
+                    </div>
+
+                        <form method="post" action="{{route('seatnotifications.post.slack.webhook')}}">
+                        {{csrf_field()}}
+
+                        <div class="modal-body">
+                            <label>Slack Webhook</label>
+                            <input type="text" name="webhook" class="form-control" placeholder="{{$slack_webhook}}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
+
+
+@endsection

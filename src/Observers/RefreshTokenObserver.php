@@ -29,7 +29,7 @@ class RefreshTokenObserver
     public function test()
     {
         Log::info('Showing user profile for user: ');
-        //$this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"https://discordapp.com/api/webhooks"));
+        //$this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"https://discordapp.com/api/webhooks/472157574247219201/jV-JaP5GdT7CH_ej5jHnNZWHlHvnT9iA3VG7T_XP7jcuG8kPIBDfbwBDXK6n-iuuH5MA",'discord'));
         $this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"#test",'slack'));
     }
 

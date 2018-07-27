@@ -4,16 +4,14 @@ namespace Herpaderpaldent\Seat\SeatNotifications;
 
 use Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookMessage;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookChannel;
-use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SlackWebhookChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackMessage;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackWebhookChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Queue\SerializesModels;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\RefreshToken;
-use Carbon\Carbon;
-use Seat\Services\Settings\Seat;
+
 
 /**
  * Created by PhpStorm.
@@ -67,7 +65,7 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
                 return [DiscordWebhookChannel::class];
                 break;
             case 'slack':
-                return [SlackWebhookChannel::class];
+                return [SeatSlackWebhookChannel::class];
                 break;
         }
     }
@@ -101,27 +99,27 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
             ->url($this->webhook_url);
     }
 
-    public function toSlack($notifiable)
+    public function toSeatSlack($notifiable)
     {
 
-        if(!empty($this->webhook_url))
+        if($this->webhook_url === "")
         {
-            return (new SlackMessage)
-                ->content('Whoops! .');
+            return (new SeatSlackMessage)
+                ->content('Whoops! 2 .');
         }
 
-        return (new SlackMessage)
+        return (new SeatSlackMessage)
             ->to($this->webhook_url) //let's us the table for time being as to
-            ->content('**A SeAT users refresh token derp was removed!**')
-            /*->attachment(function ($attachment) {
-                $attachment->title('Invoice 1322', 'Derp')
+            ->content('**A SeAT users refresh token was removed!**')
+            ->error()
+            ->attachment(function ($attachment) {
+                $attachment->title('Terrible Damage maybe now it works?', 'Derp')
                     ->fields([
-                        'Title' => 'Test',
-                        'Amount' => '$1,234',
-                        'Via' => 'American Express',
-                        'Was Overdue' => ':-1:',
+                        'Character' => $this->user_name,
+                        'Corporation' => $this->corporation,
+                        'Main Character' => $this->main_character,
                     ]);
-            })*/;
+            });
 
 
     }

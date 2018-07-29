@@ -4,13 +4,14 @@ namespace Herpaderpaldent\Seat\SeatNotifications;
 
 use Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookMessage;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackMessage;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackWebhookChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use Illuminate\Queue\SerializesModels;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\RefreshToken;
-use Carbon\Carbon;
+
 
 /**
  * Created by PhpStorm.
@@ -39,13 +40,16 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
 
     public $webhook_url;
 
-    public function __construct(RefreshToken $refresh_token, String $webhook_url)
+    public $method;
+
+    public function __construct(RefreshToken $refresh_token, String $webhook_url, String $method)
     {
         $this->user_name = $refresh_token->user->name;
         $this->image = "https://imageserver.eveonline.com/Character/" . $refresh_token->character_id . "_128.jpg";
         $this->main_character = $refresh_token->user->group->main_character->name;
         $this->corporation = CorporationInfo::find($refresh_token->user->character->corporation_id)->name;
-        $this->webhook_url = $webhook_url;
+        $this->webhook_url = $webhook_url; //TODO: probabl rename to 'To'
+        $this->method = $method;
     }
 
     /**
@@ -56,7 +60,14 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
      */
     public function via($notifiable)
     {
-        return [DiscordWebhookChannel::class];
+        switch($this->method) {
+            case 'discord':
+                return [DiscordWebhookChannel::class];
+                break;
+            case 'slack':
+                return [SeatSlackWebhookChannel::class];
+                break;
+        }
     }
 
     /**
@@ -86,6 +97,35 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
                     ->field('Main Character',$this->main_character, false);
             })
             ->url($this->webhook_url);
+    }
+
+    /**
+     * @param $notifiable
+     *
+     * @return SeatSlackMessage
+     */
+    public function toSeatSlack($notifiable)
+    {
+
+        if($this->webhook_url === "")
+        {
+            return (new SeatSlackMessage)
+                ->content('Whoops! 2 .');
+        }
+
+        return (new SeatSlackMessage)
+            ->to($this->webhook_url) //let's us the table for time being as to
+            //->content('**A SeAT users refresh token was removed!**')
+            ->warning()
+            ->attachment(function ($attachment) {
+                $attachment->title('RefreshTokenDeleted')
+                    ->fields([
+                        'Character' => $this->user_name,
+                        'Corporation' => $this->corporation,
+                        'Main Character' => $this->main_character,
+                    ])
+                ->thumb($this->image);
+            });
     }
 
     /**

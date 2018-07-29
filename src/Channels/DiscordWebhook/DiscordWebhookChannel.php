@@ -9,7 +9,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook;
 
-use Herpaderpaldent\Seat\SeatNotifications\Actions\Discord\SendViaWebhook;
 use Herpaderpaldent\Seat\SeatNotifications\Exceptions\CouldNotSendNotification;
 use Herpaderpaldent\Seat\SeatNotifications\Exceptions\InvalidMessage;
 use Illuminate\Notifications\Notification;

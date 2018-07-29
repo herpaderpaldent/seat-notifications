@@ -15,4 +15,6 @@ class Seatnotification extends Model
 {
     protected $fillable = ['character_id','corporation_id','method','notification','webhook' ];
 
+
+
 }

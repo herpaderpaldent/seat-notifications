@@ -99,6 +99,11 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
             ->url($this->webhook_url);
     }
 
+    /**
+     * @param $notifiable
+     *
+     * @return SeatSlackMessage
+     */
     public function toSeatSlack($notifiable)
     {
 
@@ -110,18 +115,17 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
 
         return (new SeatSlackMessage)
             ->to($this->webhook_url) //let's us the table for time being as to
-            ->content('**A SeAT users refresh token was removed!**')
-            ->error()
+            //->content('**A SeAT users refresh token was removed!**')
+            ->warning()
             ->attachment(function ($attachment) {
-                $attachment->title('Terrible Damage maybe now it works?', 'Derp')
+                $attachment->title('RefreshTokenDeleted')
                     ->fields([
                         'Character' => $this->user_name,
                         'Corporation' => $this->corporation,
                         'Main Character' => $this->main_character,
-                    ]);
+                    ])
+                ->thumb($this->image);
             });
-
-
     }
 
     /**

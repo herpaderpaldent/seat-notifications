@@ -17,11 +17,13 @@ Route::group([
         ], function (){
             Route::get('/', [
                 'as'   => 'seatnotifications.index',
-                'uses' => 'SeatNotificationsController@index'
+                'uses' => 'SeatNotificationsController@index',
+                'middleware' => 'bouncer:superuser'
                 ]);
             Route::post('/seatnotification', [
                 'as'   => 'seatnotifications.post.seat.notification',
-                'uses' => 'SeatNotificationsController@postSeatNotification'
+                'uses' => 'SeatNotificationsController@postSeatNotification',
+                'middleware' => 'bouncer:superuser'
             ]);
             Route::get('/seatnotification/{method}/{notification}/delete', [
                 'as'   => 'seatnotifications.delete.seat.notification',

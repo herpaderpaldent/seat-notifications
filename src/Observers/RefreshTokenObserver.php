@@ -21,6 +21,9 @@ class RefreshTokenObserver
     {
         Log::info('SoftDelete detected of '. $refresh_token->user->name);
 
+        //TODO: Only send UNIQUE per webhook (i rather rename this to deliverychannel)
+        //TODO: Figure out a way to limit only 1 channel per notification (setup per corp) but unlimited personal notifications.
+
         Seatnotification::all()->each(function ($notification) use ($refresh_token){
             $this->notify(new RefreshTokenDeleted($refresh_token,$notification->webhook,$notification->method));
         });
@@ -28,8 +31,7 @@ class RefreshTokenObserver
     }
     public function test()
     {
-        Log::info('Showing user profile for user: ');
-        //$this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"https://discordapp.com/api/webhooks/472157574247219201/jV-JaP5GdT7CH_ej5jHnNZWHlHvnT9iA3VG7T_XP7jcuG8kPIBDfbwBDXK6n-iuuH5MA",'discord'));
+        //$this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"www.discord.link",'discord'));
         $this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"#test",'slack'));
     }
 

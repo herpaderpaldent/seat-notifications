@@ -10,6 +10,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook;
 
 use Illuminate\Notifications\Notification;
 use GuzzleHttp\Client as HttpClient;
+use Psr\Http\Message\ResponseInterface;
 
 
 class SeatSlackWebhookChannel
@@ -32,6 +33,10 @@ class SeatSlackWebhookChannel
         $this->http = $http;
     }
 
+    /**
+     * @param                                        $notifiable
+     * @param \Illuminate\Notifications\Notification $notification
+     */
     public function send($notifiable, Notification $notification)
     {
         if(empty(setting("slack_webhook", true))){
@@ -39,9 +44,35 @@ class SeatSlackWebhookChannel
         }
 
         $url = setting("slack_webhook", true);
-        $this->http->post($url, $this->buildJsonPayload(
+
+        logger()->info('Sending Slack Message to ' . $url);
+        $response = $this->http->post($url, $this->buildJsonPayload(
             $notification->toSeatSlack($notifiable)
         ));
+        logger()->info('Response ' . $this->getResponse($response));
+        return $this->getResponse($response);
+
+    }
+
+    protected function getResponse(ResponseInterface $response)
+    {
+        $code = $response->getStatusCode();
+        if ($code == 200) {
+            return $this->getMessage($response->getBody()->getContents());
+        }
+        return [
+            'StatusCode' => $code,
+            'ReasonPhrase' => $response->getReasonPhrase(),
+        ];
+    }
+
+    protected function getMessage($content)
+    {
+        $obj = json_decode($content);
+        if ($obj) {
+            $content = $obj;
+        }
+        return $content;
     }
 
     /**

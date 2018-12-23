@@ -9,6 +9,8 @@ use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackWebhoo
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Discord\DiscordChannel;
+use NotificationChannels\Discord\DiscordMessage;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\RefreshToken;
 
@@ -60,14 +62,22 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
      */
     public function via($notifiable)
     {
-        switch($this->method) {
+
+        return [DiscordChannel::class];
+
+        /*switch($this->method) {
             case 'discord':
                 return [DiscordWebhookChannel::class];
                 break;
             case 'slack':
                 return [SeatSlackWebhookChannel::class];
                 break;
-        }
+        }*/
+    }
+
+    public function toDiscord($notifiable)
+    {
+        return DiscordMessage::create("You have been challenged to a game of *herp* by **derp**!");
     }
 
     /**

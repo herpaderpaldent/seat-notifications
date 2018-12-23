@@ -13,8 +13,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Seatnotification extends Model
 {
-    protected $fillable = ['character_id','corporation_id','method','notification','webhook' ];
+    public function settings()
+    {
 
+        return $this->morphTo();
+    }
 
 
 }

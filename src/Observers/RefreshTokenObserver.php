@@ -17,6 +17,11 @@ class RefreshTokenObserver
 {
     use Notifiable;
 
+    public function routeNotificationForDiscord()
+    {
+        return 525769280571310090;
+    }
+
     public function deleting(RefreshToken $refresh_token)
     {
         Log::info('SoftDelete detected of '. $refresh_token->user->name);

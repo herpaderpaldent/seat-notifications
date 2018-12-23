@@ -17,6 +17,16 @@
                 </div>
                 <div class="box-body pad table-responsive">
                     <p>Various types of notifications and channels</p>
+                    <div class="row">
+                        @foreach($notification_channels as $channel)
+
+                            {!! $channel !!}
+
+                            {{ $channel }}
+
+                        @endforeach
+                    </div>
+
                     <table class="table table-bordered text-center">
                         <tbody><tr>
                             <th>Notification</th>
@@ -28,21 +38,21 @@
                                 Refresh Token Deleted
                             </td>
                             <td>
-                                @if(\Herpaderpaldent\Seat\SeatNotifications\Models\Seatnotification::where('notification','RefreshTokenDeleted')->where('method','discord')->get()->count() === 0)
+                               {{-- @if(\Herpaderpaldent\Seat\SeatNotifications\Models\Seatnotification::where('notification','RefreshTokenDeleted')->where('method','discord')->get()->count() === 0)
                                     <button type="button" class="btn btn-block btn-default" data-toggle="modal" data-target="#modal-refreshtokendeleted-discord">Subscribe</button>
                                 @else
                                     <a href="{{route('seatnotifications.delete.seat.notification', ['method' => 'discord', 'notification' => 'RefreshTokenDeleted'])}}" type="button" class="btn btn-block btn-danger">Unsubscribe</a>
-                                @endif
+                                @endif--}}
                             </td>
                             <td>
-                                @if(empty(setting("slack_webhook", true)))
+                                {{--@if(empty(setting("slack_webhook", true)))
                                     <button type="button" class="btn btn-block btn-default disabled" data-toggle="tooltip" data-placement="bottom" title="Ask a superuser to add a slack webhook">Subscribe</button>
                                 @elseif (\Herpaderpaldent\Seat\SeatNotifications\Models\Seatnotification::where('notification','RefreshTokenDeleted')->where('method','slack')->get()->count() === 0)
-                                    {{--TODO: This elseif must be refactored with logic, 1 per channel but many per private--}}
+                                    --}}{{--TODO: This elseif must be refactored with logic, 1 per channel but many per private--}}{{--
                                     <button type="button" class="btn btn-block btn-default" data-toggle="modal" data-target="#modal-refreshtokendeleted-slack">Subscribe</button>
                                 @else
                                     <a href="{{route('seatnotifications.delete.seat.notification', ['method' => 'slack', 'notification' => 'RefreshTokenDeleted'])}}" type="button" class="btn btn-block btn-danger">Unsubscribe</a>
-                                @endif
+                                @endif--}}
                             </td>
                         </tr></tbody>
                     </table>
@@ -50,8 +60,9 @@
                 <!-- /.box -->
             </div>
         </div>
+    </div>
 
-        <!-- RefreshTokenDeleted -->
+        {{--<!-- RefreshTokenDeleted -->
         <div class="modal fade" id="modal-refreshtokendeleted-slack" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -166,6 +177,6 @@
             <!-- /.modal-dialog -->
         </div>
     </div>
-
+--}}
 
 @endsection

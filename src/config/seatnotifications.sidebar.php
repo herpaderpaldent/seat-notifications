@@ -13,9 +13,9 @@ return [
         'route_segment' => 'seatnotifications',
         'entries' => [
             [
-                'name'  => 'SeAT Notifications',
-                'icon'  => 'fa-slack',
-                'route' => 'seatnotifications.index'
+                'name'  => 'Configuration',
+                'icon'  => 'fa-gear',
+                'route' => 'seatnotifications.configuration'
             ]
         ]
     ]

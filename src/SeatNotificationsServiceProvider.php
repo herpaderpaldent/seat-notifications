@@ -21,7 +21,7 @@ class SeatNotificationsServiceProvider extends ServiceProvider
 
         $this->addRoutes();
         $this->addViews();
-        $this->addPublications();
+        $this->add_migrations();
         //$this->addTranslations();
     }
 
@@ -32,8 +32,11 @@ class SeatNotificationsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        /*$this->mergeConfigFrom(
-            __DIR__ . '/config/seatgroups.permission.php', 'web.permissions');*/
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/seatnotifications.permission.php', 'web.permissions');
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/seatnotifications.services.php', 'services');
 
         $this->mergeConfigFrom(
             __DIR__ . '/config/seatnotifications.config.php', 'seatnotifications.config'
@@ -49,12 +52,11 @@ class SeatNotificationsServiceProvider extends ServiceProvider
         ]);
     }
 
-    private function addPublications()
+    private function add_migrations()
     {
-        $this->publishes([
-            __DIR__ . '/database/migrations/' => database_path('migrations'),
-        ]);
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations/');
     }
+
     private function addRoutes()
     {
         if (!$this->app->routesAreCached()) {
@@ -64,7 +66,7 @@ class SeatNotificationsServiceProvider extends ServiceProvider
 
     private function addViews()
     {
-        $this->loadViewsFrom(__DIR__ . '/resources/views/seatnotifications', 'seatnotifications');
+        $this->loadViewsFrom(__DIR__ . '/resources/views', 'seatnotifications');
     }
 
     private function addTranslations()

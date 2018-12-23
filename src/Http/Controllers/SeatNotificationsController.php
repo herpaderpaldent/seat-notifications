@@ -19,12 +19,23 @@ use Seat\Web\Http\Controllers\Controller;
 
 class SeatNotificationsController extends Controller
 {
-    public function index()
+    public function config()
     {
-        $seat_notifications = Seatnotification::all();
-        $slack_webhook = Seat::get('slack_webhook');
 
-        return view('seatnotifications::index', compact('seat_notifications','slack_webhook'));
+        $notification_channels = collect([]);
+        $classes = config('services.laravel-notification-channel');
+
+        foreach ($classes as $class) {
+            $notification_channels->push(
+                (new $class)->getSettingView()
+            );
+        }
+
+        return view('seatnotifications::seatnotifications.config', compact('notification_channels'));
+    }
+
+    public function postConfiguration()
+    {
 
     }
 

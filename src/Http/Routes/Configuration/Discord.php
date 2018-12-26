@@ -6,12 +6,14 @@
  * Time: 11:13
  */
 
-Route::get('/', [
-    'as'   => 'seatnotifications.configuration',
-    'uses' => 'SeatNotificationsController@config',
+//These routes are meant for configuration purposes and require seatnotification.configuration permission
+
+Route::post('/', [
+    'as'   => 'herpaderp.seatnotifications.discord.post.configuration',
+    'uses' => 'DiscordServerController@postConfiguration',
 ]);
 
-Route::get('/add', [
-    'as'   => 'seatnotifications.post.configuration',
-    'uses' => 'SeatNotificationsController@postConfiguration',
+Route::get('/callback/discord/server', [
+    'as'   => 'seatnotifications.callback.discord.server',
+    'uses' => 'DiscordServerController@callback',
 ]);

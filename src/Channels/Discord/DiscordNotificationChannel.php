@@ -13,6 +13,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Channels\BaseNotificationChannel;
 
 class DiscordNotificationChannel extends BaseNotificationChannel
 {
+    //TODO: check if can be moved to controller
     public function getSettingView()
     {
         return view('seatnotifications::discord.settings')->render();

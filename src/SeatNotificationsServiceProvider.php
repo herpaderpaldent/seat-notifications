@@ -2,9 +2,11 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications;
 
+use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
 use Herpaderpaldent\Seat\SeatNotifications\Commands\SeatNotificationsTest;
 use Herpaderpaldent\Seat\SeatNotifications\Observers\RefreshTokenObserver;
 use Illuminate\Support\ServiceProvider;
+use RestCord\DiscordClient;
 use Seat\Eveapi\Models\RefreshToken;
 
 class SeatNotificationsServiceProvider extends ServiceProvider
@@ -23,6 +25,9 @@ class SeatNotificationsServiceProvider extends ServiceProvider
         $this->addViews();
         $this->add_migrations();
         //$this->addTranslations();
+
+        $this->addDiscordContainer();
+
     }
 
     /**
@@ -71,6 +76,25 @@ class SeatNotificationsServiceProvider extends ServiceProvider
 
     private function addTranslations()
     {
-        //$this->loadTranslationsFrom(__DIR__ . '/lang', 'seatgroups');
+        $this->loadTranslationsFrom(__DIR__ . '/lang', 'seatnotifications');
+    }
+
+    private function addDiscordContainer()
+    {
+        // push discord client into container as singleton if token has been set
+        $bot_token = setting('herpaderp.seatnotifications.discord.credentials.bot_token', true);
+
+        if (! is_null($bot_token)) {
+            $this->app->singleton('discord', function () {
+                return new DiscordClient([
+                    'tokenType'         => 'Bot',
+                    'token'             => setting('herpaderp.seatnotifications.discord.credentials.bot_token', true),
+                    'rateLimitProvider' => new RedisRateLimitProvider(),
+                ]);
+            });
+        }
+
+        // bind discord alias to DiscordClient
+        $this->app->alias('discord', DiscordClient::class);
     }
 }

@@ -6,21 +6,13 @@
  * Time: 10:21
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook;
+namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Discord;
 
 
-class DiscordWebhookMessage
+use Closure;
+
+class DiscordMessage
 {
-
-
-    public $url;
-
-
-    public function url($url)
-    {
-        $this->url = $url;
-        return $this;
-    }
 
     /**
      * The message contents (up to 2000 characters).
@@ -28,36 +20,28 @@ class DiscordWebhookMessage
      * @var string
      */
     public $content;
-    /**
-     * Override the default username of the webhook.
-     *
-     * @var string|null
-     */
-    public $username;
-    /**
-     * Override the default avatar of the webhook.
-     *
-     * @var string|null
-     */
-    public $avatar_url;
+
     /**
      * true if this is a TTS message.
      *
      * @var string|null
      */
     public $tts = 'false';
+
     /**
      * The contents of the file being sent.
      *
      * @var array
      */
     public $file;
+
     /**
      * Embedded rich content.
      *
      * @var array
      */
     public $embeds;
+
     /**
      * Allows to set the content by creation.
      *
@@ -69,6 +53,7 @@ class DiscordWebhookMessage
             $this->content($content);
         }
     }
+
     /**
      * Set the content of the message.
      *
@@ -81,22 +66,7 @@ class DiscordWebhookMessage
         $this->content = $content;
         return $this;
     }
-    /**
-     * Override the default username and avatar url of the webhook.
-     *
-     * @param string $username
-     * @param string|null $avatar_url
-     *
-     * @return $this
-     */
-    public function from($username, $avatar_url = null)
-    {
-        $this->username = $username;
-        if (! is_null($avatar_url)) {
-            $this->avatar_url = $avatar_url;
-        }
-        return $this;
-    }
+
     /**
      * Send as a TTS message.
      *
@@ -109,6 +79,7 @@ class DiscordWebhookMessage
         $this->tts = $enabled ? 'true' : 'false';
         return $this;
     }
+
     /**
      * Set the contents and filename of the file being sent.
      *
@@ -126,6 +97,7 @@ class DiscordWebhookMessage
         ];
         return $this;
     }
+
     /**
      * Define an embedded rich content for the message.
      *
@@ -133,12 +105,13 @@ class DiscordWebhookMessage
      *
      * @return $this
      */
-    public function embed(\Closure $callback)
+    public function embed(Closure $callback)
     {
-        $this->embeds[] = $embed = new DiscordWebhookEmbed;
+        $this->embeds[] = $embed = new DiscordEmbed;
         $callback($embed);
         return $this;
     }
+
     /**
      * Get an array representation of the message.
      *
@@ -148,8 +121,6 @@ class DiscordWebhookMessage
     {
         return [
             'content' => $this->content,
-            'username' => $this->username,
-            'avatar_url' => $this->avatar_url,
             'tts' => $this->tts,
             'file' => $this->file,
             'embeds' => $this->embeds,

@@ -35,6 +35,12 @@ class SeatNotificationsTest extends Command
 
         $this->info('Test');
         $action->test();
+
+        /*app('discord')->channel->createMessage([
+            'channel.id' => 441330906356121622,
+            'content' => 'Test my newly awesome bot'
+        ]);*/
+
         //$this->notify(new RefreshTokenDeleted());
         //Notification::send(new RefreshTokenObserver() ,new RefreshTokenDeleted());
 

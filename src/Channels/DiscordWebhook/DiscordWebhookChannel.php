@@ -117,13 +117,13 @@ class DiscordWebhookChannel
     /**
      * Build up a payload for the Discord Webhook.
      *
-     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookMessage $message
+     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordMessage $message
      *
      * @return array
      *
      * @throws \Herpaderpaldent\Seat\SeatNotifications\Exceptions\InvalidMessage
      */
-    protected function buildPayload(DiscordWebhookMessage $message)
+    protected function buildPayload(DiscordMessage $message)
     {
         if ($this->checkMessageEmpty($message)) {
             throw InvalidMessage::cannotSendAnEmptyMessage();
@@ -151,11 +151,11 @@ class DiscordWebhookChannel
     /**
      * Build up a JSON payload for the Discord Webhook.
      *
-     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookMessage $message
+     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordMessage $message
      *
      * @return array
      */
-    protected function buildJSONPayload(DiscordWebhookMessage $message)
+    protected function buildJSONPayload(DiscordMessage $message)
     {
         $optionalFields = array_filter([
             'username' => data_get($message, 'username'),
@@ -172,13 +172,13 @@ class DiscordWebhookChannel
     /**
      * Build up a Multipart payload for the Discord Webhook.
      *
-     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookMessage $message
+     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordMessage $message
      *
      * @return array
      *
      * @throws \Herpaderpaldent\Seat\SeatNotifications\Exceptions\InvalidMessage
      */
-    protected function buildMultipartPayload(DiscordWebhookMessage $message)
+    protected function buildMultipartPayload(DiscordMessage $message)
     {
         if (! is_null($message->embeds)) {
             throw InvalidMessage::embedsNotSupportedWithFileUploads();
@@ -194,13 +194,13 @@ class DiscordWebhookChannel
     /**
      * Format the message's embedded content.
      *
-     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookMessage $message
+     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordMessage $message
      *
      * @return array
      */
-    protected function embeds(DiscordWebhookMessage $message)
+    protected function embeds(DiscordMessage $message)
     {
-        return collect($message->embeds)->map(function (DiscordWebhookEmbed $embed) {
+        return collect($message->embeds)->map(function (DiscordEmbed $embed) {
             return array_filter([
                 'color' => $embed->color,
                 'title' => $embed->title,

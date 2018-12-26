@@ -29,15 +29,29 @@ class RefreshTokenObserver
         //TODO: Only send UNIQUE per webhook (i rather rename this to deliverychannel)
         //TODO: Figure out a way to limit only 1 channel per notification (setup per corp) but unlimited personal notifications.
 
-        Seatnotification::all()->each(function ($notification) use ($refresh_token){
-            $this->notify(new RefreshTokenDeleted($refresh_token,$notification->webhook,$notification->method));
+        $arr = [
+            'discord' => [
+                'channel_id' => 441330906356121622
+            ]
+        ];
+
+        Seatnotification::all()->each(function ($notification) use ($refresh_token, $arr){
+            $this->notify(new RefreshTokenDeleted($refresh_token, $arr));
         });
 
     }
     public function test()
     {
         //$this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"www.discord.link",'discord'));
-        $this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"#test",'slack'));
+
+        $arr = [
+            'discord' => [
+                'channel_id' => 525769280571310090
+            ]
+        ];
+
+        $refresh_token = RefreshToken::find(95725047);
+        return $this->notify(new RefreshTokenDeleted($refresh_token, $arr));
     }
 
 }

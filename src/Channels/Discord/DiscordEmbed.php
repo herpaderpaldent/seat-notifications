@@ -6,10 +6,10 @@
  * Time: 22:53
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook;
+namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Discord;
 
 
-class DiscordWebhookEmbed
+class DiscordEmbed
 {
     /**
      * The title of embed.
@@ -17,54 +17,63 @@ class DiscordWebhookEmbed
      * @var string
      */
     public $title;
+
     /**
      * The description of embed.
      *
      * @var string
      */
     public $description;
+
     /**
      * The URL of embed.
      *
      * @var string
      */
     public $url;
+
     /**
      * The color code of the embed.
      *
      * @var int
      */
     public $color;
+
     /**
      * The footer information.
      *
      * @var array
      */
     public $footer;
+
     /**
      * The image information.
      *
      * @var array
      */
     public $image;
+
     /**
      * The thumbnail information.
      *
      * @var array
      */
     public $thumbnail;
+
     /**
      * The author information.
      *
      * @var array
      */
     public $author;
+
     /**
      * The fields information.
      *
      * @var array
      */
     public $fields;
+
     /**
      * Set the title (url) of embed.
      *
@@ -79,6 +88,7 @@ class DiscordWebhookEmbed
         $this->url = $url;
         return $this;
     }
+
     /**
      * Set the description (text) of embed.
      *
@@ -91,6 +101,7 @@ class DiscordWebhookEmbed
         $this->description = $description;
         return $this;
     }
+
     /**
      * Set the color code of the embed.
      *
@@ -103,6 +114,7 @@ class DiscordWebhookEmbed
         $this->color = $code;
         return $this;
     }
+
     /**
      * Set the footer information.
      *
@@ -119,6 +131,7 @@ class DiscordWebhookEmbed
         ];
         return $this;
     }
+
     /**
      * Set the image (url) information.
      *
@@ -133,6 +146,7 @@ class DiscordWebhookEmbed
         ];
         return $this;
     }
+
     /**
      * Set the thumbnail (url) information.
      *
@@ -147,6 +161,7 @@ class DiscordWebhookEmbed
         ];
         return $this;
     }
+
     /**
      * Set the author information.
      *
@@ -165,6 +180,7 @@ class DiscordWebhookEmbed
         ];
         return $this;
     }
+
     /**
      * Set the fields information.
      *
@@ -176,9 +192,10 @@ class DiscordWebhookEmbed
      */
     public function field($name, $value, $inline = false)
     {
-        $this->fields[] = new DiscordWebhookEmbedField($name, $value, $inline);
+        $this->fields[] = new DiscordEmbedField($name, $value, $inline);
         return $this;
     }
+
     /**
      * Get an array representation of the embedded content.
      *

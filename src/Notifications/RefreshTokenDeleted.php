@@ -2,15 +2,13 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications;
 
-use Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookMessage;
-use Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook\DiscordWebhookChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackMessage;
-use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackWebhookChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Discord\DiscordChannel;
-use NotificationChannels\Discord\DiscordMessage;
+use Illuminate\Queue\SerializesModels;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\RefreshToken;
 
@@ -22,15 +20,9 @@ use Seat\Eveapi\Models\RefreshToken;
  * Time: 15:53
  */
 
-class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: uncomment ShouldQueue
+class RefreshTokenDeleted extends Notification implements ShouldQueue
 {
-    use Queueable;
-
-    /*public $connection = 'redis';
-
-    public $queue = 'urgent';
-
-    public $delay = 60;*/
+    use Queueable, SerializesModels;
 
     public $user_name;
 
@@ -44,14 +36,16 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
 
     public $method;
 
-    public function __construct(RefreshToken $refresh_token, String $webhook_url, String $method)
+    protected $arr;
+
+    public function __construct(RefreshToken $refresh_token, array $arr)
     {
         $this->user_name = $refresh_token->user->name;
         $this->image = "https://imageserver.eveonline.com/Character/" . $refresh_token->character_id . "_128.jpg";
         $this->main_character = $refresh_token->user->group->main_character->name;
         $this->corporation = CorporationInfo::find($refresh_token->user->character->corporation_id)->name;
-        $this->webhook_url = $webhook_url; //TODO: probabl rename to 'To'
-        $this->method = $method;
+        $this->queue = 'high';
+        $this->arr = $arr;
     }
 
     /**
@@ -77,7 +71,18 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
 
     public function toDiscord($notifiable)
     {
-        return DiscordMessage::create("You have been challenged to a game of *herp* by **derp**!");
+
+        return (new DiscordMessage)
+            //->content('test')
+            ->embed(function ($embed) {
+
+                $embed->title('**A SeAT users refresh token was removed!**')
+                    ->thumbnail($this->image)
+                    ->color('16711680')
+                    ->field('Character', $this->user_name, true)
+                    ->field('Corporation', $this->corporation, true)
+                    ->field('Main Character',$this->main_character, false);
+            });
     }
 
     /**
@@ -93,7 +98,7 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
             ->line('Thank you for using our application!');
         */
         //return DiscordMessage::create("You have been challenged to a game of *THIS IS A TEST**!");
-        return (new DiscordWebhookMessage)
+       /* return (new DiscordMessage)
             ->from('SeAT Discord Webhook')
             //->color('2021216')
             //->content('**A SeAT users refresh token was removed!**')
@@ -106,7 +111,7 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
                     ->field('Corporation', $this->corporation, true)
                     ->field('Main Character',$this->main_character, false);
             })
-            ->url($this->webhook_url);
+            ->url($this->webhook_url);*/
     }
 
     /**
@@ -150,6 +155,17 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue //TODO: un
             'channel' => "channel",
             'username' => "username",
         ];
+    }
+
+    public function getChannel($channel)
+    {
+        switch ($channel) {
+            case 'discord':
+                return $this->arr['discord']['channel_id'];
+                break;
+        }
+
+        return '';
     }
 
 }

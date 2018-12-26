@@ -6,10 +6,10 @@
  * Time: 22:54
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Channels\DiscordWebhook;
+namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Discord;
 
 
-class DiscordWebhookEmbedField
+class DiscordEmbedField
 {
     /**
      * The name of the field.

@@ -10,5 +10,6 @@ return [
     'seatnotifications' => [
         'view',
         'configuration',
+        'refresh_token'
     ],
 ];

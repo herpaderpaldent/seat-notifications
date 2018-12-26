@@ -19,7 +19,7 @@ class DiscordUser extends Model
      *
      * @var array
      */
-    protected $fillable = ['group_id', 'discord_id'];
+    protected $fillable = ['group_id', 'discord_id', 'channel_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

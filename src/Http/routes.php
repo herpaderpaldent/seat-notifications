@@ -12,10 +12,27 @@ Route::group([
     'middleware' => ['web', 'auth', 'bouncer:seatnotifications.view'],
 ], function () {
 
-    Route::get('/configuration', [
-        'as'         => 'seatnotifications.configuration',
-        'uses'       => 'SeatNotificationsController@config',
+    Route::get('/', [
+        'as'         => 'seatnotifications.index',
+        'uses'       => 'SeatNotificationsController@index',
     ]);
+
+    Route::get('/notifications', [
+        'as'         => 'seatnotifications.get.available.notification',
+        'uses'       => 'SeatNotificationsController@getNotifications',
+    ]);
+
+    Route::group([
+        'middleware' => ['bouncer:seatnotifications.configuration'],
+    ], function () {
+
+        Route::get('/configuration', [
+            'as'         => 'seatnotifications.configuration',
+            'uses'       => 'SeatNotificationsController@config',
+        ]);
+    });
+
+
 
     Route::group([
         'namespace' => 'Discord',

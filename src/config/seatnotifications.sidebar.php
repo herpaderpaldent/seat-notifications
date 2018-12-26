@@ -9,9 +9,14 @@
 return [
     'seatnotifications' => [
         'name'          => 'SeAT Notifications (POC)',
-        'icon'          => 'fa-slack',
+        'icon'          => 'fa-inbox',
         'route_segment' => 'seatnotifications',
         'entries' => [
+            [
+                'name'  => 'Notifications',
+                'icon'  => 'fa-envelope',
+                'route' => 'seatnotifications.index'
+            ],
             [
                 'name'  => 'Configuration',
                 'icon'  => 'fa-gear',

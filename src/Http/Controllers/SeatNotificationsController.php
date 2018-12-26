@@ -9,13 +9,11 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
 
-use Herpaderpaldent\Seat\SeatNotifications\Actions\Notifications\AddSeatNotification;
-use Herpaderpaldent\Seat\SeatNotifications\Actions\SeAT\AddSlackWebhook;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\AddSlackWebhookRequest;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\AddSeatNotificationRequest;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Seatnotification;
+use Illuminate\Support\Collection;
 use Seat\Services\Settings\Seat;
 use Seat\Web\Http\Controllers\Controller;
+use Yajra\DataTables\DataTables;
 
 class SeatNotificationsController extends Controller
 {
@@ -23,53 +21,59 @@ class SeatNotificationsController extends Controller
     {
 
         $notification_channels = collect([]);
-        $classes = config('services.laravel-notification-channel');
+        $classes = config('services.seat-notification-channel');
 
         foreach ($classes as $class) {
             $notification_channels->push(
-                (new $class)->getSettingView()
+                (new $class)->getSettingsView()
             );
         }
 
         return view('seatnotifications::seatnotifications.config', compact('notification_channels'));
     }
 
-    public function postConfiguration()
+    public function index()
     {
+        $notification_channels = collect([]);
+        $classes = config('services.seat-notification-channel');
 
-    }
-
-    public function postSeatNotification(AddSeatNotification $action, AddSeatNotificationRequest $request)
-    {
-        if($action->execute($request->all()))
-            return redirect()->back()->with('success', 'subscribed');
-
-        return redirect()->back()->with('error', 'failed');
-    }
-
-    public function postSlackWebhook(AddSlackWebhookRequest $request, AddSlackWebhook $action)
-    {
-        if($action->execute($request->all()))
-            return redirect()->back()->with('success', 'Webhook added');
-
-        return redirect()->back()->with('error', 'Post Webhook failed');
-    }
-
-    public function removeSlackWebhook()
-    {
-        Seat::set('slack_webhook','');
-        return redirect()->back();
-    }
-
-    public function deleteSeatNotification(string $method, string $notification)
-    {
-        if ($seat_notification = Seatnotification::where('notification',$notification)->where('method',$method)) {
-            $seat_notification->delete();
-            return redirect()->back()->with('success', 'unsubscribed');
+        foreach ($classes as $class) {
+            $notification_channels->push(
+                (new $class)->getRegistrationView()
+            );
         }
 
-        return redirect()->back()->with('error', 'failed');
-
+        return view('seatnotifications::index', compact('notification_channels'));
     }
+
+    public function getNotifications()
+    {
+        $notifications = $this->getNotificationCollection();
+
+        //dd($notifications);
+
+        return DataTables::of($notifications)
+            ->rawColumns(['private'])
+            ->make(true);
+    }
+
+    private function getNotificationCollection() : Collection
+    {
+        $notifications = collect([]);
+        $classes = config('services.seat-notification');
+
+        foreach ($classes as $class) {
+            $class = (new $class);
+            $notifications->push([
+                'notification' => $class->getNotification(),
+                'private' => $class->getPrivateView(),
+                'channel' => $class->getChannelView()
+            ]);
+        }
+
+        return $notifications;
+    }
+
+
 
 }

@@ -9,11 +9,11 @@
 //These routes are meant for the average user that has seatnotifications.view permission
 
 Route::get('/discord', [
-    'as'   => 'seatnotifications.redirect.to.provider.discord',
-    'uses' => 'SeatNotificationsDiscordController@redirectToProvider',
+    'as'   => 'seatnotifications.register.discord',
+    'uses' => 'DiscordOAuthController@join',
 ]);
 
-/*Route::get('/callback/discord/', [
-    'as'   => 'seatnotifications.callback.discord',
-    'uses' => 'DiscordServerController@handleProviderCallback',
-]);*/
+Route::get('/callback/discord/user', [
+    'as'   => 'seatnotifications.callback.discord.user',
+    'uses' => 'DiscordOAuthController@callback',
+]);

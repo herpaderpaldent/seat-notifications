@@ -16,12 +16,12 @@ class DiscordNotificationChannel extends BaseNotificationChannel
     //TODO: check if can be moved to controller
     public function getSettingsView()
     {
-        return view('seatnotifications::discord.settings')->render();
+        return 'seatnotifications::discord.settings';
     }
 
     public function getRegistrationView()
     {
-        return view('seatnotifications::discord.registration')->render();
+        return 'seatnotifications::discord.registration';
     }
 
 

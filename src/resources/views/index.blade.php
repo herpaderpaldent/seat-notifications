@@ -19,7 +19,7 @@
 
                     @foreach($notification_channels as $channel)
 
-                        {!! $channel !!}
+                      @include($channel)
 
                     @endforeach
 

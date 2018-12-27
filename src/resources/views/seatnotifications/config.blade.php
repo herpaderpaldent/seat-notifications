@@ -1,5 +1,5 @@
 @section('title', "Seat Notifications")
-@section('page_header', "Configuration Page"))
+@section('page_header', "Configuration Page")
 @section('page_description', "Dashboard")
 
 @extends('web::layouts.grids.12')
@@ -26,7 +26,7 @@
     <div class="row">
         @foreach($notification_channels as $channel)
 
-            {!! $channel !!}
+            @include($channel)
 
         @endforeach
     </div>

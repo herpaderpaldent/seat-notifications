@@ -13,7 +13,7 @@ Route::post('/', [
     'uses' => 'DiscordServerController@postConfiguration',
 ]);
 
-Route::get('/callback/discord/server', [
+Route::get('/callback/server', [
     'as'   => 'seatnotifications.callback.discord.server',
     'uses' => 'DiscordServerController@callback',
 ]);

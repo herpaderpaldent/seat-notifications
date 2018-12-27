@@ -36,6 +36,7 @@ Route::group([
 
     Route::group([
         'namespace' => 'Discord',
+        'prefix' => 'discord'
     ], function () {
 
         include __DIR__. '/Routes/NotificationChannel/Discord.php';
@@ -46,6 +47,23 @@ Route::group([
         ], function () {
 
             include __DIR__ . '/Routes/Configuration/Discord.php';
+        }
+        );
+    });
+
+    Route::group([
+        'namespace' => 'Slack',
+        'prefix' => 'slack'
+    ], function () {
+
+        include __DIR__. '/Routes/NotificationChannel/Slack.php';
+
+        Route::group([
+            'middleware' => ['bouncer:seatnotifications.configuration'],
+            'prefix' => 'configuration',
+        ], function () {
+
+            include __DIR__ . '/Routes/Configuration/Slack.php';
         }
         );
     });

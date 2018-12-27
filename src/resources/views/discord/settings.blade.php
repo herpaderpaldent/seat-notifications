@@ -101,3 +101,24 @@
     <!-- /.box-body -->
   </div>
 </div>
+
+@push('javascript')
+  <script type="application/javascript">
+    $('#client-eraser').on('click', function(){
+      var discord_client = $('#discord-configuration-client');
+      discord_client.val('');
+      discord_client.removeAttr("readonly");
+    });
+    $('#secret-eraser').on('click', function(){
+      var discord_secret = $('#discord-configuration-secret');
+      discord_secret.val('');
+      discord_secret.removeAttr("readonly");
+    });
+    $('#bot-eraser').on('click', function(){
+      var discord_secret = $('#discord-configuration-bot');
+      discord_secret.val('');
+      discord_secret.removeAttr("readonly");
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+  </script>
+@endpush

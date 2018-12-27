@@ -75,7 +75,7 @@
         columns     : [
           {data: 'notification'},
           {data: 'private', className: 'text-center'},
-          {data: 'channel'},
+          {data: 'channel', className: 'text-center'},
         ],
       });
     </script>

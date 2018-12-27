@@ -15,6 +15,13 @@ class DiscordUser extends Model
     protected $table = 'herpaderp_discord_users';
 
     /**
+     * The table associated primary key.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'group_id';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

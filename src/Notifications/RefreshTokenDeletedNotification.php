@@ -1,18 +1,4 @@
 <?php
-
-namespace Herpaderpaldent\Seat\SeatNotifications;
-
-use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
-use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
-use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackMessage;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Notification;
-use Illuminate\Queue\SerializesModels;
-use Seat\Eveapi\Models\Corporation\CorporationInfo;
-use Seat\Eveapi\Models\RefreshToken;
-
-
 /**
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
@@ -20,9 +6,20 @@ use Seat\Eveapi\Models\RefreshToken;
  * Time: 15:53
  */
 
-class RefreshTokenDeleted extends Notification implements ShouldQueue
+namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
+
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackMessage;
+use Seat\Eveapi\Models\Corporation\CorporationInfo;
+use Seat\Eveapi\Models\RefreshToken;
+
+class RefreshTokenDeletedNotification extends BaseNotification
 {
-    use Queueable, SerializesModels;
+    /**
+     * @var array
+     */
+    protected $tags = ['refresh_token'];
 
     public $user_name;
 
@@ -32,20 +29,14 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue
 
     public $corporation;
 
-    public $webhook_url;
-
-    public $method;
-
-    protected $arr;
-
-    public function __construct(RefreshToken $refresh_token, array $arr)
+    public function __construct(RefreshToken $refresh_token)
     {
+        parent::__construct();
+
         $this->user_name = $refresh_token->user->name;
         $this->image = "https://imageserver.eveonline.com/Character/" . $refresh_token->character_id . "_128.jpg";
-        $this->main_character = $refresh_token->user->group->main_character->name;
+        $this->main_character = $this->getMainCharacter($refresh_token->user->group)->name;
         $this->corporation = CorporationInfo::find($refresh_token->user->character->corporation_id)->name;
-        $this->queue = 'high';
-        $this->arr = $arr;
     }
 
     /**
@@ -57,20 +48,19 @@ class RefreshTokenDeleted extends Notification implements ShouldQueue
     public function via($notifiable)
     {
 
-        return [DiscordChannel::class];
-
-        /*switch($this->method) {
+        switch($notifiable->via) {
             case 'discord':
-                return [DiscordWebhookChannel::class];
+                return [DiscordChannel::class];
                 break;
-            case 'slack':
+            /*case 'slack':
                 return [SeatSlackWebhookChannel::class];
-                break;
-        }*/
+                break;*/
+        }
     }
 
     public function toDiscord($notifiable)
     {
+        var_dump('toDiscord');
 
         return (new DiscordMessage)
             //->content('test')

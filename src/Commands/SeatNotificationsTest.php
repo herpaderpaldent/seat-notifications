@@ -10,7 +10,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Commands;
 
 
 use Herpaderpaldent\Seat\SeatNotifications\Observers\RefreshTokenObserver;
-use Herpaderpaldent\Seat\SeatNotifications\RefreshTokenDeleted;
+use Herpaderpaldent\Seat\SeatNotifications\RefreshTokenDeletedNotification;
 use Illuminate\Console\Command;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;

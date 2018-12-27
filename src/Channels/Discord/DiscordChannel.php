@@ -28,7 +28,7 @@ class DiscordChannel
     {
         //TODO: Create logic to determin the channel ids
 
-        if (! $channel = $notification->getChannel('discord')) {
+        if (! $channel = $notifiable->channel_id) {
             return;
         }
 

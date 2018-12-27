@@ -50,10 +50,8 @@ class SeatNotificationsController extends Controller
     {
         $notifications = $this->getNotificationCollection();
 
-        //dd($notifications);
-
         return DataTables::of($notifications)
-            ->rawColumns(['private'])
+            ->rawColumns(['notification', 'private', 'channel'])
             ->make(true);
     }
 

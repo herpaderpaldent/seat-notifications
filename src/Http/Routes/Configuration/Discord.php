@@ -17,3 +17,8 @@ Route::get('/callback/discord/server', [
     'as'   => 'seatnotifications.callback.discord.server',
     'uses' => 'DiscordServerController@callback',
 ]);
+
+Route::get('/get/discord/channels', [
+    'as'   => 'seatnotifications.get.discord.channels',
+    'uses' => 'DiscordServerController@getChannels',
+]);

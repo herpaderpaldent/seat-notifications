@@ -50,6 +50,15 @@ Route::group([
         );
     });
 
+    Route::group([
+        'namespace' => 'Notifications',
+        'prefix' => 'notifications',
+    ], function () {
+
+        include __DIR__. '/Routes/Notification/RefreshToken.php';
+
+    });
+
 }
 );
 

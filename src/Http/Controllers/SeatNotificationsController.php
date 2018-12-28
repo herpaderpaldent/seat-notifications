@@ -9,9 +9,7 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\Seatnotification;
 use Illuminate\Support\Collection;
-use Seat\Services\Settings\Seat;
 use Seat\Web\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;
 

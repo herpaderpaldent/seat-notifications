@@ -60,8 +60,6 @@ class RefreshTokenDeletedNotification extends BaseNotification
 
     public function toDiscord($notifiable)
     {
-        var_dump('toDiscord');
-
         return (new DiscordMessage)
             //->content('test')
             ->embed(function ($embed) {
@@ -73,35 +71,6 @@ class RefreshTokenDeletedNotification extends BaseNotification
                     ->field('Corporation', $this->corporation, true)
                     ->field('Main Character',$this->main_character, false);
             });
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     */
-    public function toDiscordWebhook($notifiable)
-    {
-        /*return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
-        */
-        //return DiscordMessage::create("You have been challenged to a game of *THIS IS A TEST**!");
-       /* return (new DiscordMessage)
-            ->from('SeAT Discord Webhook')
-            //->color('2021216')
-            //->content('**A SeAT users refresh token was removed!**')
-            ->embed(function ($embed) {
-
-                $embed->title('**A SeAT users refresh token was removed!**')
-                    ->thumbnail($this->image)
-                    ->color('16711680')
-                    ->field('Character', $this->user_name, true)
-                    ->field('Corporation', $this->corporation, true)
-                    ->field('Main Character',$this->main_character, false);
-            })
-            ->url($this->webhook_url);*/
     }
 
     /**
@@ -147,7 +116,10 @@ class RefreshTokenDeletedNotification extends BaseNotification
         ];
     }
 
-    public function getChannel($channel)
+    /*
+     * TODO: If no exception happens delet this.
+     *
+     * public function getChannel($channel)
     {
         switch ($channel) {
             case 'discord':
@@ -156,6 +128,6 @@ class RefreshTokenDeletedNotification extends BaseNotification
         }
 
         return '';
-    }
+    }*/
 
 }

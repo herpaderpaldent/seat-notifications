@@ -6,6 +6,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
 use Herpaderpaldent\Seat\SeatNotifications\Commands\SeatNotificationsTest;
 use Herpaderpaldent\Seat\SeatNotifications\Observers\RefreshTokenObserver;
 use Illuminate\Support\ServiceProvider;
+use JoliCode\Slack\ClientFactory;
 use RestCord\DiscordClient;
 use Seat\Eveapi\Models\RefreshToken;
 
@@ -27,6 +28,7 @@ class SeatNotificationsServiceProvider extends ServiceProvider
         //$this->addTranslations();
 
         $this->addDiscordContainer();
+        $this->addSlackContainer();
 
     }
 
@@ -96,5 +98,20 @@ class SeatNotificationsServiceProvider extends ServiceProvider
 
         // bind discord alias to DiscordClient
         $this->app->alias('discord', DiscordClient::class);
+    }
+
+    private function addSlackContainer()
+    {
+        // push slack client into container as singleton if token has been set
+        $bot_token = setting('herpaderp.seatnotifications.slack.credentials.bot_access_token', true);
+
+        if (! is_null($bot_token)) {
+            $this->app->singleton('slack', function () {
+                return (new ClientFactory)->create( setting('herpaderp.seatnotifications.slack.credentials.bot_access_token', true));
+            });
+        }
+
+        // bind discord alias to SlackClient
+        $this->app->alias('slack', ClientFactory::class);
     }
 }

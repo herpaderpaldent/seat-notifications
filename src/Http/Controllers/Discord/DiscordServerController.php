@@ -62,7 +62,6 @@ class DiscordServerController extends Controller
      */
     public function callback(Request $request)
     {
-        logger()->info($request);
         // get back pending OAuth credentials validation from session
         $credentials = $request->session()->get('herpaderp.seatnotifications.discord.credentials');
 

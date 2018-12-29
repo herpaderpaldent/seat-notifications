@@ -18,7 +18,7 @@ Route::get('/callback/server', [
     'uses' => 'SlackServerOAuthController@callback',
 ]);
 
-Route::get('/get/discord/channels', [
+Route::get('/channels', [
     'as'   => 'seatnotifications.get.slack.channels',
-    'uses' => 'SlackServerOAuthController@getChannels',
+    'uses' => 'SlackNotificationChannelController@getChannels',
 ]);

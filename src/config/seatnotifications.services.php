@@ -3,7 +3,7 @@
 return [
 
     'seat-notification-channel' => [
-        'discord'   => Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordNotificationChannel::class,
+        'discord'   => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordNotificationChannel::class,
         'slack'     => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack\SlackNotificationChannelController::class,
     ],
     'seat-notification' => [

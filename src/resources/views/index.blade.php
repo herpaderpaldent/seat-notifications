@@ -17,11 +17,9 @@
                 <div class="box-body">
                     <p>Register to your prefered notification channel.</p>
 
-                    @foreach($notification_channels as $channel)
-
-                      @include($channel)
-
-                    @endforeach
+                  @foreach($notification_channels as $channel)
+                    @include($channel)
+                  @endforeach
 
                 </div>
                 <!-- /.box -->
@@ -56,7 +54,6 @@
         </div>
 
     </div>
-
 
 
 

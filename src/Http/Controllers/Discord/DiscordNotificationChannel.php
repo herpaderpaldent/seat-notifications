@@ -6,14 +6,13 @@
  * Time: 21:55
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Models\Discord;
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord;
 
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\BaseNotificationChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannel;
 
 class DiscordNotificationChannel extends BaseNotificationChannel
 {
-    //TODO: check if can be moved to controller
     public function getSettingsView()
     {
         return 'seatnotifications::discord.settings';

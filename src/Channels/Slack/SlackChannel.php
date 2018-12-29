@@ -26,7 +26,6 @@ class SlackChannel
      */
     public function __construct()
     {
-        var_dump('consturct slack');
         $this->client = app('slack');
     }
 

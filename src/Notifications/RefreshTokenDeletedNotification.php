@@ -50,11 +50,19 @@ class RefreshTokenDeletedNotification extends BaseNotification
     {
         switch($notifiable->via) {
             case 'discord':
-                $this->tags = ['refresh_token', 'discord', $this->main_character];
+                $this->tags = [
+                    'refresh_token',
+                    'discord',
+                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel'
+                ];
                 return [DiscordChannel::class];
                 break;
             case 'slack':
-                $this->tags = ['refresh_token', 'slack', $this->main_character];
+                $this->tags = [
+                    'refresh_token',
+                    'slack',
+                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel'
+                ];
                 return [SlackChannel::class];
                 break;
         }

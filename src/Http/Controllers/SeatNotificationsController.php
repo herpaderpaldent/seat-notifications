@@ -9,6 +9,8 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
 
+use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordServerController;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack\SlackNotificationChannelController;
 use Illuminate\Support\Collection;
 use Seat\Web\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;
@@ -64,8 +66,11 @@ class SeatNotificationsController extends Controller
             })
             ->editColumn('channel', function ($row){
 
+                $discord_channels = (new DiscordServerController)->getChannels();
+                $slack_channels = (new SlackNotificationChannelController)->getChannels();
+
                 if(! empty($row['channel']))
-                    return view($row['channel']);
+                    return view($row['channel'], compact('discord_channels', 'slack_channels'));
 
                 return '';
             })
@@ -89,6 +94,8 @@ class SeatNotificationsController extends Controller
 
         return $notifications;
     }
+
+
 
 
 

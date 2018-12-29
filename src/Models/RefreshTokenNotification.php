@@ -31,21 +31,6 @@ class RefreshTokenNotification extends Model
      */
     protected $fillable = ['channel_id', 'type', 'via'];
 
-    /**
-     * This returns the channel for the notification.
-     *
-     * @return mixed
-     */
-    public function routeNotificationForDiscord()
-    {
-        return $this->channel_id;
-    }
-
-    public function routeNotificationForSlack()
-    {
-        return (int) $this->channel_id;
-    }
-
     public function discord_user()
     {
         if($this->via === 'discord')
@@ -64,6 +49,9 @@ class RefreshTokenNotification extends Model
 
     public function group()
     {
+        if($this->type === 'channel')
+            return null;
+
         if($this->via === 'discord')
             return $this->discord_user->group;
 
@@ -97,6 +85,24 @@ class RefreshTokenNotification extends Model
             return true;
 
         return false;
+
+    }
+
+    public function recipient() : string
+    {
+        if(is_null($this->group()))
+           return 'channel';
+
+        $main_character = $this->group()->main_character;
+
+        if (is_null($main_character)) {
+            logger()->warning('Group has no main character set. Attempt to make assignation based on first attached character.', [
+                'group_id' => $this->group()->id,
+            ]);
+            $main_character = $group->users->first()->character;
+        }
+
+        return $main_character;
 
     }
 

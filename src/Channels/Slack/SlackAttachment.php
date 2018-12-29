@@ -6,12 +6,12 @@
  * Time: 21:12
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook;
+namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Slack;
 
 
 use Illuminate\Support\InteractsWithTime;
 
-class SeatSlackAttachment
+class SlackAttachment
 {
     use InteractsWithTime;
 
@@ -186,7 +186,7 @@ class SeatSlackAttachment
         if (is_callable($title)) {
             $callback = $title;
 
-            $callback($attachmentField = new SeatSlackAttachmentField); // new SlackAttachmentField);
+            $callback($attachmentField = new SlackAttachmentField);
 
             $this->fields[] = $attachmentField;
 

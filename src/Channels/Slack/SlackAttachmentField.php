@@ -6,10 +6,10 @@
  * Time: 21:13
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook;
+namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Slack;
 
 
-class SeatSlackAttachmentField
+class SlackAttachmentField
 {
     /**
      * The title field of the attachment field.

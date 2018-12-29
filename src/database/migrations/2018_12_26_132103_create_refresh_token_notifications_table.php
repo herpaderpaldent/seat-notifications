@@ -14,7 +14,7 @@ class CreateRefreshTokenNotificationsTable extends Migration
     public function up()
     {
         Schema::create('herpaderp_refresh_token_notifications', function (Blueprint $table) {
-            $table->unsignedBigInteger('channel_id');
+            $table->string('channel_id');
             $table->enum('type',['private','channel']);
             $table->string('via');
             $table->timestamps();
@@ -30,6 +30,6 @@ class CreateRefreshTokenNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('refresh_token_notifications');
+        Schema::dropIfExists('herpaderp_refresh_token_notifications');
     }
 }

@@ -9,7 +9,6 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Observers;
 use Herpaderpaldent\Seat\SeatNotifications\Models\RefreshTokenNotification;
 use Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshTokenDeletedNotification;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Seat\Eveapi\Models\RefreshToken;

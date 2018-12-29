@@ -49,6 +49,26 @@ class SeatNotificationsController extends Controller
         $notifications = $this->getNotificationCollection();
 
         return DataTables::of($notifications)
+            ->editColumn('notification', function ($row){
+                if(!empty($row['private']))
+                    return view($row['notification']);
+
+                return '';
+            })
+            ->editColumn('private', function ($row){
+
+                if(!empty($row['private']))
+                    return view($row['private']);
+
+                return '';
+            })
+            ->editColumn('channel', function ($row){
+
+                if(! empty($row['channel']))
+                    return view($row['channel']);
+
+                return '';
+            })
             ->rawColumns(['notification', 'private', 'channel'])
             ->make(true);
     }

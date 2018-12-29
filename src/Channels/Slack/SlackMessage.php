@@ -6,12 +6,12 @@
  * Time: 21:09
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook;
+namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Slack;
 
 
 use Closure;
 
-class SeatSlackMessage
+class SlackMessage
 {
     /**
      * The "level" of the notification (info, success, warning, error).
@@ -191,7 +191,7 @@ class SeatSlackMessage
      */
     public function attachment(Closure $callback)
     {
-        $this->attachments[] = $attachment = new SeatSlackAttachment;
+        $this->attachments[] = $attachment = new SlackAttachment;
 
         $callback($attachment);
 

@@ -51,7 +51,7 @@ class DiscordOAuthController
         request()->session()->forget('herpaderp.seatnotifications.discord.user.state');
 
         if ($state != intval(request()->input('state')))
-            return redirect()->route('home')
+            return redirect()->route('seatnotifications.index')
                 ->with('error', 'An error occurred while getting back the token. Returned state value is wrong. ' .
                     'In order to prevent any security issue, we stopped transaction.');
 

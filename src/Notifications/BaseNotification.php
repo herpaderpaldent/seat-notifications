@@ -25,6 +25,13 @@ abstract class BaseNotification extends Notification implements ShouldQueue
     protected $tags = [];
 
     /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 5;
+
+    /**
      * Assign this job a tag so that Horizon can categorize and allow
      * for specific tags to be monitored.
      *

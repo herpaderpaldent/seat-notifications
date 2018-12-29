@@ -10,7 +10,8 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
 
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
-use Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackMessage;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\RefreshToken;
 
@@ -47,21 +48,21 @@ class RefreshTokenDeletedNotification extends BaseNotification
      */
     public function via($notifiable)
     {
-
         switch($notifiable->via) {
             case 'discord':
+                $this->tags = ['refresh_token', 'discord', $this->main_character];
                 return [DiscordChannel::class];
                 break;
-            /*case 'slack':
-                return [SeatSlackWebhookChannel::class];
-                break;*/
+            case 'slack':
+                $this->tags = ['refresh_token', 'slack', $this->main_character];
+                return [SlackChannel::class];
+                break;
         }
     }
 
     public function toDiscord($notifiable)
     {
         return (new DiscordMessage)
-            //->content('test')
             ->embed(function ($embed) {
 
                 $embed->title('**A SeAT users refresh token was removed!**')
@@ -76,20 +77,11 @@ class RefreshTokenDeletedNotification extends BaseNotification
     /**
      * @param $notifiable
      *
-     * @return SeatSlackMessage
+     * @return \Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage
      */
-    public function toSeatSlack($notifiable)
+    public function toSlack($notifiable)
     {
-
-        if($this->webhook_url === "")
-        {
-            return (new SeatSlackMessage)
-                ->content('Whoops! 2 .');
-        }
-
-        return (new SeatSlackMessage)
-            ->to($this->webhook_url) //let's us the table for time being as to
-            //->content('**A SeAT users refresh token was removed!**')
+        return (new SlackMessage)
             ->warning()
             ->attachment(function ($attachment) {
                 $attachment->title('RefreshTokenDeleted')

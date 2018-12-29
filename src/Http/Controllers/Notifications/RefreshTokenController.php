@@ -13,32 +13,29 @@ use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordServe
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\AddRefreshTokenChannelSubscriptionRequest;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
 use Herpaderpaldent\Seat\SeatNotifications\Models\RefreshTokenNotification;
+use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 use Seat\Web\Http\Controllers\Controller;
 
 class RefreshTokenController extends Controller
 {
-    /*public function getModel()
-    {
-        return (new RefreshTokenNotification());
-    }*/
-
     public function getNotification()
     {
-        return view('seatnotifications::refresh_token.notification')->render();
+        return 'seatnotifications::refresh_token.notification';
     }
 
     public function getPrivateView()
     {
-        return view('seatnotifications::refresh_token.private')->render();
+        return 'seatnotifications::refresh_token.private';
     }
 
     public function getChannelView()
     {
-        // Must be do like this it is not possible to render the escaped html properly especially the needed jquery.
+        /*// Must be do like this it is not possible to render the escaped html properly especially the needed jquery.
         // maybe this can be improved in the future.
         $response = collect((new DiscordServerController)->getChannels());
 
-        return view('seatnotifications::refresh_token.channel', compact('response'))->render();;
+        return view('seatnotifications::refresh_token.channel', compact('response'))->render();*/
+        return '';
     }
 
     public function subscribeDm($via)
@@ -48,6 +45,9 @@ class RefreshTokenController extends Controller
 
         if($via === 'discord')
             $channel_id = DiscordUser::find($group_id)->channel_id;
+
+        if($via === 'slack')
+            $channel_id = SlackUser::find($group_id)->channel_id;
 
         if(is_null($channel_id))
             return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
@@ -59,6 +59,9 @@ class RefreshTokenController extends Controller
 
         if($via === 'discord')
             setting(['herpaderp.seatnotifications.refresh_token.status.discord', 'subscribed']);
+
+        if($via === 'slack')
+            setting(['herpaderp.seatnotifications.refresh_token.status.slack', 'subscribed']);
 
         return redirect()->back()->with('success', 'You are going to be notified if someone deletes his refresh_token.');
     }

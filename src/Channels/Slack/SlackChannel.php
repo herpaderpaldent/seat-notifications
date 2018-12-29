@@ -6,83 +6,63 @@
  * Time: 12:07
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook;
+namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Slack;
 
+use Exception;
 use Illuminate\Notifications\Notification;
-use GuzzleHttp\Client as HttpClient;
-use Psr\Http\Message\ResponseInterface;
 
-
-class SeatSlackWebhookChannel
+class SlackChannel
 {
     /**
      * The HTTP client instance.
      *
-     * @var \GuzzleHttp\Client
+     * @var \JoliCode\Slack\Api\Client
      */
-    protected $http;
+    protected $client;
 
     /**
      * Create a new Slack channel instance.
      *
-     * @param  \GuzzleHttp\Client  $http
-     * @return void
      */
-    public function __construct(HttpClient $http)
+    public function __construct()
     {
-        $this->http = $http;
+        var_dump('consturct slack');
+        $this->client = app('slack');
     }
 
     /**
      * @param                                        $notifiable
      * @param \Illuminate\Notifications\Notification $notification
+     *
+     * @throws \Exception
      */
     public function send($notifiable, Notification $notification)
     {
-        if(empty(setting("slack_webhook", true))){
-            return;
+        if(! $channel = $notifiable->channel_id){
+            throw new Exception("Channel could not be found.");
         }
 
-        $url = setting("slack_webhook", true);
+        $message = $notification->toSlack($notifiable);
 
-        logger()->info('Sending Slack Message to ' . $url);
-        $response = $this->http->post($url, $this->buildJsonPayload(
-            $notification->toSeatSlack($notifiable)
-        ));
-        logger()->info('Response ' . $this->getResponse($response));
-        return $this->getResponse($response);
+        $payload = $this->buildJsonPayload($message);
 
-    }
+        $this->client
+            ->chatPostMessage(array_filter([
+                'channel' => $channel,
+                'text' => $payload['json']['text'],
+                'attachments' => json_encode($payload['json']['attachments'])
+            ]));
 
-    protected function getResponse(ResponseInterface $response)
-    {
-        $code = $response->getStatusCode();
-        if ($code == 200) {
-            return $this->getMessage($response->getBody()->getContents());
-        }
-        return [
-            'StatusCode' => $code,
-            'ReasonPhrase' => $response->getReasonPhrase(),
-        ];
-    }
-
-    protected function getMessage($content)
-    {
-        $obj = json_decode($content);
-        if ($obj) {
-            $content = $obj;
-        }
-        return $content;
     }
 
     /**
      * Build up a JSON payload for the Slack webhook.
      *
-     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackMessage $message
+     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage $message
      *
      * @return array
      */
-    protected function buildJsonPayload(SeatSlackMessage $message)
+    protected function buildJsonPayload(SlackMessage $message)
     {
         $optionalFields = array_filter([
             'channel' => data_get($message, 'channel'),
@@ -105,11 +85,11 @@ class SeatSlackWebhookChannel
     /**
      * Format the message's attachments.
      *
-     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackMessage $message
+     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage $message
      *
      * @return array
      */
-    protected function attachments(SeatSlackMessage $message)
+    protected function attachments(SlackMessage $message)
     {
         return collect($message->attachments)->map(function ($attachment) use ($message) {
             return array_filter([
@@ -135,14 +115,14 @@ class SeatSlackWebhookChannel
     /**
      * Format the attachment's fields.
      *
-     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\SlackWebhook\SeatSlackAttachment $attachment
+     * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackAttachment $attachment
      *
      * @return array
      */
-    protected function fields(SeatSlackAttachment $attachment)
+    protected function fields(SlackAttachment $attachment)
     {
         return collect($attachment->fields)->map(function ($value, $key) {
-            if ($value instanceof SeatSlackAttachmentField) { //SlackAttachmentField
+            if ($value instanceof SlackAttachmentField) { //SlackAttachmentField
                 return $value->toArray();
             }
 

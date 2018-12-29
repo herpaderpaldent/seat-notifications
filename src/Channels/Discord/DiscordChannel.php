@@ -26,8 +26,6 @@ class DiscordChannel
 
     public function send($notifiable, Notification $notification)
     {
-        //TODO: Create logic to determin the channel ids
-
         if (! $channel = $notifiable->channel_id) {
             return;
         }
@@ -37,7 +35,7 @@ class DiscordChannel
         $payload = $this->buildJSONPayload($message);
 
         $this->discord->channel->createMessage([
-            'channel.id' => $channel,
+            'channel.id' => (int) $channel,
             'content' => $payload['content'],
             'embed' => $payload['embeds'][0],
         ]);

@@ -3,6 +3,7 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Models;
 
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
+use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 use Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshTokenDeletedNotification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +22,8 @@ class RefreshTokenNotification extends Model
 
     protected $primaryKey = 'channel_id';
 
+    public $incrementing = false;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -38,6 +41,11 @@ class RefreshTokenNotification extends Model
         return $this->channel_id;
     }
 
+    public function routeNotificationForSlack()
+    {
+        return (int) $this->channel_id;
+    }
+
     public function discord_user()
     {
         if($this->via === 'discord')
@@ -46,10 +54,21 @@ class RefreshTokenNotification extends Model
         return null;
     }
 
+    public function slack_user()
+    {
+        if($this->via === 'slack')
+            return $this->belongsTo(SlackUser::class, 'channel_id', 'channel_id');
+
+        return null;
+    }
+
     public function group()
     {
         if($this->via === 'discord')
             return $this->discord_user->group;
+
+        if($this->via === 'slack')
+            return $this->slack_user->group;
 
         return null;
     }

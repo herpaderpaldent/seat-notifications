@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 07.07.2018
- * Time: 10:21
+ * Time: 10:21.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Discord;
-
 
 use Closure;
 
@@ -64,6 +63,7 @@ class DiscordMessage
     public function content($content)
     {
         $this->content = $content;
+
         return $this;
     }
 
@@ -77,6 +77,7 @@ class DiscordMessage
     public function tts($enabled = true)
     {
         $this->tts = $enabled ? 'true' : 'false';
+
         return $this;
     }
 
@@ -95,6 +96,7 @@ class DiscordMessage
             'contents' => $contents,
             'filename' => $filename,
         ];
+
         return $this;
     }
 
@@ -109,6 +111,7 @@ class DiscordMessage
     {
         $this->embeds[] = $embed = new DiscordEmbed;
         $callback($embed);
+
         return $this;
     }
 
@@ -126,5 +129,4 @@ class DiscordMessage
             'embeds' => $this->embeds,
         ];
     }
-
 }

@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 27.12.2018
- * Time: 20:55
+ * Time: 20:55.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack;
-
 
 use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannel;
 
@@ -32,7 +31,7 @@ class SlackNotificationChannelController extends BaseNotificationChannel
             $channels = app('slack')
                 ->conversationsList([
                     'exclude_archived' => true,
-                    'types' => 'public_channel,private_channel'
+                    'types' => 'public_channel,private_channel',
                 ])
                 ->getChannels();
 
@@ -49,9 +48,8 @@ class SlackNotificationChannelController extends BaseNotificationChannel
             return collect([
                 'name' => $item->name,
                 'id' => $item->id,
-                'private_channel' => $item->is_group
+                'private_channel' => $item->is_group,
             ]);
         });
     }
-
 }

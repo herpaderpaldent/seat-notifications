@@ -3,26 +3,24 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 27.12.2018
- * Time: 21:08
+ * Time: 21:08.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack;
 
-
+use Exception;
 use GuzzleHttp\Client;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\ValidateSlackOAuth;
 use Illuminate\Http\Request;
-use Exception;
 use JoliCode\Slack\ClientFactory;
-use function League\Uri\create;
 
 class SlackServerOAuthController
 {
     /**
-     * Scopes used in OAuth flow with slack
+     * Scopes used in OAuth flow with slack.
      */
     const SCOPES = [
-        'bot'
+        'bot',
     ];
 
     public function postConfiguration(ValidateSlackOAuth $request)
@@ -78,7 +76,7 @@ class SlackServerOAuthController
 
             // update Slack container
             app()->singleton('slack', function () {
-                return (new ClientFactory)->create( setting('herpaderp.seatnotifications.slack.credentials.bot_access_token', true));
+                return (new ClientFactory)->create(setting('herpaderp.seatnotifications.slack.credentials.bot_access_token', true));
             });
 
         } catch (Exception $e) {
@@ -90,11 +88,10 @@ class SlackServerOAuthController
         return redirect()->route('seatnotifications.configuration')
             ->with('success', 'The bot credentials has been set.');
 
-
     }
 
     /**
-     * Return an authorization uri with presets scopes
+     * Return an authorization uri with presets scopes.
      *
      * @param $client_id
      * @param $state
@@ -113,7 +110,7 @@ class SlackServerOAuthController
     }
 
     /**
-     * Ensure an array is containing all expected values in a valid callback session
+     * Ensure an array is containing all expected values in a valid callback session.
      *
      * @param $session_content
      * @return bool
@@ -140,7 +137,7 @@ class SlackServerOAuthController
     }
 
     /**
-     * Exchange an Authorization Code with an Access Token
+     * Exchange an Authorization Code with an Access Token.
      *
      * @param string $client_id
      * @param string $client_secret
@@ -159,17 +156,16 @@ class SlackServerOAuthController
         ];
 
         $request = (new Client())->request('POST', 'https://slack.com/api/oauth.access', [
-            'form_params' => $payload
+            'form_params' => $payload,
         ]);
 
         $response = json_decode($request->getBody(), true);
 
         if (is_null($response))
-            throw new Exception("response from Slack was empty.");
+            throw new Exception('response from Slack was empty.');
 
         return array_merge($response, [
             'request_date' => array_first($request->getHeader('Date')),
         ]);
     }
-
 }

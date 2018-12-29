@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 05.07.2018
- * Time: 15:53
+ * Time: 15:53.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
@@ -35,7 +35,7 @@ class RefreshTokenDeletedNotification extends BaseNotification
         parent::__construct();
 
         $this->user_name = $refresh_token->user->name;
-        $this->image = "https://imageserver.eveonline.com/Character/" . $refresh_token->character_id . "_128.jpg";
+        $this->image = 'https://imageserver.eveonline.com/Character/' . $refresh_token->character_id . '_128.jpg';
         $this->main_character = $this->getMainCharacter($refresh_token->user->group)->name;
         $this->corporation = CorporationInfo::find($refresh_token->user->character->corporation_id)->name;
     }
@@ -53,16 +53,18 @@ class RefreshTokenDeletedNotification extends BaseNotification
                 $this->tags = [
                     'refresh_token',
                     'discord',
-                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel'
+                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
                 ];
+
                 return [DiscordChannel::class];
                 break;
             case 'slack':
                 $this->tags = [
                     'refresh_token',
                     'slack',
-                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel'
+                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
                 ];
+
                 return [SlackChannel::class];
                 break;
         }
@@ -78,7 +80,7 @@ class RefreshTokenDeletedNotification extends BaseNotification
                     ->color('16711680')
                     ->field('Character', $this->user_name, true)
                     ->field('Corporation', $this->corporation, true)
-                    ->field('Main Character',$this->main_character, false);
+                    ->field('Main Character', $this->main_character, false);
             });
     }
 
@@ -111,8 +113,8 @@ class RefreshTokenDeletedNotification extends BaseNotification
     public function toArray($notifiable)
     {
         return [
-            'channel' => "channel",
-            'username' => "username",
+            'channel' => 'channel',
+            'username' => 'username',
         ];
     }
 

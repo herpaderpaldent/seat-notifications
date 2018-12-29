@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 26.12.2018
- * Time: 12:40
+ * Time: 12:40.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord;
-
 
 use Exception;
 use GuzzleHttp\Client;
@@ -77,7 +76,7 @@ class DiscordOAuthController
     }
 
     /**
-     * Getting a OAuth Authorization query with presets scopes
+     * Getting a OAuth Authorization query with presets scopes.
      *
      * @param string $client_id
      * @param int $state
@@ -97,7 +96,7 @@ class DiscordOAuthController
     }
 
     /**
-     * Exchanging an authorization code to an access token
+     * Exchanging an authorization code to an access token.
      *
      * @param string $code
      *
@@ -131,7 +130,7 @@ class DiscordOAuthController
     }
 
     /**
-     * Return information related user attached to the token
+     * Return information related user attached to the token.
      *
      * @param string $access_token
      *
@@ -149,7 +148,7 @@ class DiscordOAuthController
     }
 
     /**
-     * Create a new SeAT/Discord user association
+     * Create a new SeAT/Discord user association.
      *
      * @param User $user
      *
@@ -181,10 +180,8 @@ class DiscordOAuthController
         return app('discord')
             ->user
             ->createDm([
-                'recipient_id' => $user->id
+                'recipient_id' => $user->id,
             ])
             ->id;
     }
-    
-
 }

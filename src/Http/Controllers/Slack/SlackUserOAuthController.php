@@ -3,20 +3,19 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 27.12.2018
- * Time: 21:08
+ * Time: 21:08.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack;
 
-
-use GuzzleHttp\Client;
 use Exception;
+use GuzzleHttp\Client;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 
 class SlackUserOAuthController
 {
     /**
-     * Scopes used in OAuth flow with slack
+     * Scopes used in OAuth flow with slack.
      */
     const SCOPES = ['identity.basic'];
 
@@ -76,7 +75,7 @@ class SlackUserOAuthController
     }
 
     /**
-     * Return an authorization uri with presets scopes
+     * Return an authorization uri with presets scopes.
      *
      * @param $client_id
      * @param $state
@@ -95,7 +94,7 @@ class SlackUserOAuthController
     }
 
     /**
-     * Exchanging an authorization code to an access token
+     * Exchanging an authorization code to an access token.
      *
      * @param string $code
      *
@@ -113,13 +112,13 @@ class SlackUserOAuthController
         ];
 
         $request = (new Client())->request('POST', 'https://slack.com/api/oauth.access', [
-            'form_params' => $payload
+            'form_params' => $payload,
         ]);
 
         $response = json_decode($request->getBody(), true);
 
         if (is_null($response))
-            throw new Exception("response from Slack was empty.");
+            throw new Exception('response from Slack was empty.');
 
         return array_merge($response, [
             'request_date' => array_first($request->getHeader('Date')),
@@ -127,7 +126,7 @@ class SlackUserOAuthController
     }
 
     /**
-     * Create a new SeAT/Discord user association
+     * Create a new SeAT/Discord user association.
      *
      * @param $credentials
      *
@@ -160,10 +159,9 @@ class SlackUserOAuthController
     {
         return app('slack')
             ->imOpen([
-                'user' => $slack_id
+                'user' => $slack_id,
             ])
             ->getChannel()
             ->getId();
     }
-
 }

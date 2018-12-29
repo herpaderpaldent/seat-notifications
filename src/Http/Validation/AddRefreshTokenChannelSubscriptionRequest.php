@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 11.07.2018
- * Time: 22:03
+ * Time: 22:03.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validation;
-
 
 use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordServerController;
 use Illuminate\Foundation\Http\FormRequest;
@@ -47,8 +46,7 @@ class AddRefreshTokenChannelSubscriptionRequest extends FormRequest
 
         return [
             'channel_id'=>'required',
-            'via'=>'required'
+            'via'=>'required',
         ];
     }
-
 }

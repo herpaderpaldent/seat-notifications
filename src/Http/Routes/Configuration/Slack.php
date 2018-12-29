@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 23.12.2018
- * Time: 11:13
+ * Time: 11:13.
  */
 
 //These routes are meant for configuration purposes and require seatnotification.configuration permission

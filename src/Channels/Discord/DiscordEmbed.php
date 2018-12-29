@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 07.07.2018
- * Time: 22:53
+ * Time: 22:53.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Discord;
-
 
 class DiscordEmbed
 {
@@ -86,6 +85,7 @@ class DiscordEmbed
     {
         $this->title = $title;
         $this->url = $url;
+
         return $this;
     }
 
@@ -99,6 +99,7 @@ class DiscordEmbed
     public function description($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -112,6 +113,7 @@ class DiscordEmbed
     public function color($code)
     {
         $this->color = $code;
+
         return $this;
     }
 
@@ -129,6 +131,7 @@ class DiscordEmbed
             'text' => $text,
             'icon_url' => $icon_url,
         ];
+
         return $this;
     }
 
@@ -144,6 +147,7 @@ class DiscordEmbed
         $this->image = [
             'url' => $url,
         ];
+
         return $this;
     }
 
@@ -159,6 +163,7 @@ class DiscordEmbed
         $this->thumbnail = [
             'url' => $url,
         ];
+
         return $this;
     }
 
@@ -178,6 +183,7 @@ class DiscordEmbed
             'url' => $url,
             'icon_url' => $icon_url,
         ];
+
         return $this;
     }
 
@@ -193,6 +199,7 @@ class DiscordEmbed
     public function field($name, $value, $inline = false)
     {
         $this->fields[] = new DiscordEmbedField($name, $value, $inline);
+
         return $this;
     }
 

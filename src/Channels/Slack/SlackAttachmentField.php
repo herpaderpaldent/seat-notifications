@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 27.07.2018
- * Time: 21:13
+ * Time: 21:13.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Slack;
-
 
 class SlackAttachmentField
 {

@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: Mutterschiff
  * Date: 11.02.2018
- * Time: 16:57
+ * Time: 16:57.
  */
-
 Route::group([
     'namespace' => 'Herpaderpaldent\Seat\SeatNotifications\Http\Controllers',
     'prefix'    => 'seatnotifications',
@@ -32,14 +31,12 @@ Route::group([
         ]);
     });
 
-
-
     Route::group([
         'namespace' => 'Discord',
-        'prefix' => 'discord'
+        'prefix' => 'discord',
     ], function () {
 
-        include __DIR__. '/Routes/NotificationChannel/Discord.php';
+        include __DIR__ . '/Routes/NotificationChannel/Discord.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],
@@ -53,10 +50,10 @@ Route::group([
 
     Route::group([
         'namespace' => 'Slack',
-        'prefix' => 'slack'
+        'prefix' => 'slack',
     ], function () {
 
-        include __DIR__. '/Routes/NotificationChannel/Slack.php';
+        include __DIR__ . '/Routes/NotificationChannel/Slack.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],
@@ -73,11 +70,9 @@ Route::group([
         'prefix' => 'notifications',
     ], function () {
 
-        include __DIR__. '/Routes/Notification/RefreshToken.php';
+        include __DIR__ . '/Routes/Notification/RefreshToken.php';
 
     });
 
 }
 );
-
-

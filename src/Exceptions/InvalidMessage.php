@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 07.07.2018
- * Time: 23:12
+ * Time: 23:12.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Exceptions;
-
 
 class InvalidMessage extends \Exception
 {
@@ -21,6 +20,7 @@ class InvalidMessage extends \Exception
     {
         return new static('Embedded Content is not supported with File Uploads.');
     }
+
     /**
      * Thrown when the message does not contain a content, file or message.
      *

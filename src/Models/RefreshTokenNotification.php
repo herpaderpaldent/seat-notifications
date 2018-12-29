@@ -105,7 +105,4 @@ class RefreshTokenNotification extends Model
         return $main_character;
 
     }
-
-
-
 }

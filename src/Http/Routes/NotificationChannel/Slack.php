@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 27.12.2018
- * Time: 21:10
+ * Time: 21:10.
  */
-
 Route::get('/', [
     'as'   => 'seatnotifications.register.slack',
     'uses' => 'SlackUserOAuthController@join',

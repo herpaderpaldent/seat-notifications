@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 26.12.2018
- * Time: 15:02
+ * Time: 15:02.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications;
-
 
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\AddRefreshTokenChannelSubscriptionRequest;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
@@ -91,7 +90,7 @@ class RefreshTokenController extends Controller
     public function unsubscribeChannel($via)
     {
         RefreshTokenNotification::where('via', $via)
-            ->where('type','channel')
+            ->where('type', 'channel')
             ->delete();
 
         if($via === 'discord')
@@ -105,7 +104,7 @@ class RefreshTokenController extends Controller
         if($channel)
             return RefreshTokenNotification::where('type', 'channel')->where('via', $via)->count() > 0 ? true : false;
 
-        $subscribers = RefreshTokenNotification::where('via', $via)->get()->filter(function ($subscriber) use ($group){
+        $subscribers = RefreshTokenNotification::where('via', $via)->get()->filter(function ($subscriber) use ($group) {
 
             if($subscriber->type === 'channel')
                 return false;
@@ -118,5 +117,4 @@ class RefreshTokenController extends Controller
 
         return false;
     }
-
 }

@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 27.12.2018
- * Time: 13:10
+ * Time: 13:10.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
-
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -70,5 +69,4 @@ abstract class BaseNotification extends Notification implements ShouldQueue
     }
 
     abstract public function via($notifiable);
-
 }

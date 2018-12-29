@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 27.07.2018
- * Time: 21:12
+ * Time: 21:12.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Slack;
-
 
 use Illuminate\Support\InteractsWithTime;
 

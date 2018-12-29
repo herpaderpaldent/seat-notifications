@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 07.07.2018
- * Time: 10:03
+ * Time: 10:03.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Exceptions;
@@ -25,8 +25,10 @@ class CouldNotSendNotification extends Exception
         $response = $exception->getResponse();
         $code = $response->getStatusCode();
         $message = $response->getBody()->getContents();
+
         return new static("Discord Webhook responded with an error ({$code}): {$message}");
     }
+
     /**
      * Thrown when the api is not reachable.
      *
@@ -38,5 +40,4 @@ class CouldNotSendNotification extends Exception
     {
         return new static("The communication with Discord Webhook failed. Reason: {$message}");
     }
-
 }

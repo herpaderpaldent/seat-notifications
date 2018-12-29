@@ -38,7 +38,7 @@ class SlackUser extends Model
 
     public function isSlackUser(Group $group)
     {
-        $slack_users = SlackUser::all()->filter(function ($slack_user) use ($group){
+        $slack_users = SlackUser::all()->filter(function ($slack_user) use ($group) {
             return $slack_user->group->id === $group->id;
         });
 

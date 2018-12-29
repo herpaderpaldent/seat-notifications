@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 27.07.2018
- * Time: 21:09
+ * Time: 21:09.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Slack;
-
 
 use Closure;
 
@@ -265,5 +264,4 @@ class SlackMessage
 
         return $this;
     }
-
 }

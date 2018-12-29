@@ -8,7 +8,6 @@ return [
     ],
     'seat-notification' => [
         'refresh_token' => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController::class,
-    ]
-
+    ],
 
 ];

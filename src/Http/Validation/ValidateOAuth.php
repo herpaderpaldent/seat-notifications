@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 25.12.2018
- * Time: 10:54
+ * Time: 10:54.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validation;

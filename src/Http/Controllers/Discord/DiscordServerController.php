@@ -3,27 +3,26 @@
  * Created by PhpStorm.
  * User: Herpaderp Aldent
  * Date: 23.12.2018
- * Time: 23:46
+ * Time: 23:46.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord;
 
-
+use Exception;
+use GuzzleHttp\Client;
 use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\ValidateOAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Seat\Web\Http\Controllers\Controller;
-use GuzzleHttp\Client;
 use RestCord\DiscordClient;
-use Exception;
+use Seat\Web\Http\Controllers\Controller;
 use WebSocket\Client as WebSocketClient;
 
 class DiscordServerController extends Controller
 {
 
     /**
-     * Scopes used in OAuth flow with Discord
+     * Scopes used in OAuth flow with Discord.
      */
     const SCOPES = [
         'bot',
@@ -157,7 +156,7 @@ class DiscordServerController extends Controller
     }
 
     /**
-     * Return an authorization uri with presets scopes
+     * Return an authorization uri with presets scopes.
      *
      * @param $client_id
      * @param $state
@@ -179,7 +178,7 @@ class DiscordServerController extends Controller
     }
 
     /**
-     * Exchange an Authorization Code with an Access Token
+     * Exchange an Authorization Code with an Access Token.
      *
      * @param string $client_id
      * @param string $client_secret
@@ -200,13 +199,13 @@ class DiscordServerController extends Controller
         ];
 
         $request = (new Client())->request('POST', 'https://discordapp.com/api/oauth2/token', [
-            'form_params' => $payload
+            'form_params' => $payload,
         ]);
 
         $response = json_decode($request->getBody(), true);
 
         if (is_null($response))
-            throw new Exception("response from Discord was empty.");
+            throw new Exception('response from Discord was empty.');
 
         return array_merge($response, [
             'request_date' => array_first($request->getHeader('Date')),
@@ -214,7 +213,7 @@ class DiscordServerController extends Controller
     }
 
     /**
-     * Ensure an array is containing all expected values in a valid callback session
+     * Ensure an array is containing all expected values in a valid callback session.
      *
      * @param $session_content
      * @return bool
@@ -252,7 +251,7 @@ class DiscordServerController extends Controller
         try {
             $response = (new Client)->get('https://discordapp.com/api/gateway', [
                 'headers' => [
-                    'Authorization' => 'Bot '. setting('herpaderp.seatnotifications.discord.credentials.bot_token', true) ,
+                    'Authorization' => 'Bot ' . setting('herpaderp.seatnotifications.discord.credentials.bot_token', true),
                 ],
             ]);
 
@@ -290,7 +289,7 @@ class DiscordServerController extends Controller
             $channels = app('discord')
                 ->guild
                 ->getGuildChannels([
-                    'guild.id' => (int) setting('herpaderp.seatnotifications.discord.credentials.guild_id', true)
+                    'guild.id' => (int) setting('herpaderp.seatnotifications.discord.credentials.guild_id', true),
                 ]);
 
             $response = [];
@@ -305,5 +304,4 @@ class DiscordServerController extends Controller
         return $response;
 
     }
-
 }

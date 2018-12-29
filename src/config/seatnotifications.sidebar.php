@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Mutterschiff
  * Date: 11.02.2018
- * Time: 18:19
+ * Time: 18:19.
  */
 
 return [
@@ -15,13 +15,13 @@ return [
             [
                 'name'  => 'Notifications',
                 'icon'  => 'fa-envelope',
-                'route' => 'seatnotifications.index'
+                'route' => 'seatnotifications.index',
             ],
             [
                 'name'  => 'Configuration',
                 'icon'  => 'fa-gear',
-                'route' => 'seatnotifications.configuration'
-            ]
-        ]
-    ]
+                'route' => 'seatnotifications.configuration',
+            ],
+        ],
+    ],
 ];

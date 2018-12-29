@@ -3,9 +3,8 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 27.12.2018
- * Time: 08:42
+ * Time: 08:42.
  */
-
 Route::group([
     'middleware' => ['bouncer:seatnotifications.refresh_token'],
 ], function () {
@@ -34,6 +33,5 @@ Route::group([
         'as'   => 'seatnotifications.refresh_token.unsubscribe.channel',
         'uses' => 'RefreshTokenController@unsubscribeChannel',
     ]);
-
 
 });

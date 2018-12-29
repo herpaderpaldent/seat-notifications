@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 07.07.2018
- * Time: 22:54
+ * Time: 22:54.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Discord;
-
 
 class DiscordEmbedField
 {
@@ -29,6 +28,7 @@ class DiscordEmbedField
      * @var bool
      */
     public $inline;
+
     /**
      * Create a new Embed Field instance.
      *
@@ -42,6 +42,7 @@ class DiscordEmbedField
         $this->value = $value;
         $this->inline = $inline;
     }
+
     /**
      * Set the name of the field.
      *
@@ -52,8 +53,10 @@ class DiscordEmbedField
     public function name($name)
     {
         $this->name = $name;
+
         return $this;
     }
+
     /**
      * Set the value of the field.
      *
@@ -64,8 +67,10 @@ class DiscordEmbedField
     public function value($value)
     {
         $this->value = $value;
+
         return $this;
     }
+
     /**
      * Set the name of the field.
      *
@@ -76,8 +81,10 @@ class DiscordEmbedField
     public function inline($inline = true)
     {
         $this->inline = boolval($inline);
+
         return $this;
     }
+
     /**
      * Get an array representation of the embedded field.
      *

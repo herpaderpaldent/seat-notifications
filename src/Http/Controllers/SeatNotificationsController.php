@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 11.07.2018
- * Time: 20:44
+ * Time: 20:44.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
-
 
 use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordServerController;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack\SlackNotificationChannelController;
@@ -51,20 +50,20 @@ class SeatNotificationsController extends Controller
         $notifications = $this->getNotificationCollection();
 
         return DataTables::of($notifications)
-            ->editColumn('notification', function ($row){
-                if(!empty($row['private']))
+            ->editColumn('notification', function ($row) {
+                if(! empty($row['private']))
                     return view($row['notification']);
 
                 return '';
             })
-            ->editColumn('private', function ($row){
+            ->editColumn('private', function ($row) {
 
-                if(!empty($row['private']))
+                if(! empty($row['private']))
                     return view($row['private']);
 
                 return '';
             })
-            ->editColumn('channel', function ($row){
+            ->editColumn('channel', function ($row) {
 
                 $discord_channels = (new DiscordServerController)->getChannels();
                 $slack_channels = (new SlackNotificationChannelController)->getChannels();
@@ -88,15 +87,10 @@ class SeatNotificationsController extends Controller
             $notifications->push([
                 'notification' => $class->getNotification(),
                 'private' => $class->getPrivateView(),
-                'channel' => $class->getChannelView()
+                'channel' => $class->getChannelView(),
             ]);
         }
 
         return $notifications;
     }
-
-
-
-
-
 }

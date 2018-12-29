@@ -66,7 +66,7 @@ class SeatNotificationsServiceProvider extends ServiceProvider
 
     private function addRoutes()
     {
-        if (!$this->app->routesAreCached()) {
+        if (! $this->app->routesAreCached()) {
             include __DIR__ . '/Http/routes.php';
         }
     }
@@ -107,7 +107,7 @@ class SeatNotificationsServiceProvider extends ServiceProvider
 
         if (! is_null($bot_token)) {
             $this->app->singleton('slack', function () {
-                return (new ClientFactory)->create( setting('herpaderp.seatnotifications.slack.credentials.bot_access_token', true));
+                return (new ClientFactory)->create(setting('herpaderp.seatnotifications.slack.credentials.bot_access_token', true));
             });
         }
 

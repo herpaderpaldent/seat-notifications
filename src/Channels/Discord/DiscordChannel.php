@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 25.12.2018
- * Time: 20:56
+ * Time: 20:56.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Discord;
-
 
 use Herpaderpaldent\Seat\SeatNotifications\Exceptions\InvalidMessage;
 use Illuminate\Notifications\Notification;
@@ -48,7 +47,6 @@ class DiscordChannel
      * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage $message
      *
      * @return array
-     *
      */
     protected function buildPayload(DiscordMessage $message)
     {
@@ -58,8 +56,10 @@ class DiscordChannel
         if (! is_null($message->file)) {
             return $this->buildMultipartPayload($message);
         }
+
         return $this->buildJSONPayload($message);
     }
+
     /**
      * Checks if the given Message is valid.
      *
@@ -72,6 +72,7 @@ class DiscordChannel
         if (is_null($message->content) && is_null($message->file) && is_null($message->embeds)) {
             return true;
         }
+
         return false;
     }
 
@@ -103,7 +104,6 @@ class DiscordChannel
      * @param \Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage $message
      *
      * @return array
-     *
      */
     protected function buildMultipartPayload(DiscordMessage $message)
     {
@@ -111,6 +111,7 @@ class DiscordChannel
             throw InvalidMessage::embedsNotSupportedWithFileUploads();
         }
         $this->type = 'multipart';
+
         return collect($message)->forget('file')->reject(function ($value) {
             return is_null($value);
         })->map(function ($value, $key) {
@@ -141,5 +142,4 @@ class DiscordChannel
             ]);
         })->all();
     }
-
 }

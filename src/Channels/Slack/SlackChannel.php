@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 26.07.2018
- * Time: 12:07
+ * Time: 12:07.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Slack;
@@ -22,7 +22,6 @@ class SlackChannel
 
     /**
      * Create a new Slack channel instance.
-     *
      */
     public function __construct()
     {
@@ -38,7 +37,7 @@ class SlackChannel
     public function send($notifiable, Notification $notification)
     {
         if(! $channel = $notifiable->channel_id){
-            throw new Exception("Channel could not be found.");
+            throw new Exception('Channel could not be found.');
         }
 
         $message = $notification->toSlack($notifiable);
@@ -49,7 +48,7 @@ class SlackChannel
             ->chatPostMessage(array_filter([
                 'channel' => $channel,
                 'text' => $payload['json']['text'],
-                'attachments' => json_encode($payload['json']['attachments'])
+                'attachments' => json_encode($payload['json']['attachments']),
             ]));
 
     }
@@ -128,5 +127,4 @@ class SlackChannel
             return ['title' => $key, 'value' => $value, 'short' => true];
         })->values()->all();
     }
-
 }

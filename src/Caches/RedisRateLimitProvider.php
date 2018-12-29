@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Herpaderp Aldent
  * Date: 25.12.2018
- * Time: 16:11
+ * Time: 16:11.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Caches;
@@ -15,7 +15,6 @@ use RestCord\RateLimit\Provider\AbstractRateLimitProvider;
 
 class RedisRateLimitProvider extends AbstractRateLimitProvider
 {
-
     /**
      * @param RequestInterface $request
      * @return string
@@ -87,7 +86,7 @@ class RedisRateLimitProvider extends AbstractRateLimitProvider
         $key = $this->getKey($request);
 
         $remaining = $response->getHeaderLine('X-RateLimit-Remaining');
-        $reset     = $response->getHeaderLine('X-RateLimit-Reset');
+        $reset = $response->getHeaderLine('X-RateLimit-Reset');
 
         if (empty($remaining) || empty($response) || (int) $remaining > 0) {
             return;

@@ -10,7 +10,10 @@
     "require": {
         "php": ">=7.1",
         "laravel/framework": "5.5.*",
-        "eveseat/web": "3.0.*"
+        "eveseat/web": "3.0.*",
+        "erusev/parsedown": "^1.7",
+        "restcord/restcord": "^0.3",
+        "jolicode/slack-php-api": "^1.0"
     },
 
     "license": "GPL-2.0-only",

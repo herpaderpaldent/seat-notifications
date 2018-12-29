@@ -3,36 +3,42 @@
  * Created by PhpStorm.
  *  * User: Herpaderp Aldent
  * Date: 07.07.2018
- * Time: 16:42
+ * Time: 16:42.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Observers;
-use Herpaderpaldent\Seat\SeatNotifications\Models\Seatnotification;
-use Herpaderpaldent\Seat\SeatNotifications\RefreshTokenDeleted;
-use Illuminate\Notifications\Notifiable;
+
+use Herpaderpaldent\Seat\SeatNotifications\Models\RefreshTokenNotification;
+use Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshTokenDeletedNotification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Seat\Eveapi\Models\RefreshToken;
 
 class RefreshTokenObserver
 {
-    use Notifiable;
-
     public function deleting(RefreshToken $refresh_token)
     {
-        Log::info('SoftDelete detected of '. $refresh_token->user->name);
+        Log::info('SoftDelete detected of ' . $refresh_token->user->name);
 
-        //TODO: Only send UNIQUE per webhook (i rather rename this to deliverychannel)
-        //TODO: Figure out a way to limit only 1 channel per notification (setup per corp) but unlimited personal notifications.
+        $receipients = RefreshTokenNotification::all()
+            ->filter(function ($recepient) {
+                return $recepient->shouldReceive();
+            });
 
-        Seatnotification::all()->each(function ($notification) use ($refresh_token){
-            $this->notify(new RefreshTokenDeleted($refresh_token,$notification->webhook,$notification->method));
-        });
+        Notification::send($receipients, (new RefreshTokenDeletedNotification($refresh_token)));
 
     }
+
     public function test()
     {
-        //$this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"www.discord.link",'discord'));
-        $this->notify(new RefreshTokenDeleted(RefreshToken::find(95725047),"#test",'slack'));
-    }
+        $receipients = RefreshTokenNotification::all()
+            ->filter(function ($recepient) {
+                return $recepient->shouldReceive();
+            });
 
+        $refresh_token = RefreshToken::find(95725047);
+
+        Notification::send($receipients, (new RefreshTokenDeletedNotification($refresh_token)));
+
+    }
 }

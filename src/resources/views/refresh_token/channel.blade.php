@@ -1,6 +1,6 @@
 @inject('RefreshTokenController', 'Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController')
 
-@if(! (auth()->user()->has('seatnotifications.refresh_token', false) && auth()->user()->has('seatnotifications.configuration', false)))
+@if(! (auth()->user()->has('seatnotifications.refresh_token', false) && auth()->user()->has('seatnotifications.configuration', false)) || is_null(setting('herpaderp.seatnotifications.discord.credentials.bot_token', true)))
     <a href="" type="button" class="btn btn-app disabled">
       <i class="fa fa-bullhorn"></i>Discord
     </a>
@@ -15,7 +15,7 @@
   </a>
 @endif
 
-@if(! (auth()->user()->has('seatnotifications.refresh_token', false) && auth()->user()->has('seatnotifications.configuration', false)))
+@if(! (auth()->user()->has('seatnotifications.refresh_token', false) && auth()->user()->has('seatnotifications.configuration', false)) || is_null(setting('herpaderp.seatnotifications.slack.credentials.token', true)))
   <a href="" type="button" class="btn btn-app disabled">
     <i class="fa fa-slack"></i>Slack
   </a>

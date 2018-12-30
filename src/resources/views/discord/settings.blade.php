@@ -36,7 +36,7 @@
                          value="{{ setting('herpaderp.seatnotifications.discord.credentials.client_id', true) }}" readonly/>
                 @endif
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-danger btn-flat" id="client-eraser">
+                  <button type="button" class="btn btn-danger btn-flat" id="discord-client-eraser">
                       <i class="fa fa-eraser"></i>
                   </button>
                 </span>
@@ -57,7 +57,7 @@
                          value="{{ setting('herpaderp.seatnotifications.discord.credentials.client_secret', true) }}" readonly/>
                 @endif
                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-danger btn-flat" id="secret-eraser">
+                                    <button type="button" class="btn btn-danger btn-flat" id="discord-secret-eraser">
                                         <i class="fa fa-eraser"></i>
                                     </button>
                                 </span>
@@ -78,7 +78,7 @@
                          value="{{ setting('herpaderp.seatnotifications.discord.credentials.bot_token', true) }}" readonly/>
                 @endif
                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-danger btn-flat" id="bot-eraser">
+                                    <button type="button" class="btn btn-danger btn-flat" id="discord-bot-eraser">
                                         <i class="fa fa-eraser"></i>
                                     </button>
                                 </span>
@@ -104,17 +104,17 @@
 
 @push('javascript')
   <script type="application/javascript">
-    $('#client-eraser').on('click', function(){
+    $('#discord-client-eraser').on('click', function(){
       var discord_client = $('#discord-configuration-client');
       discord_client.val('');
       discord_client.removeAttr("readonly");
     });
-    $('#secret-eraser').on('click', function(){
+    $('#discord-secret-eraser').on('click', function(){
       var discord_secret = $('#discord-configuration-secret');
       discord_secret.val('');
       discord_secret.removeAttr("readonly");
     });
-    $('#bot-eraser').on('click', function(){
+    $('#discord-bot-eraser').on('click', function(){
       var discord_secret = $('#discord-configuration-bot');
       discord_secret.val('');
       discord_secret.removeAttr("readonly");

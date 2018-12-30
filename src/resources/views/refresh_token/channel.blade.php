@@ -1,6 +1,10 @@
 @inject('RefreshTokenController', 'Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController')
 
-@if(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'discord', true))
+@if(! (auth()->user()->has('seatnotifications.refresh_token', false) && auth()->user()->has('seatnotifications.configuration', false)))
+    <a href="" type="button" class="btn btn-app disabled">
+      <i class="fa fa-bullhorn"></i>Discord
+    </a>
+@elseif(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'discord', true))
   <a href="" type="button" class="btn btn-app" data-toggle="modal" data-target="#discord-channel-modal">
     <i class="fa fa-bullhorn"></i>Discord
   </a>
@@ -11,7 +15,11 @@
   </a>
 @endif
 
-@if(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'slack', true) )
+@if(! (auth()->user()->has('seatnotifications.refresh_token', false) && auth()->user()->has('seatnotifications.configuration', false)))
+  <a href="" type="button" class="btn btn-app disabled">
+    <i class="fa fa-slack"></i>Slack
+  </a>
+@elseif(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'slack', true) )
   <a href="" type="button" class="btn btn-app" data-toggle="modal" data-target="#slack-channel-modal">
     <i class="fa fa-slack"></i>Slack
   </a>

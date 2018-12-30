@@ -35,4 +35,16 @@ class DiscordUser extends Model
     {
         return $this->belongsTo(Group::class, 'group_id', 'id');
     }
+
+    public function isUser(Group $group)
+    {
+        $slack_users = DiscordUser::all()->filter(function ($slack_user) use ($group) {
+            return $slack_user->group->id === $group->id;
+        });
+
+        if($slack_users->isNotEmpty())
+            return true;
+
+        return false;
+    }
 }

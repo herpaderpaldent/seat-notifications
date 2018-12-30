@@ -8,16 +8,16 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack;
 
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannelController;
 
-class SlackNotificationChannelController extends BaseNotificationChannel
+class SlackNotificationChannelController extends BaseNotificationChannelController
 {
-    public function getSettingsView()
+    public function getSettingsView() :string
     {
         return 'seatnotifications::slack.settings';
     }
 
-    public function getRegistrationView()
+    public function getRegistrationView() :string
     {
         return 'seatnotifications::slack.registration';
     }
@@ -44,12 +44,12 @@ class SlackNotificationChannelController extends BaseNotificationChannel
 
         }
 
-        return $response->map(function ($item) {
+        return ['slack' => $response->map(function ($item) {
             return collect([
                 'name' => $item->name,
                 'id' => $item->id,
                 'private_channel' => $item->is_group,
             ]);
-        });
+        })];
     }
 }

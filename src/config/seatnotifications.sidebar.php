@@ -11,16 +11,18 @@ return [
         'name'          => 'SeAT Notifications (POC)',
         'icon'          => 'fa-inbox',
         'route_segment' => 'seatnotifications',
-        'entries' => [
+        'permission'    => 'seatnotifications.view',
+        'entries'       => [
             [
                 'name'  => 'Notifications',
                 'icon'  => 'fa-envelope',
                 'route' => 'seatnotifications.index',
             ],
             [
-                'name'  => 'Configuration',
-                'icon'  => 'fa-gear',
-                'route' => 'seatnotifications.configuration',
+                'name'       => 'Configuration',
+                'icon'       => 'fa-gear',
+                'route'      => 'seatnotifications.configuration',
+                'permission' => 'seatnotifications.configuration',
             ],
         ],
     ],

@@ -1,6 +1,10 @@
 @inject('RefreshTokenController', 'Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController')
 
-@if(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'discord', true))
+@if( $RefreshTokenController->isDisabledButton('discord','channel') )
+    <a href="" type="button" class="btn btn-app disabled">
+      <i class="fa fa-bullhorn"></i>Discord
+    </a>
+@elseif(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'discord', true))
   <a href="" type="button" class="btn btn-app" data-toggle="modal" data-target="#discord-channel-modal">
     <i class="fa fa-bullhorn"></i>Discord
   </a>
@@ -11,7 +15,11 @@
   </a>
 @endif
 
-@if(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'slack', true) )
+@if( $RefreshTokenController->isDisabledButton('discord','channel') )
+  <a href="" type="button" class="btn btn-app disabled">
+    <i class="fa fa-slack"></i>Slack
+  </a>
+@elseif(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'slack', true) )
   <a href="" type="button" class="btn btn-app" data-toggle="modal" data-target="#slack-channel-modal">
     <i class="fa fa-slack"></i>Slack
   </a>
@@ -44,8 +52,15 @@
               <label for="available_channels">Select delivery channel:</label>
               <select name="channel_id" id="available_channels" class="form-control" style="width: 100%">
                 <option></option>
-                @foreach($discord_channels as $channel_id => $channel_name)
-                  <option value="{{ $channel_id }}">{{ $channel_name }}</option>
+                @foreach($available_channels as $channel)
+                  @if(!array_key_exists('discord', $channel))
+                    @continue
+                  @endif
+
+                  @foreach($channel['discord'] as $channel_id => $channel_name)
+                    <option value="{{ $channel_id }}">{{ $channel_name }}</option>
+                  @endforeach
+
                 @endforeach
               </select>
             </div>
@@ -85,13 +100,20 @@
               <label for="available_channels">Select delivery channel:</label>
               <select name="channel_id" id="available_channels" class="form-control" style="width: 100%">
                 <option></option>
-                @foreach($slack_channels as $channel)
-                  <option value="{{ $channel['id'] }}">
-                    {{ $channel['name'] }}
-                    @if($channel['private_channel'])
-                      <i>(private channel)</i>
-                    @endif
-                  </option>
+                @foreach($available_channels as $channel)
+                  @if(!array_key_exists('slack', $channel))
+                    @continue
+                  @endif
+
+                  @foreach($channel['slack'] as $channel)
+                      <option value="{{ $channel['id'] }}">
+                        {{ $channel['name'] }}
+                        @if($channel['private_channel'])
+                          <i>(private channel)</i>
+                        @endif
+                      </option>
+                  @endforeach
+
                 @endforeach
               </select>
             </div>
@@ -109,15 +131,3 @@
   </div>
   <!-- /.modal-dialog -->
 </div>
-
-@push('javascript')
-
-  <script type="text/javascript">
-
-    $(document).ready(function () {
-
-    });
-
-  </script>
-
-@endpush

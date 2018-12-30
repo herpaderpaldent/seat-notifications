@@ -36,7 +36,7 @@
                          value="{{ setting('herpaderp.seatnotifications.slack.credentials.client_id', true) }}" readonly/>
                 @endif
                 <span class="input-group-btn">
-                  <button type="button" class="btn btn-danger btn-flat" id="client-eraser">
+                  <button type="button" class="btn btn-danger btn-flat" id="slack-client-eraser">
                       <i class="fa fa-eraser"></i>
                   </button>
                 </span>
@@ -57,7 +57,7 @@
                          value="{{ setting('herpaderp.seatnotifications.slack.credentials.client_secret', true) }}" readonly/>
                 @endif
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-danger btn-flat" id="secret-eraser">
+                    <button type="button" class="btn btn-danger btn-flat" id="slack-secret-eraser">
                         <i class="fa fa-eraser"></i>
                     </button>
                 </span>
@@ -78,7 +78,7 @@
                          value="{{ setting('herpaderp.seatnotifications.slack.credentials.verification_token', true) }}" readonly/>
                 @endif
                   <span class="input-group-btn">
-                      <button type="button" class="btn btn-danger btn-flat" id="verification-eraser">
+                      <button type="button" class="btn btn-danger btn-flat" id="slack-verification-eraser">
                           <i class="fa fa-eraser"></i>
                       </button>
                   </span>
@@ -103,17 +103,17 @@
 
 @push('javascript')
   <script type="application/javascript">
-    $('#client-eraser').on('click', function(){
+    $('#slack-client-eraser').on('click', function(){
       var slack_client = $('#slack-configuration-client');
       slack_client.val('');
       slack_client.removeAttr("readonly");
     });
-    $('#secret-eraser').on('click', function(){
+    $('#slack-secret-eraser').on('click', function(){
       var slack_secret = $('#slack-configuration-secret');
       slack_secret.val('');
       slack_secret.removeAttr("readonly");
     });
-    $('#verification-eraser').on('click', function(){
+    $('#slack-verification-eraser').on('click', function(){
       var slack_verification = $('#slack-configuration-verification');
       slack_verification.val('');
       slack_verification.removeAttr("readonly");

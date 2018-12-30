@@ -8,8 +8,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordServerController;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack\SlackNotificationChannelController;
 use Illuminate\Support\Collection;
 use Seat\Web\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;
@@ -38,7 +36,7 @@ class SeatNotificationsController extends Controller
 
         foreach ($classes as $class) {
             $notification_channels->push(
-                (new $class)->getRegistrationView()
+                 (new $class)->getRegistrationView()
             );
         }
 
@@ -48,6 +46,7 @@ class SeatNotificationsController extends Controller
     public function getNotifications()
     {
         $notifications = $this->getNotificationCollection();
+        $available_channels = $this->getNotificationChannelCollection();
 
         return DataTables::of($notifications)
             ->editColumn('notification', function ($row) {
@@ -63,13 +62,10 @@ class SeatNotificationsController extends Controller
 
                 return '';
             })
-            ->editColumn('channel', function ($row) {
-
-                $discord_channels = (new DiscordServerController)->getChannels();
-                $slack_channels = (new SlackNotificationChannelController)->getChannels();
+            ->editColumn('channel', function ($row) use ($available_channels) {
 
                 if(! empty($row['channel']))
-                    return view($row['channel'], compact('discord_channels', 'slack_channels'));
+                    return view($row['channel'], compact('available_channels'));
 
                 return '';
             })
@@ -92,5 +88,19 @@ class SeatNotificationsController extends Controller
         }
 
         return $notifications;
+    }
+
+    private function getNotificationChannelCollection() : Collection
+    {
+        $notification_channels = collect([]);
+        $classes = config('services.seat-notification-channel');
+
+        foreach ($classes as $class) {
+            $notification_channels->push(
+                (new $class)->getChannels()
+            );
+        }
+
+        return $notification_channels;
     }
 }

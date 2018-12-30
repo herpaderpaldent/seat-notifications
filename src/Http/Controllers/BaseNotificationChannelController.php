@@ -10,9 +10,9 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
 use Seat\Web\Http\Controllers\Controller;
 
-abstract class BaseNotificationChannel extends Controller
+abstract class BaseNotificationChannelController extends Controller
 {
-    abstract protected function getSettingsView();
+    abstract protected function getSettingsView() :string;
 
-    abstract protected function getRegistrationView();
+    abstract protected function getRegistrationView() : string;
 }

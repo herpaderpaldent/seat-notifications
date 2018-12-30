@@ -118,7 +118,7 @@ class RefreshTokenController extends BaseNotificationController
         return false;
     }
 
-    public function isDisabledButton($channel ,$view) : bool
+    public function isDisabledButton($channel, $view) : bool
     {
         // return false if slack has not been setup
         if($channel === 'slack') {
@@ -140,15 +140,16 @@ class RefreshTokenController extends BaseNotificationController
         if($view === 'private') {
 
             if(auth()->user()->has('seatnotifications.refresh_token', false)) {
-                if( $channel === 'discord')
-                    if( (new DiscordUser)->isUser( auth()->user()->group) )
+                if($channel === 'discord')
+                    if((new DiscordUser)->isUser(auth()->user()->group))
                         return false;
 
-                if( $channel === 'slack')
-                    if( (new SlackUser())->isSlackUser( auth()->user()->group) )
+                if($channel === 'slack')
+                    if((new SlackUser())->isSlackUser(auth()->user()->group))
                         return false;
             }
         }
+
         return true;
     }
 }

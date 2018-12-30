@@ -44,12 +44,12 @@ class SlackNotificationChannelController extends BaseNotificationChannel
 
         }
 
-        return $response->map(function ($item) {
+        return ['slack' => $response->map(function ($item) {
             return collect([
                 'name' => $item->name,
                 'id' => $item->id,
                 'private_channel' => $item->is_group,
             ]);
-        });
+        })];
     }
 }

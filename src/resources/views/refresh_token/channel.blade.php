@@ -44,8 +44,15 @@
               <label for="available_channels">Select delivery channel:</label>
               <select name="channel_id" id="available_channels" class="form-control" style="width: 100%">
                 <option></option>
-                @foreach($discord_channels as $channel_id => $channel_name)
-                  <option value="{{ $channel_id }}">{{ $channel_name }}</option>
+                @foreach($available_channels as $channel)
+                  @if(!array_key_exists('discord', $channel))
+                    @continue
+                  @endif
+
+                  @foreach($channel['discord'] as $channel_id => $channel_name)
+                    <option value="{{ $channel_id }}">{{ $channel_name }}</option>
+                  @endforeach
+
                 @endforeach
               </select>
             </div>
@@ -85,13 +92,20 @@
               <label for="available_channels">Select delivery channel:</label>
               <select name="channel_id" id="available_channels" class="form-control" style="width: 100%">
                 <option></option>
-                @foreach($slack_channels as $channel)
-                  <option value="{{ $channel['id'] }}">
-                    {{ $channel['name'] }}
-                    @if($channel['private_channel'])
-                      <i>(private channel)</i>
-                    @endif
-                  </option>
+                @foreach($available_channels as $channel)
+                  @if(!array_key_exists('slack', $channel))
+                    @continue
+                  @endif
+
+                  @foreach($channel['slack'] as $channel)
+                      <option value="{{ $channel['id'] }}">
+                        {{ $channel['name'] }}
+                        @if($channel['private_channel'])
+                          <i>(private channel)</i>
+                        @endif
+                      </option>
+                  @endforeach
+
                 @endforeach
               </select>
             </div>
@@ -109,15 +123,3 @@
   </div>
   <!-- /.modal-dialog -->
 </div>
-
-@push('javascript')
-
-  <script type="text/javascript">
-
-    $(document).ready(function () {
-
-    });
-
-  </script>
-
-@endpush

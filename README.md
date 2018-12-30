@@ -1,31 +1,109 @@
 # seat-notifications
-With this [SeAT](https://github.com/eveseat/seat) Package you can setup and manage notifications. This is a poc to illustrate what i meant by "Notification package needs some love". This is more of a walking skeleton then a well designed and developed solution. But from here things could take on.
+With this [SeAT](https://github.com/eveseat/seat) Package you can setup and manage notifications. It is build to be expendend from within the package or from another package. Please read more about it further down.
+
+[![Latest Stable Version](https://poser.pugx.org/herpaderpaldent/seat-notifications/v/stable)](https://packagist.org/packages/herpaderpaldent/seat-notifications)
+[![StyleCI](https://github.styleci.io/repos/140680541/shield?branch=master)](https://github.styleci.io/repos/140680541)
+[![Maintainability](https://api.codeclimate.com/v1/badges/2270953cdfaa22197d78/maintainability)](https://codeclimate.com/github/herpaderpaldent/seat-notifications/maintainability)
+[![License](https://poser.pugx.org/herpaderpaldent/seat-notifications/license)](https://packagist.org/packages/herpaderpaldent/seat-notifications)
+[![Total Downloads](https://poser.pugx.org/herpaderpaldent/seat-notifications/downloads)](https://packagist.org/packages/herpaderpaldent/seat-notifications)
+
+***Important**: seat-notifications are work in progress and certainly have some bugs
+please do report any findings to [seat-slack](https://eveseat-slack.herokuapp.com/) and report it as an issue*.
+
+## Installation
+
+1. cd to `/var/www/seat`
+2. enter `composer require herpaderpaldent/seat-notifications`
+4. run migration `php artisan migrate`
+
+### Enable Notification Channel
+To enable `seat-notifications` functionality of sending notifications. Create a bot for your notification channel. By default seat-notifications offers two notification channels which could be extended by other packages: `slack` and `discord`:
+![configuration](https://i.imgur.com/pgfuSDO.png)
+
+a more detailed guide on oAuth creation will follow for now the blow table must suffice:
+
+| Notification Channel | Redirect URLs                                                      | Comment                                                                |
+|----------------------|--------------------------------------------------------------------|------------------------------------------------------------------------|
+| Discord              | {seat_url}/seatnotifications/discord/configuration/callback/server | This callback url is needed for the configuration of your discord bot. |
+| Discord              | {seat_url}/seatnotifications/discord/callback/user                 | This callback url is needed for the authentication of a discord user.  |
+| Slack                | {seat_url}/seatnotifications/slack/configuration/callback/server   | This callback url is needed for the configuration of your slack bot.   |
+| Slack                | {seat_url}/seatnotifications/slack/callback/user                   | This callback url is needed for the authentication of a slack user.    |
+
+***Note**: you may only configure one notification channel at your will. However, for discord you must create a bot in your application. For Slack you need to add the bot permission to your oauth scope.*
+
+### Setup Roles
+To be able to subsripe to a notification the user needs the appropriate permission. Please setup a role that carries the needed permission and assign it to users that should be able to receive the notification.
+
+### Authenticate
+Users need to authenticate for your setup notification channel prior to receiving notifications. they may do this in the registration box on the notification page.
 
 ## What does the package do at the moment
-* Send `RefreshTokenDeleted` Notification to Discord Webhook when a Refresh Token is deleted.
-* Set Discord Webhook via Form field
+* Send `RefreshTokenDeleted` Notification to Discord and/or Slack when a `refresh_token` is deleted.
 * Using Model Observer to dispatch Notifications
-* notifications are quable and send out via Horizon. 
+* Notifications are queueable and send out via the queue. 
+* The RefreshTokenNotification is able to be delivered to Channels or via DM on the users preference. 
 
-## What is it i try to achive
+Example:
+![image](https://user-images.githubusercontent.com/6583519/50541121-0f8b3e00-0b9f-11e9-9319-1a4512376271.png)
+![picture](https://i.imgur.com/img64u6.png)
 
-![Overview](https://i.imgur.com/aW5oDjd.png) 
+## Developing
 
-* The basic idea derived from the webhook ability of slack or email per se to send individual notifications. I understood if we could enable users to save their SlackID and extend the current `toSlack()` method with the `to(ID)` method, the user setting up the notification would receive private messages containing the content of the notification. 
-This would then have been very useful f.e. if someone runs industry or PI. The user would have been notified when his/her extractor runs out.
+Most importantly: take note of [laravel's notification documentation](https://laravel.com/docs/5.5/notifications). The provided example of [RefreshTokenDeletedNotification](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/Notifications/RefreshTokenDeletedNotification.php) is based upon it. Notifications are being send by using the `Notification` facade:
 
-* The second idea i was aiming to achieve was: Using model observer to dispatch notifications. 
+```
+Notification::send($receipients, (new RefreshTokenDeletedNotification($refresh_token)));
+```
 
-* Finally: i found the notificiation package not intuitive to read and understand. This is why i recreated it in a more (for me) intuitive and readable way, which hopefully lead to more maintainable code.
+where `$receipients` are a collection of modal that should receive the notification and `$refresh_token` is the deleted `refresh_token` that is passed to the constructor. In this example we use an Observer to send notifications: [Observer](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/Observers/RefreshTokenObserver.php).
 
-## What would the next steps be
+### Add new channels
 
-1. Support more channels (mail for parity)
-2. create proper view with post methods and actions per type of notification: `character`, `corporation`, `seat`
-3. create more observer
-4. create more notifications
-5. remove the test command
-6. add permissions.
-8. Show character notifications per character owned by user-group.
-9. Implement some logic that per channel only 1 subscription is possible
-10. Introduce helpers
+If you have written a new notification channel that you would like to use for sending notifications to your users you might extend `config/services.php` similar to the provided example:
+
+```
+'seat-notification-channel' => [
+        'discord'   => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordNotificationChannel::class,
+    ],
+```
+
+Your channel should extend [BaseNotificationChannel](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/Http/Controllers/BaseNotificationChannel.php)
+
+```
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
+use Seat\Web\Http\Controllers\Controller;
+abstract class BaseNotificationChannel extends Controller
+{
+    abstract protected function getSettingsView();
+    abstract protected function getRegistrationView();
+}
+```
+
+### Add new notifications
+
+If you want to extend the available notifications you need to extend the `seat-notification` array in `config/services.php`:
+
+```
+'seat-notification' => [
+        'refresh_token' => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController::class,
+    ],
+```
+
+Your custom notification must contain the following public functions to add your notification to the users notification list:
+
+```
+public function getNotification()
+    {
+        return 'seatnotifications::refresh_token.notification';
+    }
+    public function getPrivateView()
+    {
+        return 'seatnotifications::refresh_token.private';
+    }
+    public function getChannelView()
+    {
+        return 'seatnotifications::refresh_token.channel';
+    }
+```
+
+the functions should return a string containing the name of your view that should be rendered per column.

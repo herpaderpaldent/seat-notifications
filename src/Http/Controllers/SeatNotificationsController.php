@@ -8,9 +8,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordNotificationChannelController;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordServerController;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack\SlackNotificationChannelController;
 use Illuminate\Support\Collection;
 use Seat\Web\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;

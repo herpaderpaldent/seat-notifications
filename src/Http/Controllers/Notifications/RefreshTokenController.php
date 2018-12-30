@@ -8,26 +8,26 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications;
 
+use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationController;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\AddRefreshTokenChannelSubscriptionRequest;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
 use Herpaderpaldent\Seat\SeatNotifications\Models\RefreshTokenNotification;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
-use Seat\Web\Http\Controllers\Controller;
 use Seat\Web\Models\Group;
 
-class RefreshTokenController extends Controller
+class RefreshTokenController extends BaseNotificationController
 {
-    public function getNotification()
+    public function getNotification() : string
     {
         return 'seatnotifications::refresh_token.notification';
     }
 
-    public function getPrivateView()
+    public function getPrivateView() : string
     {
         return 'seatnotifications::refresh_token.private';
     }
 
-    public function getChannelView()
+    public function getChannelView() : string
     {
 
         return 'seatnotifications::refresh_token.channel';
@@ -149,7 +149,6 @@ class RefreshTokenController extends Controller
                         return false;
             }
         }
-
         return true;
     }
 }

@@ -8,9 +8,9 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord;
 
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannelController;
 
-class DiscordNotificationChannelController extends BaseNotificationChannel
+class DiscordNotificationChannelController extends BaseNotificationChannelController
 {
     public function getSettingsView()
     {

@@ -8,9 +8,9 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack;
 
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannelController;
 
-class SlackNotificationChannelController extends BaseNotificationChannel
+class SlackNotificationChannelController extends BaseNotificationChannelController
 {
     public function getSettingsView()
     {

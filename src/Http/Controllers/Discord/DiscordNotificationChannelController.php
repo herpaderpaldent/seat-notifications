@@ -12,12 +12,12 @@ use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChan
 
 class DiscordNotificationChannelController extends BaseNotificationChannelController
 {
-    public function getSettingsView()
+    public function getSettingsView() : string
     {
         return 'seatnotifications::discord.settings';
     }
 
-    public function getRegistrationView()
+    public function getRegistrationView() : string
     {
         return 'seatnotifications::discord.registration';
     }

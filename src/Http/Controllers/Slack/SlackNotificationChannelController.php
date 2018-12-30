@@ -12,12 +12,12 @@ use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChan
 
 class SlackNotificationChannelController extends BaseNotificationChannelController
 {
-    public function getSettingsView()
+    public function getSettingsView() :string
     {
         return 'seatnotifications::slack.settings';
     }
 
-    public function getRegistrationView()
+    public function getRegistrationView() :string
     {
         return 'seatnotifications::slack.registration';
     }

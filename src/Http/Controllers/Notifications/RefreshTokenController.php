@@ -117,4 +117,39 @@ class RefreshTokenController extends Controller
 
         return false;
     }
+
+    public function isDisabledButton($channel ,$view) : bool
+    {
+        // return false if slack has not been setup
+        if($channel === 'slack') {
+            if(is_null(setting('herpaderp.seatnotifications.slack.credentials.token', true)))
+                return true;
+        }
+
+        // return false if discord has not been setup
+        if($channel === 'discord') {
+            if(is_null(setting('herpaderp.seatnotifications.discord.credentials.bot_token', true)))
+                return true;
+        }
+
+        if($view === 'channel') {
+            if(auth()->user()->has('seatnotifications.refresh_token', false) && auth()->user()->has('seatnotifications.configuration', false))
+                return false;
+        }
+
+        if($view === 'private') {
+
+            if(auth()->user()->has('seatnotifications.refresh_token', false)) {
+                if( $channel === 'discord')
+                    if( (new DiscordUser)->isUser( auth()->user()->group) )
+                        return false;
+
+                if( $channel === 'slack')
+                    if( (new SlackUser())->isSlackUser( auth()->user()->group) )
+                        return false;
+            }
+        }
+
+        return true;
+    }
 }

@@ -18,7 +18,7 @@ please do report any findings to [seat-slack](https://eveseat-slack.herokuapp.co
 
 ### Enable Notification Channel
 To enable `seat-notifications` functionality of sending notifications. Create a bot for your notification channel. By default seat-notifications offers two notification channels which could be extended by other packages: `slack` and `discord`:
-![configuration](https://i.imgur.com/pgfuSDO.png)
+![configure](https://i.imgur.com/3ueTIaO.png)
 
 a more detailed guide on oAuth creation will follow for now the blow table must suffice:
 
@@ -32,7 +32,10 @@ a more detailed guide on oAuth creation will follow for now the blow table must 
 ***Note**: you may only configure one notification channel at your will. However, for discord you must create a bot in your application. For Slack you need to add the bot permission to your oauth scope.*
 
 ### Setup Roles
-To be able to subsripe to a notification the user needs the appropriate permission. Please setup a role that carries the needed permission and assign it to users that should be able to receive the notification.
+To be able to subscribe to a notification the user needs the appropriate permission. Please setup a role that carries the needed permission and assign it to users that should be able to receive the notification.
+
+### Restart workers
+Since the notifications are send out by your workers you need to restart them to pick up the new code. Do this either via `docker-compose restart seat-worker` if you use docker, or `supervisorctl restart worker` on linux distributions.
 
 ### Authenticate
 Users need to authenticate for your setup notification channel prior to receiving notifications. they may do this in the registration box on the notification page.

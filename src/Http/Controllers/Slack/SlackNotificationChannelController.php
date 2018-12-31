@@ -24,6 +24,9 @@ class SlackNotificationChannelController extends BaseNotificationChannelControll
 
     public function getChannels()
     {
+        if(is_null(setting('herpaderp.seatnotifications.slack.credentials.token', true)))
+            return ['slack' => []];
+
         $response = cache('herpaderp.seatnotifications.slack.channels');
 
         if(is_null($response)){

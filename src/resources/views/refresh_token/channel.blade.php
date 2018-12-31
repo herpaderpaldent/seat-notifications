@@ -15,7 +15,7 @@
   </a>
 @endif
 
-@if( $RefreshTokenController->isDisabledButton('discord','channel') )
+@if( $RefreshTokenController->isDisabledButton('slack','channel') )
   <a href="" type="button" class="btn btn-app disabled">
     <i class="fa fa-slack"></i>Slack
   </a>

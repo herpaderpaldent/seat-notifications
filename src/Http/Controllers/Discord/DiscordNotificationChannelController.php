@@ -24,8 +24,8 @@ class DiscordNotificationChannelController extends BaseNotificationChannelContro
 
     public function getChannels()
     {
-        if(is_null(setting('herpaderp.seatnotifications.discord.credentials.guild_id', true)))
-            return redirect()->back()->with('error', 'No guild_id detected, have you setup your discord bot correctly?');
+        if(is_null(setting('herpaderp.seatnotifications.discord.credentials.bot_token', true)))
+            return ['discord' => []];
 
         $response = cache('herpaderp.seatnotifications.discord.channels');
 

@@ -277,5 +277,4 @@ class DiscordServerController extends Controller
     {
         return new WebSocketClient($gateway);
     }
-
 }

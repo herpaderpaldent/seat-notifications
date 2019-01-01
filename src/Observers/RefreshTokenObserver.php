@@ -45,7 +45,6 @@ class RefreshTokenObserver
                     return $recepient->shouldReceive();
                 });
 
-
             Notification::send($receipients, (new RefreshTokenDeletedNotification($refresh_token)));
         }, function () use ($refresh_token) {
             logger()->info('A Soft-Delete job is already running for ' . $refresh_token->user->name);

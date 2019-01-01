@@ -11,12 +11,13 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Seat\Web\Models\Group;
 
 abstract class BaseNotification extends Notification implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, InteractsWithQueue;
 
     /**
      * @var array

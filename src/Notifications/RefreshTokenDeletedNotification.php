@@ -12,6 +12,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage;
+use Illuminate\Support\Facades\Redis;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\RefreshToken;
 
@@ -37,7 +38,7 @@ class RefreshTokenDeletedNotification extends BaseNotification
         $this->user_name = $refresh_token->user->name;
         $this->image = 'https://imageserver.eveonline.com/Character/' . $refresh_token->character_id . '_128.jpg';
         $this->main_character = $this->getMainCharacter($refresh_token->user->group)->name;
-        $this->corporation = CorporationInfo::find($refresh_token->user->character->corporation_id)->name;
+        $this->corporation = optional(CorporationInfo::find($refresh_token->user->character->corporation_id))->name ?: 'NPC Corporation';
     }
 
     /**
@@ -48,26 +49,39 @@ class RefreshTokenDeletedNotification extends BaseNotification
      */
     public function via($notifiable)
     {
-        switch($notifiable->via) {
-            case 'discord':
-                $this->tags = [
-                    'refresh_token',
-                    'discord',
-                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
-                ];
+        Redis::funnel('seatnotification:channel_id' . $notifiable->channel_id)->limit(1)->then(function () use ($notifiable) {
+            switch($notifiable->via) {
+                case 'discord':
+                    $this->tags = [
+                        'refresh_token',
+                        'discord',
+                        $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
+                    ];
 
-                return [DiscordChannel::class];
-                break;
-            case 'slack':
-                $this->tags = [
-                    'refresh_token',
-                    'slack',
-                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
-                ];
+                    return [DiscordChannel::class];
+                    break;
+                case 'slack':
+                    $this->tags = [
+                        'refresh_token',
+                        'slack',
+                        $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
+                    ];
 
-                return [SlackChannel::class];
-                break;
-        }
+                    return [SlackChannel::class];
+                    break;
+                default:
+                    return [''];
+            }
+        }, function () use ($notifiable) {
+
+            logger()->warning(' A notification on ' . $notifiable->via .
+                ' for channel ' . $notifiable->channel_id .
+                ' has already been dispateched. Removing the job from the queue');
+
+            $this->delete();
+        });
+
+        return [''];
     }
 
     public function toDiscord($notifiable)

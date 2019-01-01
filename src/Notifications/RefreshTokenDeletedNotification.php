@@ -37,7 +37,7 @@ class RefreshTokenDeletedNotification extends BaseNotification
         $this->user_name = $refresh_token->user->name;
         $this->image = 'https://imageserver.eveonline.com/Character/' . $refresh_token->character_id . '_128.jpg';
         $this->main_character = $this->getMainCharacter($refresh_token->user->group)->name;
-        $this->corporation = CorporationInfo::find($refresh_token->user->character->corporation_id)->name;
+        $this->corporation = optional(CorporationInfo::find($refresh_token->user->character->corporation_id))->name ?: 'NPC Corporation';
     }
 
     /**

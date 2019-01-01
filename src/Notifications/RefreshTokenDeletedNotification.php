@@ -12,7 +12,6 @@ use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage;
-use Illuminate\Support\Facades\Redis;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\RefreshToken;
 
@@ -49,39 +48,28 @@ class RefreshTokenDeletedNotification extends BaseNotification
      */
     public function via($notifiable)
     {
-        Redis::funnel('seatnotification:channel_id' . $notifiable->channel_id)->limit(1)->then(function () use ($notifiable) {
-            switch($notifiable->via) {
-                case 'discord':
-                    $this->tags = [
-                        'refresh_token',
-                        'discord',
-                        $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
-                    ];
+        switch($notifiable->via) {
+            case 'discord':
+                $this->tags = [
+                    'refresh_token',
+                    'discord',
+                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
+                ];
 
-                    return [DiscordChannel::class];
-                    break;
-                case 'slack':
-                    $this->tags = [
-                        'refresh_token',
-                        'slack',
-                        $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
-                    ];
+                return [DiscordChannel::class];
+                break;
+            case 'slack':
+                $this->tags = [
+                    'refresh_token',
+                    'slack',
+                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
+                ];
 
-                    return [SlackChannel::class];
-                    break;
-                default:
-                    return [''];
-            }
-        }, function () use ($notifiable) {
-
-            logger()->warning(' A notification on ' . $notifiable->via .
-                ' for channel ' . $notifiable->channel_id .
-                ' has already been dispateched. Removing the job from the queue');
-
-            $this->delete();
-        });
-
-        return [''];
+                return [SlackChannel::class];
+                break;
+            default:
+                return [''];
+        }
     }
 
     public function toDiscord($notifiable)

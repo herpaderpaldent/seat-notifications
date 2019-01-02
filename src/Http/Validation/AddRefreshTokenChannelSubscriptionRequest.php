@@ -8,7 +8,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validation;
 
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordServerController;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AddRefreshTokenChannelSubscriptionRequest extends FormRequest
@@ -31,7 +30,6 @@ class AddRefreshTokenChannelSubscriptionRequest extends FormRequest
      */
     public function rules()
     {
-
 
         return [
             'channel_id'=>'required',

@@ -52,7 +52,7 @@ Example:
 
 ## Developing
 
-Most importantly: take note of [laravel's notification documentation](https://laravel.com/docs/5.5/notifications). The provided example of [RefreshTokenDeletedNotification](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/Notifications/RefreshTokenDeletedNotification.php) is based upon it. Notifications are being send by using the `Notification` facade:
+Most importantly: take note of [laravel's notification documentation](https://laravel.com/docs/5.5/notifications). Secondly have a look at [this package service provider](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/SeatNotificationsServiceProvider.php) as it helps with merging the services array properly. The provided example of [RefreshTokenDeletedNotification](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/Notifications/RefreshTokenDeletedNotification.php) is based upon it. Notifications are being send by using the `Notification` facade:
 
 ```
 Notification::send($receipients, (new RefreshTokenDeletedNotification($refresh_token)));

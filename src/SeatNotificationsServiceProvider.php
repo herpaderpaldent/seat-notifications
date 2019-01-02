@@ -5,6 +5,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications;
 use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
 use Herpaderpaldent\Seat\SeatNotifications\Commands\SeatNotificationsTest;
 use Herpaderpaldent\Seat\SeatNotifications\Observers\RefreshTokenObserver;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use JoliCode\Slack\ClientFactory;
 use RestCord\DiscordClient;
@@ -113,5 +114,50 @@ class SeatNotificationsServiceProvider extends ServiceProvider
 
         // bind discord alias to SlackClient
         $this->app->alias('slack', ClientFactory::class);
+    }
+
+    /**
+     * Merge the given configuration with the existing configuration.
+     * https://medium.com/@koenhoeijmakers/properly-merging-configs-in-laravel-packages-a4209701746d.
+     *
+     * @param  string  $path
+     * @param  string  $key
+     * @return void
+     */
+    protected function mergeConfigFrom($path, $key)
+    {
+        $config = $this->app['config']->get($key, []);
+        $this->app['config']->set($key, $this->mergeConfigs(require $path, $config));
+    }
+
+    /**
+     * Merges the configs together and takes multi-dimensional arrays into account.
+     * https://medium.com/@koenhoeijmakers/properly-merging-configs-in-laravel-packages-a4209701746d.
+     *
+     * @param  array  $original
+     * @param  array  $merging
+     * @return array
+     */
+    protected function mergeConfigs(array $original, array $merging)
+    {
+        $array = array_merge($original, $merging);
+
+        foreach ($original as $key => $value) {
+            if (! is_array($value)) {
+                continue;
+            }
+
+            if (! Arr::exists($merging, $key)) {
+                continue;
+            }
+
+            if (is_numeric($key)) {
+                continue;
+            }
+
+            $array[$key] = $this->mergeConfigs($value, $merging[$key]);
+        }
+
+        return $array;
     }
 }

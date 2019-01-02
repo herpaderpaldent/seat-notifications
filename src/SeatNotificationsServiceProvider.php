@@ -116,10 +116,9 @@ class SeatNotificationsServiceProvider extends ServiceProvider
         $this->app->alias('slack', ClientFactory::class);
     }
 
-
     /**
      * Merge the given configuration with the existing configuration.
-     * https://medium.com/@koenhoeijmakers/properly-merging-configs-in-laravel-packages-a4209701746d
+     * https://medium.com/@koenhoeijmakers/properly-merging-configs-in-laravel-packages-a4209701746d.
      *
      * @param  string  $path
      * @param  string  $key
@@ -130,9 +129,10 @@ class SeatNotificationsServiceProvider extends ServiceProvider
         $config = $this->app['config']->get($key, []);
         $this->app['config']->set($key, $this->mergeConfigs(require $path, $config));
     }
+
     /**
      * Merges the configs together and takes multi-dimensional arrays into account.
-     * https://medium.com/@koenhoeijmakers/properly-merging-configs-in-laravel-packages-a4209701746d
+     * https://medium.com/@koenhoeijmakers/properly-merging-configs-in-laravel-packages-a4209701746d.
      *
      * @param  array  $original
      * @param  array  $merging
@@ -157,6 +157,7 @@ class SeatNotificationsServiceProvider extends ServiceProvider
 
             $array[$key] = $this->mergeConfigs($value, $merging[$key]);
         }
+
         return $array;
     }
 }

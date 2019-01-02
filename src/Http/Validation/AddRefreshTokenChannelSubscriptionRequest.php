@@ -31,18 +31,7 @@ class AddRefreshTokenChannelSubscriptionRequest extends FormRequest
      */
     public function rules()
     {
-        /*if($this->input('via') === 'discord'){
-            $channel_ids = array_keys((new DiscordServerController)->getChannels());
 
-            return [
-                'channel_id'=> [
-                    'required',
-                    'in_array:' . $channel_ids
-                ],
-                'via'=>'required'
-            ];
-
-        }*/
 
         return [
             'channel_id'=>'required',

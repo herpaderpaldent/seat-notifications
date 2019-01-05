@@ -20,7 +20,7 @@ class DiscordChannel
 
     public function __construct()
     {
-        $this->discord = app('discord');
+        $this->discord = app('seatnotifications-discord');
     }
 
     public function send($notifiable, Notification $notification)

@@ -88,7 +88,7 @@ class SeatNotificationsServiceProvider extends ServiceProvider
         $bot_token = setting('herpaderp.seatnotifications.discord.credentials.bot_token', true);
 
         if (! is_null($bot_token)) {
-            $this->app->singleton('discord', function () {
+            $this->app->singleton('seatnotifications-discord', function () {
                 return new DiscordClient([
                     'tokenType'         => 'Bot',
                     'token'             => setting('herpaderp.seatnotifications.discord.credentials.bot_token', true),
@@ -98,7 +98,7 @@ class SeatNotificationsServiceProvider extends ServiceProvider
         }
 
         // bind discord alias to DiscordClient
-        $this->app->alias('discord', DiscordClient::class);
+        $this->app->alias('seatnotifications-discord', DiscordClient::class);
     }
 
     private function addSlackContainer()

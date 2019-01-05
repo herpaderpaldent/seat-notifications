@@ -30,10 +30,13 @@ class RefreshTokenDeletedNotification extends BaseNotification
 
     public $corporation;
 
+    private $refresh_token;
+
     public function __construct(RefreshToken $refresh_token)
     {
         parent::__construct();
 
+        $this->refresh_token = $refresh_token;
         $this->user_name = $refresh_token->user->name;
         $this->image = 'https://imageserver.eveonline.com/Character/' . $refresh_token->character_id . '_128.jpg';
         $this->main_character = $this->getMainCharacter($refresh_token->user->group)->name;
@@ -74,13 +77,17 @@ class RefreshTokenDeletedNotification extends BaseNotification
 
     public function toDiscord($notifiable)
     {
+        $character = sprintf('[%s](%s)',
+            $this->user_name,
+            route('configuration.users.edit', ['user_id' => $this->refresh_token->character_id]));
+
         return (new DiscordMessage)
-            ->embed(function ($embed) {
+            ->embed(function ($embed) use ($character) {
 
                 $embed->title('**A SeAT users refresh token was removed!**')
                     ->thumbnail($this->image)
                     ->color('16711680')
-                    ->field('Character', $this->user_name, true)
+                    ->field('Character', $character, true)
                     ->field('Corporation', $this->corporation, true)
                     ->field('Main Character', $this->main_character, false);
             });

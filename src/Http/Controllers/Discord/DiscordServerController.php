@@ -96,7 +96,7 @@ class DiscordServerController extends Controller
             setting(['herpaderp.seatnotifications.discord.credentials.guild_id', $request->input('guild_id')], true);
 
             // update Discord container
-            app()->singleton('discord', function () {
+            app()->singleton('seatnotifications-discord', function () {
                 return new DiscordClient([
                     'tokenType'         => 'Bot',
                     'token'             => setting('herpaderp.seatnotifications.discord.credentials.bot_token', true),

@@ -30,7 +30,7 @@ class DiscordNotificationChannelController extends BaseNotificationChannelContro
         $response = cache('herpaderp.seatnotifications.discord.channels');
 
         if(is_null($response)){
-            $channels = app('discord')
+            $channels = app('seatnotifications-discord')
                 ->guild
                 ->getGuildChannels([
                     'guild.id' => (int) setting('herpaderp.seatnotifications.discord.credentials.guild_id', true),

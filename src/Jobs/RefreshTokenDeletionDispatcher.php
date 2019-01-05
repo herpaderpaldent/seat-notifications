@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 05.01.2019
- * Time: 22:53
+ * Time: 22:53.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Jobs;
-
 
 use Herpaderpaldent\Seat\SeatNotifications\Models\RefreshTokenNotification;
 use Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshTokenDeletedNotification;
@@ -49,5 +48,4 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
             $this->delete();
         });
     }
-
 }

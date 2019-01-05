@@ -19,6 +19,18 @@
 
                 </div>
                 <!-- /.box -->
+                <div class="box-footer">
+                    <div class="col-md-3">
+                        Installed version: <b>{{ config('seatnotifications.config.version') }}</b>
+                    </div>
+                    <div class="col-md-3">
+                        Latest version:
+                        <a href="https://packagist.org/packages/herpaderpaldent/seat-notifications">
+                            <img src="https://poser.pugx.org/herpaderpaldent/seat-notifications/v/stable" alt="SeAT Notifications version" />
+                        </a>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -30,6 +42,10 @@
 
         @endforeach
     </div>
+
+    <div class="row">
+
+        <div>
 
 
 @endsection

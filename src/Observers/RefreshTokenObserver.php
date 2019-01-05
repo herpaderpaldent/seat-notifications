@@ -8,28 +8,17 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Observers;
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\RefreshTokenNotification;
-use Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshTokenDeletedNotification;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Redis;
+use Herpaderpaldent\Seat\SeatNotifications\Jobs\RefreshTokenDeletionDispatcher;
 use Seat\Eveapi\Models\RefreshToken;
 
 class RefreshTokenObserver
 {
     public function deleting(RefreshToken $refresh_token)
     {
-        Redis::funnel('soft_delete:refresh_token_' . $refresh_token->user->name)->limit(1)->then(function () use ($refresh_token) {
-            logger()->info('SoftDelete detected of ' . $refresh_token->user->name);
 
-            $receipients = RefreshTokenNotification::all()
-                ->filter(function ($recepient) {
-                    return $recepient->shouldReceive();
-                });
+        $job = new RefreshTokenDeletionDispatcher($refresh_token);
 
-            Notification::send($receipients, (new RefreshTokenDeletedNotification($refresh_token)));
-        }, function () use ($refresh_token) {
-            logger()->info('A Soft-Delete job is already running for ' . $refresh_token->user->name);
-        });
+        dispatch($job)->onQueue('high');
     }
 
     public function test()
@@ -37,18 +26,9 @@ class RefreshTokenObserver
 
         $refresh_token = RefreshToken::find(95725047);
 
-        Redis::funnel('soft_delete:refresh_token_' . $refresh_token->user->name)->limit(1)->then(function () use ($refresh_token) {
-            logger()->info('SoftDelete detected of ' . $refresh_token->user->name);
+        $job = new RefreshTokenDeletionDispatcher($refresh_token);
 
-            $receipients = RefreshTokenNotification::all()
-                ->filter(function ($recepient) {
-                    return $recepient->shouldReceive();
-                });
-
-            Notification::send($receipients, (new RefreshTokenDeletedNotification($refresh_token)));
-        }, function () use ($refresh_token) {
-            logger()->info('A Soft-Delete job is already running for ' . $refresh_token->user->name);
-        });
+        dispatch($job)->onQueue('high');
 
     }
 }

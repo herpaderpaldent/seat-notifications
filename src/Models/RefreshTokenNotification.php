@@ -93,13 +93,13 @@ class RefreshTokenNotification extends Model
         if(is_null($this->group()))
            return 'channel';
 
-        $main_character = $this->group()->main_character;
+        $main_character = $this->group()->main_character->name;
 
         if (is_null($main_character)) {
             logger()->warning('Group has no main character set. Attempt to make assignation based on first attached character.', [
                 'group_id' => $this->group()->id,
             ]);
-            $main_character = $group->users->first()->character;
+            $main_character = $group->users->first()->character->name;
         }
 
         return $main_character;

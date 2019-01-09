@@ -99,7 +99,7 @@ class RefreshTokenNotification extends Model
             logger()->warning('Group has no main character set. Attempt to make assignation based on first attached character.', [
                 'group_id' => $this->group()->id,
             ]);
-            $main_character = $group->users->first()->character->name;
+            $main_character = $this->group()->users->first()->character->name;
         }
 
         return $main_character;

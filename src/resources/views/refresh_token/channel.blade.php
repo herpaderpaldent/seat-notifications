@@ -5,7 +5,7 @@
       <i class="fa fa-bullhorn"></i>Discord
     </a>
 @elseif(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'discord', true))
-  <a href="" type="button" class="btn btn-app" data-toggle="modal" data-target="#discord-channel-modal">
+  <a href="" type="button" class="btn btn-app" data-toggle="modal" data-target="#discord-channel-refreshTokenDeletion-modal">
     <i class="fa fa-bullhorn"></i>Discord
   </a>
 @else
@@ -20,7 +20,7 @@
     <i class="fa fa-slack"></i>Slack
   </a>
 @elseif(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'slack', true) )
-  <a href="" type="button" class="btn btn-app" data-toggle="modal" data-target="#slack-channel-modal">
+  <a href="" type="button" class="btn btn-app" data-toggle="modal" data-target="#slack-channel-refreshTokenDeletion-modal">
     <i class="fa fa-slack"></i>Slack
   </a>
 @else
@@ -31,7 +31,7 @@
 @endif
 
 
-<div class="modal fade" id="discord-channel-modal">
+<div class="modal fade" id="discord-channel-refreshTokenDeletion-modal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -79,7 +79,7 @@
   <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="slack-channel-modal">
+<div class="modal fade" id="slack-channel-refreshTokenDeletion-modal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

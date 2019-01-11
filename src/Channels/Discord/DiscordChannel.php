@@ -9,6 +9,7 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Discord;
 
 use Herpaderpaldent\Seat\SeatNotifications\Exceptions\InvalidMessage;
+use Herpaderpaldent\Seat\SeatNotifications\Jobs\SendDiscordNotification;
 use Illuminate\Notifications\Notification;
 
 class DiscordChannel
@@ -17,11 +18,6 @@ class DiscordChannel
      * @var \RestCord\DiscordClient
      */
     protected $discord;
-
-    public function __construct()
-    {
-        $this->discord = app('seatnotifications-discord');
-    }
 
     public function send($notifiable, Notification $notification)
     {
@@ -33,11 +29,9 @@ class DiscordChannel
 
         $payload = $this->buildJSONPayload($message);
 
-        $this->discord->channel->createMessage([
-            'channel.id' => (int) $channel,
-            'content' => $payload['content'],
-            'embed' => $payload['embeds'][0],
-        ]);
+        $job = new SendDiscordNotification((int) $channel, $payload);
+
+        dispatch($job)->onQueue('high');
 
     }
 

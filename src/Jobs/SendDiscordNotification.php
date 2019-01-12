@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 11.01.2019
- * Time: 22:11
+ * Time: 22:11.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Jobs;
-
 
 use Exception;
 use Illuminate\Support\Facades\Redis;
@@ -62,5 +61,4 @@ class SendDiscordNotification extends SeatNotificationsJobBase
             return $this->release(10);
         });
     }
-
 }

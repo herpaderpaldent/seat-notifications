@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 12.01.2019
- * Time: 14:24
+ * Time: 14:24.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Jobs;
-
 
 use Exception;
 use Illuminate\Support\Facades\Redis;
@@ -49,6 +48,7 @@ class SendSlackNotification extends SeatNotificationsJobBase
                     return $this->release(10);
 
                 report($e);
+
                 return $this->delete();
             }
         }, function () {
@@ -57,5 +57,4 @@ class SendSlackNotification extends SeatNotificationsJobBase
             return $this->release(10);
         });
     }
-
 }

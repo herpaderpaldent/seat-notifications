@@ -9,6 +9,7 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Channels\Slack;
 
 use Exception;
+use Herpaderpaldent\Seat\SeatNotifications\Jobs\SendSlackNotification;
 use Illuminate\Notifications\Notification;
 
 class SlackChannel
@@ -25,6 +26,7 @@ class SlackChannel
      */
     public function __construct()
     {
+
         $this->client = app('slack');
     }
 
@@ -36,7 +38,8 @@ class SlackChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if(! $channel = $notifiable->channel_id){
+
+        if (! $channel = $notifiable->channel_id) {
             throw new Exception('Channel could not be found.');
         }
 
@@ -44,13 +47,15 @@ class SlackChannel
 
         $payload = $this->buildJsonPayload($message);
 
-        $this->client
-            ->chatPostMessage(array_filter([
-                'channel' => $channel,
-                'text' => $payload['json']['text'],
-                'attachments' => json_encode($payload['json']['attachments']),
-            ]));
+        $parameters = array_filter([
+            'channel'     => $channel,
+            'text'        => $payload['json']['text'],
+            'attachments' => json_encode($payload['json']['attachments']),
+        ]);
 
+        $job = new SendSlackNotification($parameters);
+
+        dispatch($job)->onQueue('high');
     }
 
     /**
@@ -62,19 +67,20 @@ class SlackChannel
      */
     protected function buildJsonPayload(SlackMessage $message)
     {
+
         $optionalFields = array_filter([
-            'channel' => data_get($message, 'channel'),
-            'icon_emoji' => data_get($message, 'icon'),
-            'icon_url' => data_get($message, 'image'),
-            'link_names' => data_get($message, 'linkNames'),
+            'channel'      => data_get($message, 'channel'),
+            'icon_emoji'   => data_get($message, 'icon'),
+            'icon_url'     => data_get($message, 'image'),
+            'link_names'   => data_get($message, 'linkNames'),
             'unfurl_links' => data_get($message, 'unfurlLinks'),
             'unfurl_media' => data_get($message, 'unfurlMedia'),
-            'username' => data_get($message, 'username'),
+            'username'     => data_get($message, 'username'),
         ]);
 
         return array_merge([
             'json' => array_merge([
-                'text' => $message->content,
+                'text'        => $message->content,
                 'attachments' => $this->attachments($message),
             ], $optionalFields),
         ], $message->http);
@@ -89,23 +95,25 @@ class SlackChannel
      */
     protected function attachments(SlackMessage $message)
     {
+
         return collect($message->attachments)->map(function ($attachment) use ($message) {
+
             return array_filter([
                 'author_icon' => $attachment->authorIcon,
                 'author_link' => $attachment->authorLink,
                 'author_name' => $attachment->authorName,
-                'color' => $attachment->color ?: $message->color(),
-                'fallback' => $attachment->fallback,
-                'fields' => $this->fields($attachment),
-                'footer' => $attachment->footer,
+                'color'       => $attachment->color ?: $message->color(),
+                'fallback'    => $attachment->fallback,
+                'fields'      => $this->fields($attachment),
+                'footer'      => $attachment->footer,
                 'footer_icon' => $attachment->footerIcon,
-                'image_url' => $attachment->imageUrl,
-                'mrkdwn_in' => $attachment->markdown,
-                'text' => $attachment->content,
-                'thumb_url' => $attachment->thumbUrl,
-                'title' => $attachment->title,
-                'title_link' => $attachment->url,
-                'ts' => $attachment->timestamp,
+                'image_url'   => $attachment->imageUrl,
+                'mrkdwn_in'   => $attachment->markdown,
+                'text'        => $attachment->content,
+                'thumb_url'   => $attachment->thumbUrl,
+                'title'       => $attachment->title,
+                'title_link'  => $attachment->url,
+                'ts'          => $attachment->timestamp,
             ]);
         })->all();
     }
@@ -119,7 +127,9 @@ class SlackChannel
      */
     protected function fields(SlackAttachment $attachment)
     {
+
         return collect($attachment->fields)->map(function ($value, $key) {
+
             if ($value instanceof SlackAttachmentField) { //SlackAttachmentField
                 return $value->toArray();
             }

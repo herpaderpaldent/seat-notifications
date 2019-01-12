@@ -28,15 +28,13 @@ class SendDiscordNotification extends SeatNotificationsJobBase
 
     protected $discord;
 
-    protected $channel;
+    protected $parameters;
 
     protected $payload;
 
-    public function __construct(int $channel, $payload)
+    public function __construct(array $parameters)
     {
-        $this->channel = $channel;
-        $this->payload = $payload;
-
+        $this->parameters = $parameters;
     }
 
     public function handle()
@@ -47,11 +45,8 @@ class SendDiscordNotification extends SeatNotificationsJobBase
         Redis::funnel('discord_notification')->limit(1)->then(function () {
 
             try {
-                $this->discord->channel->createMessage([
-                    'channel.id' => (int) $this->channel,
-                    'content'    => $this->payload['content'],
-                    'embed'      => $this->payload['embeds'][0],
-                ]);
+
+                $this->discord->channel->createMessage($this->parameters);
             } catch (Exception $e) {
                 $response = json_decode($e->getResponse()->getBody()->getContents());
 

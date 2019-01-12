@@ -21,6 +21,7 @@ class DiscordChannel
 
     public function send($notifiable, Notification $notification)
     {
+
         if (! $channel = $notifiable->channel_id) {
             return;
         }
@@ -29,10 +30,15 @@ class DiscordChannel
 
         $payload = $this->buildJSONPayload($message);
 
-        $job = new SendDiscordNotification((int) $channel, $payload);
+        $parameters = [
+            'channel.id' => (int) $channel,
+            'content'    => $payload['content'],
+            'embed'      => $payload['embeds'][0],
+        ];
+
+        $job = new SendDiscordNotification($parameters);
 
         dispatch($job)->onQueue('high');
-
     }
 
     /**
@@ -44,6 +50,7 @@ class DiscordChannel
      */
     protected function buildPayload(DiscordMessage $message)
     {
+
         if ($this->checkMessageEmpty($message)) {
             throw InvalidMessage::cannotSendAnEmptyMessage();
         }
@@ -63,6 +70,7 @@ class DiscordChannel
      */
     protected function checkMessageEmpty($message)
     {
+
         if (is_null($message->content) && is_null($message->file) && is_null($message->embeds)) {
             return true;
         }
@@ -79,16 +87,17 @@ class DiscordChannel
      */
     protected function buildJSONPayload(DiscordMessage $message)
     {
+
         $optionalFields = array_filter([
-            'username' => data_get($message, 'username'),
+            'username'   => data_get($message, 'username'),
             'avatar_url' => data_get($message, 'avatar_url'),
-            'tts' => data_get($message, 'tts'),
-            'timestamp' => data_get($message, 'timestamp'),
+            'tts'        => data_get($message, 'tts'),
+            'timestamp'  => data_get($message, 'timestamp'),
         ]);
 
         return array_merge([
             'content' => $message->content,
-            'embeds' => $this->embeds($message),
+            'embeds'  => $this->embeds($message),
         ], $optionalFields);
     }
 
@@ -101,14 +110,17 @@ class DiscordChannel
      */
     protected function buildMultipartPayload(DiscordMessage $message)
     {
+
         if (! is_null($message->embeds)) {
             throw InvalidMessage::embedsNotSupportedWithFileUploads();
         }
         $this->type = 'multipart';
 
         return collect($message)->forget('file')->reject(function ($value) {
+
             return is_null($value);
         })->map(function ($value, $key) {
+
             return ['name' => $key, 'contents' => $value];
         })->push($message->file)->values()->all();
     }
@@ -122,17 +134,19 @@ class DiscordChannel
      */
     protected function embeds(DiscordMessage $message)
     {
+
         return collect($message->embeds)->map(function (DiscordEmbed $embed) {
+
             return array_filter([
-                'color' => $embed->color,
-                'title' => $embed->title,
+                'color'       => $embed->color,
+                'title'       => $embed->title,
                 'description' => $embed->description,
-                'link' => $embed->url,
-                'thumbnail' => $embed->thumbnail,
-                'image' => $embed->image,
-                'footer' => $embed->footer,
-                'author' => $embed->author,
-                'fields' => $embed->fields,
+                'link'        => $embed->url,
+                'thumbnail'   => $embed->thumbnail,
+                'image'       => $embed->image,
+                'footer'      => $embed->footer,
+                'author'      => $embed->author,
+                'fields'      => $embed->fields,
             ]);
         })->all();
     }

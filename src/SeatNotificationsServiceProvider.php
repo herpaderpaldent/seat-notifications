@@ -6,12 +6,12 @@ use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
 use Herpaderpaldent\Seat\SeatNotifications\Commands\SeatNotificationsTest;
 use Herpaderpaldent\Seat\SeatNotifications\Observers\RefreshTokenObserver;
 use Illuminate\Support\Arr;
-use Illuminate\Support\ServiceProvider;
 use JoliCode\Slack\ClientFactory;
 use RestCord\DiscordClient;
 use Seat\Eveapi\Models\RefreshToken;
+use Seat\Services\AbstractSeatPlugin;
 
-class SeatNotificationsServiceProvider extends ServiceProvider
+class SeatNotificationsServiceProvider extends AbstractSeatPlugin
 {
     /**
      * Bootstrap the application services.
@@ -159,5 +159,60 @@ class SeatNotificationsServiceProvider extends ServiceProvider
         }
 
         return $array;
+    }
+
+    /**
+     * Return the plugin public name as it should be displayed into settings.
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+
+        return 'seat-notifications';
+    }
+
+    /**
+     * Return the plugin repository address.
+     *
+     * @return string
+     */
+    public function getPackageRepositoryUrl(): string
+    {
+
+        return 'https://github.com/herpaderpaldent/seat-notifications';
+    }
+
+    /**
+     * Return the plugin technical name as published on package manager.
+     *
+     * @return string
+     */
+    public function getPackagistPackageName(): string
+    {
+
+        return 'seat-notifications';
+    }
+
+    /**
+     * Return the plugin vendor tag as published on package manager.
+     *
+     * @return string
+     */
+    public function getPackagistVendorName(): string
+    {
+
+        return 'herpaderpaldent';
+    }
+
+    /**
+     * Return the plugin installed version.
+     *
+     * @return string
+     */
+    public function getVersion(): string
+    {
+
+        return config('seatnotifications.config.version');
     }
 }

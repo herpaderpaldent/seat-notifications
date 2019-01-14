@@ -177,7 +177,7 @@ class DiscordOAuthController
      */
     private function getDmChannel(User $user)
     {
-        return app('discord')
+        return app('seatnotifications-discord')
             ->user
             ->createDm([
                 'recipient_id' => $user->id,

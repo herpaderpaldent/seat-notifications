@@ -77,7 +77,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-          <button type="submit" form="subscribeToRefreshTokenDeletionDiscordDiscord" class="btn btn-primary">Save
+          <button type="submit" form="subscribeToRefreshTokenDeletionDiscord" class="btn btn-primary">Save
             changes
           </button>
         </div>

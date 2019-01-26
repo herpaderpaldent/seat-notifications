@@ -4,10 +4,12 @@ namespace Herpaderpaldent\Seat\SeatNotifications;
 
 use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
 use Herpaderpaldent\Seat\SeatNotifications\Commands\SeatNotificationsTest;
+use Herpaderpaldent\Seat\SeatNotifications\Observers\CorporationKillmailObserver;
 use Herpaderpaldent\Seat\SeatNotifications\Observers\RefreshTokenObserver;
 use Illuminate\Support\Arr;
 use JoliCode\Slack\ClientFactory;
 use RestCord\DiscordClient;
+use Seat\Eveapi\Models\Killmails\CorporationKillmail;
 use Seat\Eveapi\Models\RefreshToken;
 use Seat\Services\AbstractSeatPlugin;
 
@@ -31,6 +33,7 @@ class SeatNotificationsServiceProvider extends AbstractSeatPlugin
         $this->addDiscordContainer();
         $this->addSlackContainer();
 
+        CorporationKillmail::observe(CorporationKillmailObserver::class);
     }
 
     /**

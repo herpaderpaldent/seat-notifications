@@ -11,5 +11,6 @@ return [
         'view',
         'configuration',
         'refresh_token',
+        'kill_mail',
     ],
 ];

@@ -71,6 +71,7 @@ Route::group([
     ], function () {
 
         include __DIR__ . '/Routes/Notification/RefreshToken.php';
+        include __DIR__ . '/Routes/Notification/KillMail.php';
 
     });
 

@@ -8,6 +8,7 @@ return [
     ],
     'seat-notification' => [
         'refresh_token' => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController::class,
+        'kill_mail' => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\KillMailController::class,
     ],
 
 ];

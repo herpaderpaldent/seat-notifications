@@ -21,6 +21,7 @@ class DiscordChannel
 
     public function send($notifiable, Notification $notification)
     {
+        var_dump('test');
 
         if (! $channel = $notifiable->channel_id) {
             return;

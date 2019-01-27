@@ -19,7 +19,7 @@
     </a>
   @endif
 
-  @if( $KillMailController->isDisabledButton('private','slack') )
+  @if( $KillMailController->isDisabledButton('private','slack'))
     <a href="" type="button" class="btn btn-app disabled">
       <i class="fa fa-slack"></i>Slack
     </a>

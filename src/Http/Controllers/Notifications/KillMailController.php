@@ -65,12 +65,12 @@ class KillMailController extends BaseNotificationController
         $channel_id = (string) request('channel_id');
 
         if(is_null($channel_id) || is_null($channel_id))
-            return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
+             abort(500);
 
         if($this->subscribeToChannel($channel_id, $via, 'kill_mail', true))
             return redirect()->back()->with('success', 'You are going to be notified about killmails.');
 
-        return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
+        return abort(500);
 
     }
 
@@ -79,12 +79,12 @@ class KillMailController extends BaseNotificationController
         $channel_id = $this->getChannelChannelId($channel,'kill_mail');
 
         if(is_null($channel_id))
-            return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
+            return abort(500);
 
         if($this->unsubscribeFromChannel($channel_id, 'kill_mail'))
             return redirect()->back()->with('success', 'You are no longer going to be notified about killmails.');
 
-        return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
+        return abort(500);
 
     }
 

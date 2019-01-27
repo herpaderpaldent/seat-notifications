@@ -1,13 +1,12 @@
-{{--
 @inject('RefreshTokenController', 'Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController')
 
-@if(auth()->user()->has('seatnotifications.view', false) && auth()->user()->has('seatnotifications.refresh_token', false))
+@if($RefreshTokenController->isAvailable())
 
-  @if( $RefreshTokenController->isDisabledButton('discord','private') )
+  @if( $RefreshTokenController->isDisabledButton('private', 'discord'))
     <a href="" type="button" class="btn btn-app disabled">
       <i class="fa fa-bullhorn"></i>Discord
     </a>
-  @elseif(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'discord'))
+  @elseif(! $RefreshTokenController->isSubscribed('private', 'discord'))
     <a href=" {{ route('seatnotifications.refresh_token.subscribe.user', ['via' => 'discord']) }}" type="button"
        class="btn btn-app">
       <i class="fa fa-bullhorn"></i>Discord
@@ -20,11 +19,11 @@
     </a>
   @endif
 
-  @if( $RefreshTokenController->isDisabledButton('slack','private') )
+  @if( $RefreshTokenController->isDisabledButton('private','slack'))
     <a href="" type="button" class="btn btn-app disabled">
       <i class="fa fa-slack"></i>Slack
     </a>
-  @elseif(! $RefreshTokenController->isSubscribed(auth()->user()->group, 'slack'))
+  @elseif(! $RefreshTokenController->isSubscribed('private', 'slack'))
     <a href=" {{ route('seatnotifications.refresh_token.subscribe.user', ['via' => 'slack']) }}" type="button"
        class="btn btn-app">
       <i class="fa fa-slack"></i>Slack
@@ -42,4 +41,3 @@
   @include('seatnotifications::seatnotifications.partials.missing-permissions')
 
 @endif
---}}

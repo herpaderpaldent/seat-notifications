@@ -36,12 +36,14 @@ class SeatNotificationRecipient extends Model
      */
     public function notification_user()
     {
-        $user = $this->belongsTo(DiscordUser::class, 'channel_id', 'channel_id');
 
-        if(is_null($user))
-            $user = $this->belongsTo(SlackUser::class, 'channel_id', 'channel_id');
+        if($this->notification_channel === 'discord')
+            return $this->belongsTo(DiscordUser::class, 'channel_id', 'channel_id');
 
-        return $user;
+        if($this->notification_channel === 'slack')
+            return $this->belongsTo(SlackUser::class, 'channel_id', 'channel_id');
+
+        return null;
     }
 
     public function notifications()
@@ -50,63 +52,42 @@ class SeatNotificationRecipient extends Model
     }
 
     /**
-     * @return null|\Seat\Web\Models\Group
-     */
-    /*public function group() : ?Group
-    {
-        if($this->type === 'channel')
-            return null;
-
-        if($this->type === 'private')
-            return $this->user->group;
-
-        return null;
-    }*/
-
-    /**
+     * Returns a boolean if a certain Recipient should receive a given notification.
+     *
+     * @param string $notification Name of the notification that should be checked.
+     *
      * @return bool
      */
-    /*public function shouldReceive()
+    public function shouldReceive(string $notification) : bool
     {
-        if($this->type === 'channel')
-            return true;
 
-        $permissions = collect();
-
-        if(! is_null($this->group())) {
-            foreach ($this->group()->roles as $role) {
-                foreach ($role->permissions as $permission){
-                    $permissions->push($permission->title);
-                }
-            }
-        }
-
-        if ($permissions->containsStrict($this->notification) || $permissions->containsStrict('superuser'))
-            return true;
-
-        return false;
-    }*/
+        return $this->notifications
+            ->filter(function ($seat_notification) use ($notification) {
+                return $seat_notification->name === $notification;
+            })
+            ->isNotEmpty();
+    }
 
     /**
      * @return string
      */
-    /*public function recipient() : string
+    public function recipient() : string
     {
-        if(is_null($this->group()))
+        if(is_null($this->notification_user))
             return 'channel';
 
-        $main_character = $this->group()->main_character->name;
+        $main_character = $this->notification_user->group->main_character->name;
 
         if (is_null($main_character)) {
             logger()->warning('Group has no main character set. Attempt to make assignation based on first attached character.', [
-                'group_id' => $this->group()->id,
+                'group_id' => $this->notification_user->group->id,
             ]);
-            $main_character = $this->group()->users->first()->character->name;
+            $main_character = $this->notification_user->group->users->first()->character->name;
         }
 
         return $main_character;
 
-    }*/
+    }
 
 
 

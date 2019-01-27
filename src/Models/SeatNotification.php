@@ -15,7 +15,7 @@ class SeatNotification extends Model
 {
     /**
      * The table associated with the model.
-     *
+     *herpaderp_seat_notification_notification_recipients
      * @var string
      */
     protected $table = 'herpaderp_seat_notification_notification_recipients';

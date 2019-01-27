@@ -40,7 +40,7 @@ class KillMailController extends BaseNotificationController
         if(is_null($channel_id))
             return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
 
-        if($this->subscribePrivateChannel($channel_id, $via, 'kill_mail'))
+        if($this->subscribeToChannel($channel_id, $via, 'kill_mail'))
             return redirect()->back()->with('success', 'You are going to be notified about killmails.');
 
         return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
@@ -48,19 +48,49 @@ class KillMailController extends BaseNotificationController
 
     public function unsubscribeDm($via)
     {
+        $channel_id = $this->getPrivateChannel($via);
+
+        if(is_null($channel_id))
+            return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
+
+        if($this->unsubscribeFromChannel($channel_id, 'kill_mail'))
+            return redirect()->back()->with('success', 'You are no longer going to be notified about killmails.');
+
+        return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
     }
 
     public function subscribeChannel()
     {
+        $via = (string) request('via');
+        $channel_id = (string) request('channel_id');
+
+        if(is_null($channel_id) || is_null($channel_id))
+            return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
+
+        if($this->subscribeToChannel($channel_id, $via, 'kill_mail', true))
+            return redirect()->back()->with('success', 'You are going to be notified about killmails.');
+
+        return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
+
     }
 
-    public function unsubscribeChannel($via)
+    public function unsubscribeChannel($channel)
     {
+        $channel_id = $this->getChannelChannelId($channel,'kill_mail');
+
+        if(is_null($channel_id))
+            return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
+
+        if($this->unsubscribeFromChannel($channel_id, 'kill_mail'))
+            return redirect()->back()->with('success', 'You are no longer going to be notified about killmails.');
+
+        return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
+
     }
 
     public function isSubscribed($view, $channel)
     {
-        return false;
+        return $this->getSubscribtionStatus($channel, $view, 'kill_mail');
     }
 
     public function isDisabledButton($view, $channel) : bool
@@ -70,6 +100,6 @@ class KillMailController extends BaseNotificationController
 
     public function isAvailable() : bool
     {
-        return auth()->user()->has('seatnotifications.view', false) && auth()->user()->has('seatnotifications.refresh_token', false);
+        return $this->hasPermission('kill_mail');
     }
 }

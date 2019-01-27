@@ -1,3 +1,4 @@
+{{--
 @inject('RefreshTokenController', 'Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController')
 
 @if(auth()->user()->has('seatnotifications.view', false) && auth()->user()->has('seatnotifications.configuration', false) && auth()->user()->has('seatnotifications.refresh_token', false))
@@ -148,3 +149,4 @@
 
 @endif
 
+--}}

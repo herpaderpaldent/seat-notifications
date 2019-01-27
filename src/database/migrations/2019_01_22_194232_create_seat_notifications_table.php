@@ -23,6 +23,7 @@ class CreateSeatNotificationsTable extends Migration
         Schema::create('herpaderp_seat_notification_recipients', function (Blueprint $table) {
             $table->string('channel_id');
             $table->string('notification_channel');
+            $table->boolean('is_channel')->default(false);
             $table->timestamps();
 
             $table->primary('channel_id', 'herpaderp_seat_notification_recipients_primary');
@@ -47,14 +48,12 @@ class CreateSeatNotificationsTable extends Migration
      */
     public function down()
     {
+        Schema::table('herpaderp_discord_users', function (Blueprint $table) {
+            $table->bigInteger('channel_id')->change();
+            $table->dropUnique('herpaderp_discord_channel_id_unique');
+        });
+
         Schema::dropIfExists('herpaderp_seat_notification_notification_recipients');
         Schema::dropIfExists('herpaderp_seat_notification_recipients');
-
-        Schema::create('seatnotifications', function (Blueprint $table) {
-            $table->increments('id')->index();
-            $table->integer('settings_id');
-            $table->string('settings_type');
-            $table->timestamps();
-        });
     }
 }

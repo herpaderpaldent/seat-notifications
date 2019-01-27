@@ -6,7 +6,6 @@ use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Seat\Web\Models\Group;
 
 class SeatNotificationRecipient extends Model
 {
@@ -19,6 +18,10 @@ class SeatNotificationRecipient extends Model
      */
     protected $table = 'herpaderp_seat_notification_recipients';
 
+    public $primaryKey = 'channel_id';
+
+    public $keyType = 'string';
+
     public $incrementing = false;
 
     /**
@@ -26,7 +29,7 @@ class SeatNotificationRecipient extends Model
      *
      * @var array
      */
-    protected $fillable = ['channel_id', 'notification_channel'];
+    protected $fillable = ['channel_id', 'notification_channel', 'is_channel'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Relations\HasOne|null

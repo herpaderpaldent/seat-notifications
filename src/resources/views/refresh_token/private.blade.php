@@ -1,3 +1,4 @@
+{{--
 @inject('RefreshTokenController', 'Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController')
 
 @if(auth()->user()->has('seatnotifications.view', false) && auth()->user()->has('seatnotifications.refresh_token', false))
@@ -41,3 +42,4 @@
   @include('seatnotifications::seatnotifications.partials.missing-permissions')
 
 @endif
+--}}

@@ -22,11 +22,24 @@ class SeatNotification extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['channel_id', 'name'];
+    protected $fillable = ['channel_id', 'name', 'affiliation'];
 
     public function recipients()
     {
         return $this->belongsTo(SeatNotificationRecipient::class, 'channel_id', 'channel_id');
+    }
+
+    public function affiliations()
+    {
+        return json_decode($this->affiliation);
+    }
+
+    public function hasAffiliation(string $type, int $id) : bool
+    {
+        if($type === 'corp')
+            return in_array($id, $this->affiliations()->corporations);
+
+        return false;
     }
 
 

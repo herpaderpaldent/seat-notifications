@@ -32,6 +32,7 @@ class CreateSeatNotificationsTable extends Migration
         Schema::create('herpaderp_seat_notification_notification_recipients', function (Blueprint $table) {
             $table->string('channel_id');
             $table->string('name');
+            $table->json('affiliation')->nullable()->default(null);
             $table->timestamps();
 
             $table->foreign('channel_id',  'seat_notification_notification_recipients_foreign')

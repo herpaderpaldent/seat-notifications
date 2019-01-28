@@ -9,6 +9,7 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications;
 
 use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationController;
+use Seat\Services\Repositories\Corporation\Corporation;
 
 /**
  * Class KillMailController
@@ -16,6 +17,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationCont
  */
 class KillMailController extends BaseNotificationController
 {
+    use Corporation;
 
     public function getNotification() : string
     {
@@ -63,11 +65,12 @@ class KillMailController extends BaseNotificationController
     {
         $via = (string) request('via');
         $channel_id = (string) request('channel_id');
+        $affiliation = collect(['corporations' => request('corporation_ids')])->toJson();
 
         if(is_null($channel_id) || is_null($channel_id))
              abort(500);
 
-        if($this->subscribeToChannel($channel_id, $via, 'kill_mail', true))
+        if($this->subscribeToChannel($channel_id, $via, 'kill_mail', true, $affiliation))
             return redirect()->back()->with('success', 'You are going to be notified about killmails.');
 
         return abort(500);
@@ -101,5 +104,10 @@ class KillMailController extends BaseNotificationController
     public function isAvailable() : bool
     {
         return $this->hasPermission('kill_mail');
+    }
+
+    public function getAvailableCorporations()
+    {
+        return $this->getAllCorporationsWithAffiliationsAndFilters();
     }
 }

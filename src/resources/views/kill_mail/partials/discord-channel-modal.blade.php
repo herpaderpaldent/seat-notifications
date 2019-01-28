@@ -34,6 +34,21 @@
           </div>
 
           <span class="help-block">Although you might chose the right channel here you need to make sure that the bot has the appropriate channel permission to post a message.</span>
+
+          <div class="row">
+            <div class="col-md-12"></div>
+            <div class="form-group-lg col-md-12">
+              <label>{{trans('seatgroups::seat.seat_groups_role')}}</label>
+              <select class="select2" name="corporation_ids[]" style="width: 100%" multiple>
+
+                @foreach($corporations as $corporation)
+                  <option value="{{$corporation->corporation_id}}">{{ $corporation->name }}</option>
+                @endforeach
+
+              </select>
+            </div>
+          </div>
+
         </form>
       </div>
       <div class="modal-footer">
@@ -48,3 +63,38 @@
   </div>
   <!-- /.modal-dialog -->
 </div>
+
+@push('javascript')
+
+  <script type="text/javascript">
+
+      $("#discord-channel-killMail-modal").on('show.bs.modal', function () {
+        console.log('test')
+        $("#available_roles").select2({
+          placeholder: "{{ trans('web::seat.select_item_add') }}"
+        });
+        $.ajax({
+          type   : 'GET',
+          url    : '{{ route('seatgroups.create') }}',
+          success: function (data) {
+
+            var select = $('#available_roles');
+
+            select.empty();
+
+            for (var i = 0; i < data.length; i++) {
+              select.append($('<option></option>').attr('value', data[i].id).text(data[i].title));
+            }
+          },
+          error  : function (xhr, textStatus, errorThrown) {
+            console.log(xhr);
+            console.log(textStatus);
+            console.log(errorThrown);
+          }
+        })
+      })
+
+
+  </script>
+
+@endpush

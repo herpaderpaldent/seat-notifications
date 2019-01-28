@@ -11,7 +11,7 @@
        data-target="#discord-channel-killMail-modal">
       <i class="fa fa-bullhorn"></i>Discord
     </a>
-    @include('seatnotifications::kill_mail.partials.discord-channel-modal')
+    @include('seatnotifications::kill_mail.partials.discord-channel-modal', ['corporations' => $KillMailController->getAvailableCorporations()])
   @else
     <a href=" {{ route('seatnotifications.kill_mail.unsubscribe.channel', ['via' => 'discord']) }}" type="button"
        class="btn btn-app">

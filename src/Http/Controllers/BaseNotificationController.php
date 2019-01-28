@@ -23,7 +23,7 @@ abstract class BaseNotificationController extends Controller
 
     abstract public function getChannelView() : string;
 
-    public function subscribeToChannel($channel_id, $via, $notification, $is_channel = false) : bool
+    public function subscribeToChannel($channel_id, $via, $notification, $is_channel = false, $affiliation = null) : bool
     {
 
         try {
@@ -31,7 +31,7 @@ abstract class BaseNotificationController extends Controller
                 ['channel_id' => $channel_id], ['notification_channel' => $via, 'is_channel' => $is_channel]
             )
                 ->notifications()
-                ->create(['name' => $notification]);
+                ->create(['name' => $notification, 'affiliation' => $affiliation]);
 
             return true;
 

@@ -58,12 +58,28 @@ class SeatNotificationRecipient extends Model
      *
      * @return bool
      */
-    public function shouldReceive(string $notification) : bool
+    public function shouldReceive(string $notification, array $ids = null) : bool
     {
 
         return $this->notifications
             ->filter(function ($seat_notification) use ($notification) {
+
                 return $seat_notification->name === $notification;
+            })
+            ->filter(function ($seat_notification) use ($ids) {
+
+                if($ids === null)
+                    return true;
+
+                if($seat_notification->affiliation === null)
+                    return true;
+
+                foreach ($ids as $id) {
+                    if($seat_notification->hasAffiliation('corp', $id))
+                        return true;
+                }
+
+                return false;
             })
             ->isNotEmpty();
     }
@@ -88,8 +104,4 @@ class SeatNotificationRecipient extends Model
         return $main_character;
 
     }
-
-
-
-
 }

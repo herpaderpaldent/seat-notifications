@@ -26,7 +26,7 @@ class SeatNotificationsTest extends Command
         parent::__construct();
     }
 
-    public function handle(RefreshTokenObserver $action)
+    public function handle(CorporationKillmailObserver $action)
     {
 
         $this->info('Test');

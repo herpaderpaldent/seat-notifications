@@ -8,9 +8,11 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Observers;
 
+use Herpaderpaldent\Seat\SeatNotifications\Jobs\CorporationKillmaillDispatcher;
 use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
 use Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMailNotification;
 use Illuminate\Support\Facades\Notification;
+use function Psy\debug;
 use Seat\Eveapi\Models\Killmails\CorporationKillmail;
 
 class CorporationKillmailObserver
@@ -24,26 +26,19 @@ class CorporationKillmailObserver
      */
     public function created(CorporationKillmail $corporation_killmail)
     {
-        logger()->debug('created triggerd');
 
-        $recipients = SeatNotificationRecipient::where('notification','kill_mail')
-            ->filter(function ($recepient) {
-                return $recepient->shouldReceive();
-            });
+        $job = new CorporationKillmaillDispatcher($corporation_killmail);
 
-        Notification::send($recipients, (new KillMailNotification($corporation_killmail)));
+        dispatch($job)->onQueue('high');
     }
 
     public function test()
     {
-        $recipients = SeatNotificationRecipient::all()//->where('notification','kill_mail')
-            ->filter(function ($recepient) {
-                return $recepient->shouldReceive();
-            });
+        $corporation_killmail = CorporationKillmail::where('corporation_id', 98534270)->first();
 
-        $corporation_killmail = CorporationKillmail::first();
+        $job = new CorporationKillmaillDispatcher($corporation_killmail);
 
-        Notification::send($recipients, (new KillMailNotification($corporation_killmail)));
+        dispatch($job)->onQueue('high');
 
     }
 

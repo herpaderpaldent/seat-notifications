@@ -15,9 +15,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Seat\Web\Models\Group;
 
-abstract class BaseNotification extends Notification implements ShouldQueue
+abstract class BaseNotification extends Notification //implements ShouldQueue
 {
-    use Queueable, SerializesModels, InteractsWithQueue;
+    //use Queueable, SerializesModels, InteractsWithQueue;
 
     /**
      * @var array

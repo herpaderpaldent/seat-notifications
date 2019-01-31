@@ -94,7 +94,7 @@ class KillMailNotification extends BaseNotification
                     ->color($this->is_loss($notifiable) ? '14502713' : '42586')
                     ->field('Value', $this->getValue($this->killmail_detail->killmail_id))
                     ->field('Involved Pilots', $this->getNumberOfAttackers(), true)
-                    ->field('System', $this->getSystem(), true)
+                    ->field('System', $this->getSystem('discord'), true)
                     ->field('Link', $this->zKillBoardToLink('kill', $this->killmail_detail->killmail_id), true)
                     ->footer('zKillboard ' . $this->killmail_detail->killmail_time, 'https://zkillboard.com/img/wreck.png');
             });
@@ -107,16 +107,21 @@ class KillMailNotification extends BaseNotification
      */
     public function toSlack($notifiable)
     {
+
         return (new SlackMessage)
-            ->warning()
-            ->attachment(function ($attachment) {
-                $attachment->title('RefreshTokenDeleted')
+            ->attachment(function ($attachment)  use ($notifiable) {
+                $attachment->content($this->getNotificationString('slack'))
+                    ->thumb($this->image)
                     ->fields([
-                        'Character' => $this->user_name,
-                        'Corporation' => $this->corporation,
-                        'Main Character' => $this->main_character,
+                        'Value' => $this->getValue($this->killmail_detail->killmail_id),
+                        'Involved Pilots' => $this->getNumberOfAttackers(),
+                        'System' => $this->getSystem('slack'),
+                        'Link' => $this->zKillBoardToLink('kill', $this->killmail_detail->killmail_id)
                     ])
-                    ->thumb($this->image);
+                    ->markdown(['System'])
+                    ->color($this->is_loss($notifiable) ? '#DD4B39' : '#00A65A')
+                    ->footerIcon('https://zkillboard.com/img/wreck.png')
+                    ->footer('zKillboard ' . $this->killmail_detail->killmail_time);
             });
     }
 
@@ -162,6 +167,14 @@ class KillMailNotification extends BaseNotification
                 $killmail_attacker->alliance_id
             );
 
+        if($channel === 'slack')
+            return $this->getSlackKMStringPartial(
+                $killmail_attacker->character_id,
+                $killmail_attacker->corporation_id,
+                $killmail_attacker->ship_type_id,
+                $killmail_attacker->alliance_id
+            );
+
         return '';
     }
 
@@ -182,6 +195,14 @@ class KillMailNotification extends BaseNotification
                 $killmail_victim->alliance_id
             );
 
+        if($channel === 'slack')
+            return $this->getSlackKMStringPartial(
+                $killmail_victim->character_id,
+                $killmail_victim->corporation_id,
+                $killmail_victim->ship_type_id,
+                $killmail_victim->alliance_id
+            );
+
         return '';
     }
 
@@ -195,18 +216,43 @@ class KillMailNotification extends BaseNotification
     {
         $character = is_null($character_id) ? null : $this->resolveID($character_id);
         $corporation = $this->resolveID($corporation_id);
-        $alliance = is_null($alliance_id) ? null :  strtoupper(' ' . $this->resolveID($alliance_id, true));
+        $alliance = is_null($alliance_id) ? null :  strtoupper('<' . $this->resolveID($alliance_id, true) . '>');
         $ship_type = optional(InvType::find($ship_type_id))->typeName;
 
         if(is_null($character_id))
-            return sprintf('**%s** (%s%s)',
+            return sprintf('**%s** [%s] %s)',
                 $ship_type,
                 $corporation,
                 $alliance
             );
 
         if (!is_null($character_id))
-            return sprintf('**%s** (%s%s) flying a **%s**',
+            return sprintf('**%s** [%s] %s flying a **%s**',
+                $character,
+                $corporation,
+                $alliance,
+                $ship_type
+            );
+
+        return '';
+    }
+
+    private function getSlackKMStringPartial($character_id, $corporation_id, $ship_type_id, $alliance_id) : string
+    {
+        $character = is_null($character_id) ? null : $this->resolveID($character_id);
+        $corporation = $this->resolveID($corporation_id);
+        $alliance = is_null($alliance_id) ? null :  strtoupper('<' . $this->resolveID($alliance_id, true) . '>');
+        $ship_type = optional(InvType::find($ship_type_id))->typeName;
+
+        if(is_null($character_id))
+            return sprintf('*%s* [%s] %s)',
+                $ship_type,
+                $corporation,
+                $alliance
+            );
+
+        if (!is_null($character_id))
+            return sprintf('*%s* [%s] %s flying a *%s*',
                 $character,
                 $corporation,
                 $alliance,
@@ -237,15 +283,25 @@ class KillMailNotification extends BaseNotification
             ->hasAffiliation('corp', $this->killmail_detail->victims->corporation_id);
     }
 
-    private function getSystem() : string
+    private function getSystem($channel) : string
     {
         $solar_system = $this->killmail_detail->solar_system;
 
-        return sprintf('[%s (%s)](%s)',
-            $solar_system->itemName,
-            number($solar_system->security, 2),
-            $this->zKillBoardToLink('system', $solar_system->itemID)
-        );
+        if ($channel === 'discord')
+            return sprintf('[%s (%s)](%s)',
+                $solar_system->itemName,
+                number($solar_system->security, 2),
+                $this->zKillBoardToLink('system', $solar_system->itemID)
+            );
+
+        if ($channel === 'slack')
+            return sprintf('<%s|%s (%s)>',
+                $this->zKillBoardToLink('system', $solar_system->itemID),
+                $solar_system->itemName,
+                number($solar_system->security, 2)
+            );
+
+        return $this->zKillBoardToLink('system', $solar_system->itemID);
     }
 
     private function resolveID($id, $is_alliance = false)
@@ -262,8 +318,6 @@ class KillMailNotification extends BaseNotification
         $eseye = app('esi-client')->get();
         $eseye->setBody([$id]);
         $names = $eseye->invoke('post', '/universe/names/');
-
-        var_dump($names);
 
         $name = collect($names)->first()->name;
 

@@ -2,7 +2,8 @@
 
 @if($KillMailController->isAvailable())
 
-  @if( $KillMailController->isDisabledButton('private', 'discord'))
+  not supported
+  {{--@if( $KillMailController->isDisabledButton('private', 'discord'))
     <a href="" type="button" class="btn btn-app disabled">
       <i class="fa fa-bullhorn"></i>Discord
     </a>
@@ -34,7 +35,7 @@
       <span class="badge bg-green"><i class="fa fa-check"></i></span>
       <i class="fa fa-slack"></i>Slack
     </a>
-  @endif
+  @endif--}}
 
 @else
 

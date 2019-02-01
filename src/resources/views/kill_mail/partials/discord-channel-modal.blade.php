@@ -17,7 +17,7 @@
 
           <div class="form-group">
             <label for="available_channels">Select delivery channel:</label>
-            <select name="channel_id" id="available_channels" class="form-control" style="width: 100%"
+            <select name="channel_id" id="available_channels" class="select2" style="width: 100%"
                     form="subscribeTokillMailDiscord">
               <option></option>
               @foreach($available_channels as $channel)
@@ -26,7 +26,7 @@
                 @endif
 
                 @foreach($channel['discord'] as $channel_id => $channel_name)
-                  <option value="{{ $channel_id }}">{{ $channel_name }}</option>
+                  <option value="{{ $channel_id }}" @if($channel_id = $delivery_channel) selected @endif>{{ $channel_name }} </option>
                 @endforeach
 
               @endforeach
@@ -38,11 +38,11 @@
           <div class="row">
             <div class="col-md-12"></div>
             <div class="form-group-lg col-md-12">
-              <label>{{trans('seatgroups::seat.seat_groups_role')}}</label>
+              <label>Select your corporation.</label>
               <select class="select2" name="corporation_ids[]" style="width: 100%" multiple>
 
                 @foreach($corporations as $corporation)
-                  <option value="{{$corporation->corporation_id}}">{{ $corporation->name }}</option>
+                  <option value="{{ $corporation['corporation_id'] }}" @if( $corporation['subscribed'] ) selected @endif>{{ $corporation['name'] }}</option>
                 @endforeach
 
               </select>
@@ -50,9 +50,11 @@
           </div>
 
         </form>
+
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <a href="{{ route('seatnotifications.kill_mail.unsubscribe.channel', ['via' => 'discord']) }}" type="button" class="btn btn-danger pull-left">Remove Notification</a>
         <button type="submit" form="subscribeTokillMailDiscord" class="btn btn-primary">Save
           changes
         </button>

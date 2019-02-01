@@ -59,7 +59,6 @@ class KillMailNotification extends BaseNotification
 
     public function via($notifiable)
     {
-
         switch ($notifiable->notification_channel) {
             case 'discord':
                 $this->tags = [

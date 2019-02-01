@@ -13,10 +13,13 @@ use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
 use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotification;
 use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
+use Seat\Services\Repositories\Corporation\Corporation;
 use Seat\Web\Http\Controllers\Controller;
 
 abstract class BaseNotificationController extends Controller
 {
+    use Corporation;
+
     abstract public function getNotification() : string;
 
     abstract public function getPrivateView() : string;
@@ -85,6 +88,44 @@ abstract class BaseNotificationController extends Controller
                 return $notification->recipients->is_channel && $notification->recipients->notification_channel === $channel;
             })
             ->first()->channel_id;
+    }
+
+    public function getCorporations(string $view, string $channel, string $notification)
+    {
+
+        $subscribed_corporations = [];
+
+        if($this->getSubscribtionStatus($channel, $view, $notification)) {
+            $channel_id = null;
+
+            if($view === 'private')
+                $channel_id = $this->getPrivateChannel($channel);
+
+            if($view === 'channel')
+                $channel_id = $this->getChannelChannelId($channel, $notification);
+
+            if(is_null($channel_id))
+                abort(500);
+
+            $subscribed_corporations = SeatNotification::where('channel_id', $channel_id)
+                ->where('name', $notification)
+                ->get()
+                ->map(function ($seat_notification) {
+                    return $seat_notification->affiliations()->corporations;
+                })
+                ->flatten()
+                ->toArray();
+        }
+
+        return $this->getAllCorporationsWithAffiliationsAndFilters()
+            ->map(function ($corporation) use ($subscribed_corporations) {
+                return [
+                    'corporation_id' => $corporation->corporation_id,
+                    'name' => $corporation->name,
+                    'subscribed' => in_array($corporation->corporation_id, $subscribed_corporations)
+                    ];
+            })->toArray();
+
     }
 
     /**
@@ -176,6 +217,7 @@ abstract class BaseNotificationController extends Controller
 
     public function getChannelSubscriptionStatus(string $channel, string $notification) : bool
     {
+        // TODO: check if could be simplified by getting channel_id similiar to getAvailableCorporation
         return SeatNotification::where('name', $notification)
             ->get()
             ->filter(function ($notification) use ($channel) {
@@ -183,4 +225,17 @@ abstract class BaseNotificationController extends Controller
             })
             ->isNotEmpty();
     }
+
+    /*public function getChannelSubscribedCorporations(string $channel, string $notification)
+    {
+        return SeatNotification::where('name', $notification)
+            ->get()
+            ->filter(function ($notification) use ($channel) {
+                return $notification->recipients->is_channel && $notification->recipients->notification_channel === $channel;
+            })
+            ->map(function ($notification) {
+                return $notification->affiliations()->corporations;
+            })
+            ->flatten();
+    }*/
 }

@@ -17,7 +17,7 @@
 
           <div class="form-group">
             <label for="available_channels">Select delivery channel:</label>
-            <select name="channel_id" id="available_channels" class="form-control" style="width: 100%"
+            <select name="channel_id" id="available_channels" class="select2" style="width: 100%"
                     form="subscribeTokillMailSlack">
               <option></option>
               @foreach($available_channels as $channel)
@@ -26,8 +26,7 @@
                 @endif
 
                 @foreach($channel['slack'] as $channel)
-                  <option value="{{ $channel['id'] }}">
-                    {{ $channel['name'] }}
+                  <option value="{{ $channel['id'] }}" @if($channel['id'] = $delivery_channel) selected @endif> {{ $channel['name'] }}
                     @if($channel['private_channel'])
                       <i>(private channel)</i>
                     @endif
@@ -39,10 +38,25 @@
           </div>
 
           <span class="help-block">If do not see the wished channel, invite the bot to it and try again later.</span>
+
+          <div class="row">
+            <div class="col-md-12"></div>
+            <div class="form-group-lg col-md-12">
+              <label>{{trans('seatgroups::seat.seat_groups_role')}}</label>
+              <select class="select2" name="corporation_ids[]" style="width: 100%" multiple>
+
+                @foreach($corporations as $corporation)
+                  <option value="{{ $corporation['corporation_id'] }}" @if( $corporation['subscribed'] ) selected @endif>{{ $corporation['name'] }}</option>
+                @endforeach
+
+              </select>
+            </div>
+          </div>
+
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <a href="{{ route('seatnotifications.kill_mail.unsubscribe.channel', ['via' => 'slack']) }}" type="button" class="btn btn-danger pull-left">Remove Notification</a>
         <button type="submit" form="subscribeTokillMailSlack" class="btn btn-primary">Save changes</button>
       </div>
 

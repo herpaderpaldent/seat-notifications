@@ -64,10 +64,19 @@ class KillMailController extends BaseNotificationController
     public function subscribeChannel()
     {
         $via = (string) request('via');
+
+        if($this->isSubscribed('channel', $via)){
+
+            $channel_id = $this->getChannelChannelId($via,'kill_mail');
+
+            if(!$this->unsubscribeFromChannel($channel_id, 'kill_mail'))
+                return abort(500);
+        }
+
         $channel_id = (string) request('channel_id');
         $affiliation = collect(['corporations' => request('corporation_ids')])->toJson();
 
-        if(is_null($channel_id) || is_null($channel_id))
+        if(empty($channel_id) || empty($affiliation))
              abort(500);
 
         if($this->subscribeToChannel($channel_id, $via, 'kill_mail', true, $affiliation))
@@ -106,8 +115,8 @@ class KillMailController extends BaseNotificationController
         return $this->hasPermission('kill_mail');
     }
 
-    public function getAvailableCorporations()
+    public function getAvailableCorporations($view, $channel)
     {
-        return $this->getAllCorporationsWithAffiliationsAndFilters();
+        return $this->getCorporations($view, $channel, 'kill_mail');
     }
 }

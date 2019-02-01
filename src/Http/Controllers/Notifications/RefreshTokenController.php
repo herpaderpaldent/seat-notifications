@@ -9,11 +9,6 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications;
 
 use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationController;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\AddRefreshTokenChannelSubscriptionRequest;
-use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
-use Herpaderpaldent\Seat\SeatNotifications\Models\RefreshTokenNotification;
-use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
-use Seat\Web\Models\Group;
 
 class RefreshTokenController extends BaseNotificationController
 {
@@ -35,121 +30,70 @@ class RefreshTokenController extends BaseNotificationController
 
     public function subscribeDm($via)
     {
-        $group_id = auth()->user()->group->id;
-        $channel_id = null;
-
-        if($via === 'discord')
-            $channel_id = DiscordUser::find($group_id)->channel_id;
-
-        if($via === 'slack')
-            $channel_id = SlackUser::find($group_id)->channel_id;
+        $channel_id = $this->getPrivateChannel($via);
 
         if(is_null($channel_id))
             return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
 
-        RefreshTokenNotification::updateOrCreate(
-            ['channel_id' => $channel_id],
-            ['type' => 'private', 'via' => $via]
-        );
+        if($this->subscribeToChannel($channel_id, $via, 'refresh_token'))
+            return redirect()->back()->with('success', 'You are going to be notified if someone deletes his refresh_token.');
 
-        return redirect()->back()->with('success', 'You are going to be notified if someone deletes his refresh_token.');
+        return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
     }
 
     public function unsubscribeDm($via)
     {
-        $group_id = auth()->user()->group->id;
-        $channel_id = null;
-
-        if($via === 'discord')
-            $channel_id = DiscordUser::find($group_id)->channel_id;
-        if($via === 'slack')
-            $channel_id = SlackUser::find($group_id)->channel_id;
+        $channel_id = $this->getPrivateChannel($via);
 
         if(is_null($channel_id))
             return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
 
-        RefreshTokenNotification::destroy($channel_id);
+        if($this->unsubscribeFromChannel($channel_id, 'refresh_token'))
+            return redirect()->back()->with('success', 'You are no longer going to be notified about deleted refresh_tokens.');
 
-        return redirect()->back()->with('success', 'You are no longer going to be notified if someone deletes his refresh_token.');
-
+        return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
     }
 
-    public function subscribeChannel(AddRefreshTokenChannelSubscriptionRequest $request)
+    public function subscribeChannel()
     {
-        RefreshTokenNotification::updateOrCreate(
-            ['channel_id' => $request->input('channel_id')],
-            ['type' => 'channel', 'via' => $request->input('via')]
-        );
 
-        if($request->input('via') === 'discord')
-            setting(['herpaderp.seatnotifications.refresh_token.channel.discord', 'subscribed'], true);
+        $via = (string) request('via');
+        $channel_id = (string) request('channel_id');
 
-        return redirect()->back()->with('success', 'Channel will receive refresh_token notifications from now on.');
+        if(is_null($channel_id) || is_null($channel_id))
+            return abort(500);
+
+        if($this->subscribeToChannel($channel_id, $via, 'refresh_token', true))
+            return redirect()->back()->with('success', 'Channel will receive refresh_token notifications from now on.');
+
+        return abort(500);
     }
 
-    public function unsubscribeChannel($via)
+    public function unsubscribeChannel($channel)
     {
-        RefreshTokenNotification::where('via', $via)
-            ->where('type', 'channel')
-            ->delete();
+        $channel_id = $this->getChannelChannelId($channel, 'refresh_token');
 
-        if($via === 'discord')
-            setting(['herpaderp.seatnotifications.refresh_token.channel.discord', 'unsubscribed'], true);
+        if(is_null($channel_id))
+            return abort(500);
 
-        return redirect()->back()->with('success', 'Channel will not receive refresh_token notifications from this point on.');
+        if($this->unsubscribeFromChannel($channel_id, 'refresh_token'))
+            return redirect()->back()->with('success', 'Channel will not receive refresh_token notifications from this point on.');
+
+        return abort(500);
     }
 
-    public function isSubscribed(Group $group, $via, $channel = false)
+    public function isSubscribed($view, $channel)
     {
-        if($channel)
-            return RefreshTokenNotification::where('type', 'channel')->where('via', $via)->count() > 0 ? true : false;
-
-        $subscribers = RefreshTokenNotification::where('via', $via)->get()->filter(function ($subscriber) use ($group) {
-
-            if($subscriber->type === 'channel')
-                return false;
-
-            return $subscriber->group()->id === $group->id;
-        });
-
-        if($subscribers->isNotEmpty())
-            return true;
-
-        return false;
+        return $this->getSubscribtionStatus($channel, $view, 'refresh_token');
     }
 
-    public function isDisabledButton($channel, $view) : bool
+    public function isDisabledButton($view, $channel) : bool
     {
-        // return false if slack has not been setup
-        if($channel === 'slack') {
-            if(is_null(setting('herpaderp.seatnotifications.slack.credentials.token', true)))
-                return true;
-        }
+        return $this->isDisabled($channel, $view, 'refresh_token');
+    }
 
-        // return false if discord has not been setup
-        if($channel === 'discord') {
-            if(is_null(setting('herpaderp.seatnotifications.discord.credentials.bot_token', true)))
-                return true;
-        }
-
-        if($view === 'channel') {
-            if(auth()->user()->has('seatnotifications.refresh_token', false) && auth()->user()->has('seatnotifications.configuration', false))
-                return false;
-        }
-
-        if($view === 'private') {
-
-            if(auth()->user()->has('seatnotifications.refresh_token', false)) {
-                if($channel === 'discord')
-                    if((new DiscordUser)->isUser(auth()->user()->group))
-                        return false;
-
-                if($channel === 'slack')
-                    if((new SlackUser())->isSlackUser(auth()->user()->group))
-                        return false;
-            }
-        }
-
-        return true;
+    public function isAvailable() : bool
+    {
+        return $this->hasPermission('refresh_token');
     }
 }

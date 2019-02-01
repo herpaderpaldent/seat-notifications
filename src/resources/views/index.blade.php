@@ -74,6 +74,12 @@
           {data: 'private', className: 'text-center'},
           {data: 'channel', className: 'text-center'},
         ],
+        drawCallback : function () {
+          $(".select2").select2({
+            placeholder: "{{ trans('web::seat.select_item_add') }}",
+            allowClear: true
+          });
+        }
       });
     </script>
 

@@ -8,6 +8,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Commands;
 
+use Herpaderpaldent\Seat\SeatNotifications\Observers\KillmailDetailObserver;
 use Herpaderpaldent\Seat\SeatNotifications\Observers\RefreshTokenObserver;
 use Illuminate\Console\Command;
 use Illuminate\Notifications\Notification;
@@ -25,7 +26,7 @@ class SeatNotificationsTest extends Command
         parent::__construct();
     }
 
-    public function handle(RefreshTokenObserver $action)
+    public function handle(KillmailDetailObserver $action)
     {
 
         $this->info('Test');

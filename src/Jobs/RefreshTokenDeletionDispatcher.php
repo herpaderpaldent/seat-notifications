@@ -8,12 +8,16 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Jobs;
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\RefreshTokenNotification;
+use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
 use Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshTokenDeletedNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
 use Seat\Eveapi\Models\RefreshToken;
 
+/**
+ * Class RefreshTokenDeletionDispatcher.
+ * @package Herpaderpaldent\Seat\SeatNotifications\Jobs
+ */
 class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
 {
     /**
@@ -26,6 +30,11 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
      */
     private $refresh_token;
 
+    /**
+     * RefreshTokenDeletionDispatcher constructor.
+     *
+     * @param \Seat\Eveapi\Models\RefreshToken $refresh_token
+     */
     public function __construct(RefreshToken $refresh_token)
     {
         $this->refresh_token = $refresh_token;
@@ -36,9 +45,9 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
         Redis::funnel('soft_delete:refresh_token_' . $this->refresh_token->user->name)->limit(1)->then(function () {
             logger()->info('SoftDelete detected of ' . $this->refresh_token->user->name);
 
-            $recipients = RefreshTokenNotification::all()
-                ->filter(function ($recepient) {
-                    return $recepient->shouldReceive();
+            $recipients = SeatNotificationRecipient::all()
+                ->filter(function ($recipient) {
+                    return $recipient->shouldReceive('refresh_token');
                 });
 
             Notification::send($recipients, (new RefreshTokenDeletedNotification($this->refresh_token)));

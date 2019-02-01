@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSeatNotificationsTable extends Migration
 {
@@ -35,7 +35,7 @@ class CreateSeatNotificationsTable extends Migration
             $table->json('affiliation')->nullable()->default(null);
             $table->timestamps();
 
-            $table->foreign('channel_id',  'seat_notification_notification_recipients_foreign')
+            $table->foreign('channel_id', 'seat_notification_notification_recipients_foreign')
                 ->references('channel_id')
                 ->on('herpaderp_seat_notification_recipients')
                 ->onDelete('cascade');

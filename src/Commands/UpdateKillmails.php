@@ -10,11 +10,11 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Commands;
 
 use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotification;
 use Illuminate\Console\Command;
-use Seat\Eveapi\Jobs\Killmails\Character\Recent as CharacterRecent;
 use Seat\Eveapi\Jobs\Killmails\Character\Detail as CharacterDetail;
-use Seat\Eveapi\Models\Character\CharacterInfo;
+use Seat\Eveapi\Jobs\Killmails\Character\Recent as CharacterRecent;
 use Seat\Eveapi\Jobs\Killmails\Corporation\Detail as CorporationDetail;
 use Seat\Eveapi\Jobs\Killmails\Corporation\Recent as CorporationRecent;
+use Seat\Eveapi\Models\Character\CharacterInfo;
 use Seat\Eveapi\Models\RefreshToken;
 
 class UpdateKillmails extends Command
@@ -42,7 +42,7 @@ class UpdateKillmails extends Command
 
                 // Killmails
                 CharacterRecent::withChain([
-                        new CharacterDetail($token)
+                        new CharacterDetail($token),
                 ])->dispatch($token)->onQueue('high');
 
                 CorporationRecent::withChain([

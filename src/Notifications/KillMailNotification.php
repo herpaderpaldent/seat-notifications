@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 23.01.2019
- * Time: 19:22
+ * Time: 19:22.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
-
 
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
@@ -53,8 +52,6 @@ class KillMailNotification extends BaseNotification
         $this->image = sprintf('https://imageserver.eveonline.com/Type/%d_64.png',
             $this->killmail_detail->victims->ship_type_id);
 
-
-
     }
 
     public function via($notifiable)
@@ -66,6 +63,7 @@ class KillMailNotification extends BaseNotification
                     'discord',
                     $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
                 ];
+
                 return [DiscordChannel::class];
                 break;
             case 'slack':
@@ -74,6 +72,7 @@ class KillMailNotification extends BaseNotification
                     'slack',
                     $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
                 ];
+
                 return [SlackChannel::class];
                 break;
             default:
@@ -86,7 +85,7 @@ class KillMailNotification extends BaseNotification
     {
 
         return (new DiscordMessage)
-            ->embed(function ($embed) use ($notifiable){
+            ->embed(function ($embed) use ($notifiable) {
 
                 $embed->title($this->getNotificationString('discord'))
                     ->thumbnail($this->image)
@@ -108,14 +107,14 @@ class KillMailNotification extends BaseNotification
     {
 
         return (new SlackMessage)
-            ->attachment(function ($attachment)  use ($notifiable) {
+            ->attachment(function ($attachment) use ($notifiable) {
                 $attachment->content($this->getNotificationString('slack'))
                     ->thumb($this->image)
                     ->fields([
                         'Value' => $this->getValue($this->killmail_detail->killmail_id),
                         'Involved Pilots' => $this->getNumberOfAttackers(),
                         'System' => $this->getSystem('slack'),
-                        'Link' => $this->zKillBoardToLink('kill', $this->killmail_detail->killmail_id)
+                        'Link' => $this->zKillBoardToLink('kill', $this->killmail_detail->killmail_id),
                     ])
                     ->markdown(['System'])
                     ->color($this->is_loss($notifiable) ? '#DD4B39' : '#00A65A')
@@ -215,7 +214,7 @@ class KillMailNotification extends BaseNotification
     {
         $character = is_null($character_id) ? null : $this->resolveID($character_id);
         $corporation = $this->resolveID($corporation_id);
-        $alliance = is_null($alliance_id) ? null :  strtoupper('<' . $this->resolveID($alliance_id, true) . '>');
+        $alliance = is_null($alliance_id) ? null : strtoupper('<' . $this->resolveID($alliance_id, true) . '>');
         $ship_type = optional(InvType::find($ship_type_id))->typeName;
 
         if(is_null($character_id))
@@ -225,7 +224,7 @@ class KillMailNotification extends BaseNotification
                 $alliance
             );
 
-        if (!is_null($character_id))
+        if (! is_null($character_id))
             return sprintf('**%s** [%s] %s flying a **%s**',
                 $character,
                 $corporation,
@@ -240,7 +239,7 @@ class KillMailNotification extends BaseNotification
     {
         $character = is_null($character_id) ? null : $this->resolveID($character_id);
         $corporation = $this->resolveID($corporation_id);
-        $alliance = is_null($alliance_id) ? null :  strtoupper('<' . $this->resolveID($alliance_id, true) . '>');
+        $alliance = is_null($alliance_id) ? null : strtoupper('<' . $this->resolveID($alliance_id, true) . '>');
         $ship_type = optional(InvType::find($ship_type_id))->typeName;
 
         if(is_null($character_id))
@@ -250,7 +249,7 @@ class KillMailNotification extends BaseNotification
                 $alliance
             );
 
-        if (!is_null($character_id))
+        if (! is_null($character_id))
             return sprintf('*%s* [%s] %s flying a *%s*',
                 $character,
                 $corporation,
@@ -278,7 +277,7 @@ class KillMailNotification extends BaseNotification
     {
         return $notifiable
             ->notifications
-            ->firstwhere('name','kill_mail')
+            ->firstwhere('name', 'kill_mail')
             ->hasAffiliation('corp', $this->killmail_detail->victims->corporation_id);
     }
 
@@ -338,9 +337,4 @@ class KillMailNotification extends BaseNotification
 
         return $ticker;
     }
-
-
-
-
-
 }

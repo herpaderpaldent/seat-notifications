@@ -45,6 +45,6 @@ class SeedSchedule extends Migration
      */
     public function down()
     {
-        //
+
     }
 }

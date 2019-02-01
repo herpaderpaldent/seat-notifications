@@ -122,7 +122,7 @@ abstract class BaseNotificationController extends Controller
                 return [
                     'corporation_id' => $corporation->corporation_id,
                     'name' => $corporation->name,
-                    'subscribed' => in_array($corporation->corporation_id, $subscribed_corporations)
+                    'subscribed' => in_array($corporation->corporation_id, $subscribed_corporations),
                     ];
             })->toArray();
 
@@ -137,10 +137,10 @@ abstract class BaseNotificationController extends Controller
      */
     public function isDisabled(string $channel, string $view, string $permission) : bool
     {
-        if(!$this->hasPermission($permission, $view))
+        if(! $this->hasPermission($permission, $view))
             return true;
 
-        if(!$this->isChannelSetup($channel))
+        if(! $this->isChannelSetup($channel))
             return true;
 
         if($view === 'private')
@@ -153,7 +153,7 @@ abstract class BaseNotificationController extends Controller
     public function hasPermission(string $permission, string $view = '') : bool
     {
         if($view === 'channel')
-            if(!auth()->user()->has('seatnotifications.configuration', false))
+            if(! auth()->user()->has('seatnotifications.configuration', false))
                 return false;
 
         if(auth()->user()->has('seatnotifications.' . $permission, false))

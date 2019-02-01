@@ -10,7 +10,6 @@ use Herpaderpaldent\Seat\SeatNotifications\Observers\RefreshTokenObserver;
 use Illuminate\Support\Arr;
 use JoliCode\Slack\ClientFactory;
 use RestCord\DiscordClient;
-use Seat\Eveapi\Models\Killmails\CorporationKillmail;
 use Seat\Eveapi\Models\Killmails\KillmailDetail;
 use Seat\Eveapi\Models\RefreshToken;
 use Seat\Services\AbstractSeatPlugin;
@@ -62,7 +61,7 @@ class SeatNotificationsServiceProvider extends AbstractSeatPlugin
     {
         $this->commands([
             SeatNotificationsTest::class,
-            UpdateKillmails::class
+            UpdateKillmails::class,
         ]);
     }
 

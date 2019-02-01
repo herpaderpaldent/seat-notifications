@@ -9,11 +9,6 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications;
 
 use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationController;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\AddRefreshTokenChannelSubscriptionRequest;
-use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
-use Herpaderpaldent\Seat\SeatNotifications\Models\RefreshTokenNotification;
-use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
-use Seat\Web\Models\Group;
 
 class RefreshTokenController extends BaseNotificationController
 {
@@ -76,7 +71,7 @@ class RefreshTokenController extends BaseNotificationController
 
     public function unsubscribeChannel($channel)
     {
-        $channel_id = $this->getChannelChannelId($channel,'refresh_token');
+        $channel_id = $this->getChannelChannelId($channel, 'refresh_token');
 
         if(is_null($channel_id))
             return abort(500);

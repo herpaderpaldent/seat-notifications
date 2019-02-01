@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 26.01.2019
- * Time: 09:18
+ * Time: 09:18.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Models;
-
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +14,7 @@ class SeatNotification extends Model
 {
     /**
      * The table associated with the model.
-     *herpaderp_seat_notification_notification_recipients
+     *herpaderp_seat_notification_notification_recipients.
      * @var string
      */
     protected $table = 'herpaderp_seat_notification_notification_recipients';
@@ -41,6 +40,4 @@ class SeatNotification extends Model
 
         return false;
     }
-
-
 }

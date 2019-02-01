@@ -12,7 +12,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationCont
 use Seat\Services\Repositories\Corporation\Corporation;
 
 /**
- * Class KillMailController
+ * Class KillMailController.
  * @package Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications
  */
 class KillMailController extends BaseNotificationController
@@ -67,9 +67,9 @@ class KillMailController extends BaseNotificationController
 
         if($this->isSubscribed('channel', $via)){
 
-            $channel_id = $this->getChannelChannelId($via,'kill_mail');
+            $channel_id = $this->getChannelChannelId($via, 'kill_mail');
 
-            if(!$this->unsubscribeFromChannel($channel_id, 'kill_mail'))
+            if(! $this->unsubscribeFromChannel($channel_id, 'kill_mail'))
                 return abort(500);
         }
 
@@ -88,7 +88,7 @@ class KillMailController extends BaseNotificationController
 
     public function unsubscribeChannel($channel)
     {
-        $channel_id = $this->getChannelChannelId($channel,'kill_mail');
+        $channel_id = $this->getChannelChannelId($channel, 'kill_mail');
 
         if(is_null($channel_id))
             return abort(500);

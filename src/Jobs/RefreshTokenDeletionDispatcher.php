@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Redis;
 use Seat\Eveapi\Models\RefreshToken;
 
 /**
- * Class RefreshTokenDeletionDispatcher
+ * Class RefreshTokenDeletionDispatcher.
  * @package Herpaderpaldent\Seat\SeatNotifications\Jobs
  */
 class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase

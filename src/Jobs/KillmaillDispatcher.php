@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
 use Seat\Eveapi\Models\Killmails\KillmailDetail;
 
-
 class KillmaillDispatcher extends SeatNotificationsJobBase
 {
     /**
@@ -23,7 +22,7 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
     protected $tags = ['kill_mail'];
 
     /**
-     * @var 
+     * @var
      */
     private $killmail_id;
 

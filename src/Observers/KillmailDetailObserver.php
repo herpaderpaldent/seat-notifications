@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: felix
  * Date: 23.01.2019
- * Time: 18:34
+ * Time: 18:34.
  */
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Observers;

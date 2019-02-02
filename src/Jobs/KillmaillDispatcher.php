@@ -27,39 +27,44 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
     private $killmail_id;
 
     /**
-     * @var array
+     * @var
      */
-    private $filtered_corporation_ids;
+    private $killmail_detail;
 
     /**
      * RefreshTokenDeletionDispatcher constructor.
      *
-     * @param \Seat\Eveapi\Models\Killmails\CorporationKillmail $killmail_id
+     * @param \Seat\Eveapi\Models\Killmails\KillmailDetail $killmail_detail
      */
     public function __construct(KillmailDetail $killmail_detail)
     {
         logger()->debug('Construct KillmailDispatcher: ' . $killmail_detail->killmail_id);
 
+        $this->killmail_detail = $killmail_detail;
         $this->killmail_id = $killmail_detail->killmail_id;
 
-        $this->filtered_corporation_ids = $killmail_detail
-            ->attackers
-            ->map(function ($attacker) {
-                return $attacker->corporation_id;
-            })
-            ->push(optional($killmail_detail->victims)->corporation_id)
-            ->toArray();
-
+        $this->tags = [
+            'killmail_id: ' . $this->killmail_id
+        ];
     }
 
     public function handle()
     {
+
+        // Check if victim and attacker details are present yet.
+        if(empty($this->killmail_detail->victims) || empty($this->killmail_detail->attackers)){
+
+            logger()->debug('Either victim or attacker information are missing. Delaying the job for a minute');
+            KillmaillDispatcher::dispatch($this->killmail_detail)->onQueue($this->queue)->delay(now()->addMinute());
+            $this->delete();
+        }
+
         Redis::funnel('killmail_id:' . $this->killmail_id)->limit(1)->then(function () {
             logger()->debug('Killmail notification for ID: ' . $this->killmail_id);
 
             $recipients = SeatNotificationRecipient::all()
                 ->filter(function ($recepient) {
-                    return $recepient->shouldReceive('kill_mail', $this->filtered_corporation_ids);
+                    return $recepient->shouldReceive('kill_mail', $this->getFilteredCorporationIds());
                 });
 
             Notification::send($recipients, (new KillMailNotification($this->killmail_id)));
@@ -68,5 +73,24 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
             logger()->debug('A Killmail job is already running for ' . $this->killmail_id);
             $this->delete();
         });
+    }
+
+    /**
+     * @return array
+     */
+    private function getFilteredCorporationIds() : array
+    {
+        $attacker_corporation_ids = $this->killmail_detail
+            ->attackers
+            ->map(function ($attacker) {
+                return $attacker->corporation_id;
+            });
+
+        $victim_corporation_id = optional($this->killmail_detail->victims)->corporation_id;
+
+        return $attacker_corporation_ids
+            ->push($victim_corporation_id)
+            ->filter()
+            ->toArray();
     }
 }

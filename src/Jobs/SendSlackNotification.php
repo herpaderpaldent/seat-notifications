@@ -44,8 +44,14 @@ class SendSlackNotification extends SeatNotificationsJobBase
 
                 $this->slack->chatPostMessage($this->parameters);
             } catch (Exception $e) {
-                if($e->getCode() === 429)
-                    return $this->release(10);
+
+                if($e->getCode() === 429) {
+                    SendSlackNotification::dispatch($this->parameters)
+                        ->onQueue($this->queue)
+                        ->delay(now()->addMinute());
+
+                    $this->delete();
+                }
 
                 report($e);
 

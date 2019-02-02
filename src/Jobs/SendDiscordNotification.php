@@ -31,9 +31,12 @@ class SendDiscordNotification extends SeatNotificationsJobBase
 
     protected $payload;
 
-    public function __construct(array $parameters)
+    protected $channel_id;
+
+    public function __construct(int $channel, array $parameters)
     {
         $this->parameters = $parameters;
+        $this->channel_id = $channel;
     }
 
     public function handle()
@@ -41,7 +44,7 @@ class SendDiscordNotification extends SeatNotificationsJobBase
 
         $this->discord = app('seatnotifications-discord');
 
-        Redis::funnel('discord_notification')->limit(1)->then(function () {
+        Redis::funnel('channel_id: ' . $this->channel_id)->limit(1)->then(function () {
 
             try {
 
@@ -50,7 +53,11 @@ class SendDiscordNotification extends SeatNotificationsJobBase
                 $response = json_decode($e->getResponse()->getBody()->getContents());
 
                 //retry_after is in ms, so we need to convert it to seconds.
-                return $this->release((int) $response->retry_after / 1000);
+                SendDiscordNotification::dispatch($this->channel_id, $this->parameters)
+                    ->onQueue($this->queue)
+                    ->delay(now()->addSeconds((int) $response->retry_after / 1000));
+
+                $this->delete();
             }
 
         }, function () {

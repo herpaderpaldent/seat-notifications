@@ -21,7 +21,6 @@ class DiscordChannel
 
     public function send($notifiable, Notification $notification)
     {
-        var_dump('test');
 
         if (! $channel = $notifiable->channel_id) {
             return;
@@ -37,7 +36,7 @@ class DiscordChannel
             'embed'      => $payload['embeds'][0],
         ];
 
-        $job = new SendDiscordNotification($parameters);
+        $job = new SendDiscordNotification((int) $channel, $parameters);
 
         dispatch($job)->onQueue('high');
     }

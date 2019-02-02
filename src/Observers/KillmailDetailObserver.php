@@ -9,7 +9,6 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Observers;
 
 use Herpaderpaldent\Seat\SeatNotifications\Jobs\KillmaillDispatcher;
-use function Psy\debug;
 use Seat\Eveapi\Models\Killmails\KillmailDetail;
 
 class KillmailDetailObserver

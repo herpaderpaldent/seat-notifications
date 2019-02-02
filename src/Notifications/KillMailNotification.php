@@ -29,13 +29,6 @@ class KillMailNotification extends BaseNotification
      */
     private $killmail_detail;
 
-    /**
-     * @var bool
-     */
-    private $is_loss;
-
-    private $zkillmail_link;
-
     private $image;
 
     /**

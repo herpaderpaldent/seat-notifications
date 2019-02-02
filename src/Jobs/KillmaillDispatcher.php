@@ -38,6 +38,8 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
      */
     public function __construct(KillmailDetail $killmail_detail)
     {
+        logger()->debug('Construct KillmailDispatcher: ' . $killmail_detail->killmail_id);
+
         $this->killmail_id = $killmail_detail->killmail_id;
 
         $this->filtered_corporation_ids = $killmail_detail
@@ -45,7 +47,7 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
             ->map(function ($attacker) {
                 return $attacker->corporation_id;
             })
-            ->push($killmail_detail->victims->corporation_id)
+            ->push(optional($killmail_detail->victims)->corporation_id)
             ->toArray();
 
     }

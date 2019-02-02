@@ -75,6 +75,10 @@ class SeatNotificationRecipient extends Model
                     return true;
 
                 foreach ($ids as $id) {
+
+                    if(empty($id))
+                        return false;
+
                     if($seat_notification->hasAffiliation('corp', $id))
                         return true;
                 }

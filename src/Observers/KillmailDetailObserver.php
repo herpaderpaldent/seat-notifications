@@ -9,6 +9,7 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Observers;
 
 use Herpaderpaldent\Seat\SeatNotifications\Jobs\KillmaillDispatcher;
+use function Psy\debug;
 use Seat\Eveapi\Models\Killmails\KillmailDetail;
 
 class KillmailDetailObserver
@@ -23,9 +24,11 @@ class KillmailDetailObserver
     public function created(KillmailDetail $killmail_detail)
     {
 
-        $job = (new KillmaillDispatcher($killmail_detail))->delay(60);
+        logger()->debug('Observer is dispatching an Killmail Notification for killmail_id: ' . $killmail_detail->killmail_id);
 
-        dispatch($job)->onQueue('high');
+        KillmaillDispatcher::dispatch($killmail_detail)
+            ->delay(now()->addMinutes(1))
+            ->onQueue('high');
     }
 
     public function test()

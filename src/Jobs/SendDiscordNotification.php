@@ -29,8 +29,6 @@ class SendDiscordNotification extends SeatNotificationsJobBase
 
     protected $parameters;
 
-    protected $payload;
-
     protected $channel_id;
 
     public function __construct(int $channel, array $parameters)
@@ -38,9 +36,9 @@ class SendDiscordNotification extends SeatNotificationsJobBase
         $this->parameters = $parameters;
         $this->channel_id = $channel;
 
-        $this->tags = [
+        $this->tags = array_merge($this->tags, [
             'channel_id: ' . $this->channel_id
-        ];
+        ]);
     }
 
     public function handle()
@@ -48,7 +46,7 @@ class SendDiscordNotification extends SeatNotificationsJobBase
 
         $this->discord = app('seatnotifications-discord');
 
-        Redis::funnel('channel_id: ' . $this->channel_id)->limit(1)->then(function () {
+        Redis::funnel('channel_id_' . $this->channel_id)->limit(1)->then(function () {
 
             try {
 

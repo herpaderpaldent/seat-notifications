@@ -44,7 +44,7 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
         $this->killmail_id = $killmail_detail->killmail_id;
 
         $this->tags = array_merge($this->tags, [
-            'killmail_id: ' . $this->killmail_id
+            'killmail_id: ' . $this->killmail_id,
         ]);
     }
 
@@ -67,7 +67,7 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
                     return $recepient->shouldReceive('kill_mail', $this->getFilteredCorporationIds());
                 });
 
-            logger()->debug('and for corporations: ' . implode(", ", $this->getFilteredCorporationIds()));
+            logger()->debug('and for corporations: ' . implode(', ', $this->getFilteredCorporationIds()));
 
             Notification::send($recipients, (new KillMailNotification($this->killmail_id)));
         }, function () {

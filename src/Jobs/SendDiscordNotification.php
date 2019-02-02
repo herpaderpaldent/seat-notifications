@@ -23,7 +23,7 @@ class SendDiscordNotification extends SeatNotificationsJobBase
      *
      * @var int
      */
-    public $tries = 100;
+    public $tries = 3;
 
     protected $discord;
 
@@ -37,6 +37,10 @@ class SendDiscordNotification extends SeatNotificationsJobBase
     {
         $this->parameters = $parameters;
         $this->channel_id = $channel;
+
+        $this->tags = [
+            'channel_id: ' . $this->channel_id
+        ];
     }
 
     public function handle()
@@ -63,7 +67,7 @@ class SendDiscordNotification extends SeatNotificationsJobBase
         }, function () {
 
             // Could not obtain lock...
-            logger()->debug('Could not obtain lock...');
+            logger()->debug('Could not dispatch job for channel.id: ' . $this->channel_id);
 
             return $this->release(10);
         });

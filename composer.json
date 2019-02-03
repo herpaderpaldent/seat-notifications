@@ -1,6 +1,6 @@
 {
     "name": "herpaderpaldent/seat-notifications",
-    "description": "A proof of concept for new notification settings",
+    "description": "With this SeAT Package you can setup and manage notifications. It is build to be expendend from within the package or from another package",
     "autoload": {
         "psr-4": {
             "Herpaderpaldent\\Seat\\SeatNotifications\\": "src/"
@@ -18,7 +18,7 @@
         "jolicode/slack-php-api": "^1.0"
     },
 
-    "license": "GPL-2.0-only",
+    "license": "MIT",
     "authors": [
         {
             "name": "Felix Huber",

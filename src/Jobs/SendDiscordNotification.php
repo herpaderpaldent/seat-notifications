@@ -55,7 +55,7 @@ class SendDiscordNotification extends SeatNotificationsJobBase
         $this->channel_id = $channel;
 
         $this->tags = array_merge($this->tags, [
-            'channel_id: ' . $this->channel_id
+            'channel_id: ' . $this->channel_id,
         ]);
     }
 

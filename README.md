@@ -110,3 +110,25 @@ public function getNotification()
 ```
 
 the functions should return a string containing the name of your view that should be rendered per column.
+
+### Use BaseNotificationController
+
+You are absolutely free to handle your own database and recipient logic. However seat-notifications offer you a convinient and easy way to handle your subscribors in [BaseNotificationController.php](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/Http/Controllers/BaseNotificationController.php)
+
+f.e:
+
+````php
+public function subscribeToChannel($channel_id, $via, $notification, $is_channel = false, $affiliation = null) : bool
+    {
+        try {
+            SeatNotificationRecipient::firstOrCreate(
+                ['channel_id' => $channel_id], ['notification_channel' => $via, 'is_channel' => $is_channel]
+            )
+                ->notifications()
+                ->create(['name' => $notification, 'affiliation' => $affiliation]);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+````

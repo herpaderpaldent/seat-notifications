@@ -29,6 +29,9 @@ class KillMailNotification extends BaseNotification
      */
     private $killmail_detail;
 
+    /**
+     * @var
+     */
     private $image;
 
     /**

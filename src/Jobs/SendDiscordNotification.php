@@ -64,12 +64,10 @@ class SendDiscordNotification extends SeatNotificationsJobBase
 
         Redis::funnel('channel_id_' . $this->channel_id)->limit(1)->then(function () {
 
-
             try {
 
                 $this->discord->channel->createMessage($this->parameters);
             } catch (Exception $e) {
-
 
                 if ($e->getResponse()->getStatusCode() === 429) {
 

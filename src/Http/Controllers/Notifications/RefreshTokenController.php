@@ -106,11 +106,11 @@ class RefreshTokenController extends BaseNotificationController
 
     public function isDisabledButton($view, $channel) : bool
     {
-        return $this->isDisabled($channel, $view, 'refresh_token');
+        return $this->isDisabled($channel, $view, 'seatnotifications.refresh_token');
     }
 
     public function isAvailable() : bool
     {
-        return $this->hasPermission('refresh_token');
+        return $this->hasPermission('seatnotifications.refresh_token');
     }
 }

@@ -75,10 +75,12 @@ class KillMailNotification extends BaseNotification
         switch ($notifiable->notification_channel) {
             case 'discord':
                 array_push($this->tags, 'discord');
+
                 return [DiscordChannel::class];
                 break;
             case 'slack':
                 array_push($this->tags, 'slack');
+
                 return [SlackChannel::class];
                 break;
             default:

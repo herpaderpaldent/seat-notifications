@@ -1,3 +1,6 @@
+# Version 1.1.1
+This update adds some better tagging and job handling. Also it ensures that `AbstractSeatPlugin` class present as it requires eveseat/web ~3.0.14.
+
 # Version 1.1.0
 
 ```

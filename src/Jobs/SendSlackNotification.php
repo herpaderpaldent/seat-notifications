@@ -70,14 +70,13 @@ class SendSlackNotification extends SeatNotificationsJobBase
                     $this->delete();
                 }
 
-                report($e);
-
-                return $this->delete();
+                $this->fail($e);
             }
         }, function () {
             // Could not obtain lock...
 
-            return $this->release(10);
+            logger()->debug('SendSlackNotification job is already running. Delay job by 10 second.');
+            $this->release(10);
         });
     }
 }

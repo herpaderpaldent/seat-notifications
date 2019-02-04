@@ -60,9 +60,7 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
         $this->killmail_detail = $killmail_detail;
         $this->killmail_id = $killmail_detail->killmail_id;
 
-        $this->tags = array_merge($this->tags, [
-            'killmail_id: ' . $this->killmail_id,
-        ]);
+        array_push($this->tags, 'killmail_id: ' . $this->killmail_id);
     }
 
     public function handle()

@@ -55,6 +55,8 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
     public function __construct(RefreshToken $refresh_token)
     {
         $this->refresh_token = $refresh_token;
+
+        array_push($this->tags, 'user_id:' . $this->refresh_token->user->id);
     }
 
     public function handle()

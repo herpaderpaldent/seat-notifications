@@ -50,12 +50,11 @@ class SendDiscordNotification extends SeatNotificationsJobBase
 
     public function __construct(int $channel, array $parameters)
     {
+
         $this->parameters = $parameters;
         $this->channel_id = $channel;
 
-        $this->tags = array_merge($this->tags, [
-            'channel_id: ' . $this->channel_id,
-        ]);
+        array_push($this->tags, 'channel_id:' . $this->channel_id);
     }
 
     public function handle()
@@ -65,26 +64,33 @@ class SendDiscordNotification extends SeatNotificationsJobBase
 
         Redis::funnel('channel_id_' . $this->channel_id)->limit(1)->then(function () {
 
+
             try {
 
                 $this->discord->channel->createMessage($this->parameters);
             } catch (Exception $e) {
-                $response = json_decode($e->getResponse()->getBody()->getContents());
 
-                //retry_after is in ms, so we need to convert it to seconds.
-                SendDiscordNotification::dispatch($this->channel_id, $this->parameters)
-                    ->onQueue($this->queue)
-                    ->delay(now()->addSeconds((int) $response->retry_after / 1000));
 
-                $this->delete();
+                if ($e->getResponse()->getStatusCode() === 429) {
+
+                    $response = json_decode($e->getResponse()->getBody()->getContents());
+
+                    //retry_after is in ms, so we need to convert it to seconds.
+                    SendDiscordNotification::dispatch($this->channel_id, $this->parameters)
+                        ->onQueue($this->queue)
+                        ->delay(now()->addSeconds((int) $response->retry_after / 1000));
+
+                    $this->delete();
+                }
+
+                $this->fail($e);
             }
-
         }, function () {
 
             // Could not obtain lock...
-            logger()->debug('Could not dispatch job for channel.id: ' . $this->channel_id);
+            logger()->debug('Could not dispatch SendDiscordNotification job for channel.id: ' . $this->channel_id);
 
-            return $this->release(10);
+            $this->release(10);
         });
     }
 }

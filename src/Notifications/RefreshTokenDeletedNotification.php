@@ -58,6 +58,8 @@ class RefreshTokenDeletedNotification extends BaseNotification
         $this->image = 'https://imageserver.eveonline.com/Character/' . $refresh_token->character_id . '_128.jpg';
         $this->main_character = $this->getMainCharacter($refresh_token->user->group)->name;
         $this->corporation = optional(CorporationInfo::find($refresh_token->user->character->corporation_id))->name ?: 'NPC Corporation';
+
+        array_push($this->tags, 'user_name:' . $this->user_name);
     }
 
     /**
@@ -68,23 +70,15 @@ class RefreshTokenDeletedNotification extends BaseNotification
      */
     public function via($notifiable)
     {
+        array_push($this->tags, $notifiable->is_channel ? 'channel' : $notifiable->recipient());
+
         switch($notifiable->notification_channel) {
             case 'discord':
-                $this->tags = [
-                    'refresh_token',
-                    'discord',
-                    $notifiable->is_channel ? 'channel' : $notifiable->recipient(),
-                ];
-
+                array_push($this->tags, 'discord');
                 return [DiscordChannel::class];
                 break;
             case 'slack':
-                $this->tags = [
-                    'refresh_token',
-                    'slack',
-                    $notifiable->is_channel ? 'channel' : $notifiable->recipient(),
-                ];
-
+                array_push($this->tags, 'slack');
                 return [SlackChannel::class];
                 break;
             default:

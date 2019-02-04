@@ -55,11 +55,13 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
     public function __construct(RefreshToken $refresh_token)
     {
         $this->refresh_token = $refresh_token;
+
+        array_push($this->tags, 'user_id:' . $this->refresh_token->user->id);
     }
 
     public function handle()
     {
-        Redis::funnel('soft_delete:refresh_token_' . $this->refresh_token->user->name)->limit(1)->then(function () {
+        Redis::funnel('soft_delete:refresh_token_' . $this->refresh_token->user->id)->limit(1)->then(function () {
             logger()->info('SoftDelete detected of ' . $this->refresh_token->user->name);
 
             $recipients = SeatNotificationRecipient::all()
@@ -70,7 +72,7 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
             Notification::send($recipients, (new RefreshTokenDeletedNotification($this->refresh_token)));
         }, function () {
 
-            logger()->info('A Soft-Delete job is already running for ' . $this->refresh_token->user->name);
+            logger()->debug('A Soft-Delete job is already running for ' . $this->refresh_token->user->name);
             $this->delete();
         });
     }

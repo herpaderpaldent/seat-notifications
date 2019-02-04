@@ -65,26 +65,21 @@ class KillMailNotification extends BaseNotification
         $this->image = sprintf('https://imageserver.eveonline.com/Type/%d_64.png',
             $this->killmail_detail->victims->ship_type_id);
 
+        array_push($this->tags, 'killmail_id:' . $killmail_id);
     }
 
     public function via($notifiable)
     {
+        array_push($this->tags, $notifiable->type === 'private' ? $notifiable->recipient() : 'channel');
+
         switch ($notifiable->notification_channel) {
             case 'discord':
-                $this->tags = [
-                    'kill_mail',
-                    'discord',
-                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
-                ];
+                array_push($this->tags, 'discord');
 
                 return [DiscordChannel::class];
                 break;
             case 'slack':
-                $this->tags = [
-                    'kill_mail',
-                    'slack',
-                    $notifiable->type === 'private' ? $notifiable->recipient() : 'channel',
-                ];
+                array_push($this->tags, 'slack');
 
                 return [SlackChannel::class];
                 break;

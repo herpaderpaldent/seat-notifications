@@ -144,7 +144,7 @@ class KillMailNotification extends BaseNotification
     private function getDiscordKMStringPartial($character_id, $corporation_id, $ship_type_id, $alliance_id) : string
     {
         $character = is_null($character_id) ? null : $this->resolveID($character_id);
-        $corporation = $this->resolveID($corporation_id);
+        $corporation = is_null($corporation_id) ? null : $this->resolveID($corporation_id);
         $alliance = is_null($alliance_id) ? null : strtoupper('<' . $this->resolveID($alliance_id, true) . '>');
         $ship_type = optional(InvType::find($ship_type_id))->typeName;
 
@@ -205,7 +205,7 @@ class KillMailNotification extends BaseNotification
     private function getSlackKMStringPartial($character_id, $corporation_id, $ship_type_id, $alliance_id) : string
     {
         $character = is_null($character_id) ? null : $this->resolveID($character_id);
-        $corporation = $this->resolveID($corporation_id);
+        $corporation = is_null($corporation_id) ? null : $this->resolveID($corporation_id);
         $alliance = is_null($alliance_id) ? null : strtoupper('<' . $this->resolveID($alliance_id, true) . '>');
         $ship_type = optional(InvType::find($ship_type_id))->typeName;
 

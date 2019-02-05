@@ -1,3 +1,12 @@
+# Version 1.1.2
+This version adds some smaller improvements:
+* Delete job from dispatcher if there are no recipients for a given notification.
+* KillMail Notification for channel: show selected channel
+* Permission handling on BaseNotification: Full string support to support external developers
+* Attempt to support NPC Killmails
+
+Regarding NPC Killmails, this is only a first attempt and work is in process.
+
 # Version 1.1.1
 This update adds some better tagging and job handling. Also it ensures that `AbstractSeatPlugin` class present as it requires eveseat/web ~3.0.14.
 

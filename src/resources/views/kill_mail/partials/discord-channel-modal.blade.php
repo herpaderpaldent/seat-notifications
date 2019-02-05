@@ -14,7 +14,6 @@
 
           <input type="hidden" name="via" value="discord">
 
-
           <div class="form-group">
             <label for="available_channels">Select delivery channel:</label>
             <select name="channel_id" id="available_channels" class="select2" style="width: 100%"
@@ -26,7 +25,7 @@
                 @endif
 
                 @foreach($channel['discord'] as $channel_id => $channel_name)
-                  <option value="{{ $channel_id }}" @if($channel_id = $delivery_channel) selected @endif>{{ $channel_name }} </option>
+                  <option value="{{ $channel_id }}" @if($channel_id === (int) $delivery_channel) selected @endif>{{ $channel_name }} </option>
                 @endforeach
 
               @endforeach

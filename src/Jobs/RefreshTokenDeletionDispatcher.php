@@ -69,6 +69,11 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
                     return $recipient->shouldReceive('refresh_token');
                 });
 
+            if($recipients->isEmpty()){
+                logger()->debug('No Receiver found for this Notification. This job is going to be deleted.');
+                $this->delete();
+            }
+
             Notification::send($recipients, (new RefreshTokenDeletedNotification($this->refresh_token)));
         }, function () {
 

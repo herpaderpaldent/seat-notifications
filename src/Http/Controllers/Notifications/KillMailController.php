@@ -124,12 +124,12 @@ class KillMailController extends BaseNotificationController
 
     public function isDisabledButton($view, $channel) : bool
     {
-        return $this->isDisabled($channel, $view, 'kill_mail');
+        return $this->isDisabled($channel, $view, 'seatnotifications.kill_mail');
     }
 
     public function isAvailable() : bool
     {
-        return $this->hasPermission('kill_mail');
+        return $this->hasPermission('seatnotifications.kill_mail');
     }
 
     public function getAvailableCorporations($view, $channel)

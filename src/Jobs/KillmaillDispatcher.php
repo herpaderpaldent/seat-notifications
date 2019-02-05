@@ -84,6 +84,11 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
 
             logger()->debug('and for corporations: ' . implode(', ', $this->getFilteredCorporationIds()));
 
+            if($recipients->isEmpty()){
+                logger()->debug('No Receiver found for this Notification. This job is going to be deleted.');
+                $this->delete();
+            }
+
             Notification::send($recipients, (new KillMailNotification($this->killmail_id)));
         }, function () {
 

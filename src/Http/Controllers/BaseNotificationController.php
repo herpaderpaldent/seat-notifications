@@ -173,7 +173,7 @@ abstract class BaseNotificationController extends Controller
             if(! auth()->user()->has('seatnotifications.configuration', false))
                 return false;
 
-        if(auth()->user()->has('seatnotifications.' . $permission, false))
+        if(auth()->user()->has($permission, false))
             return true;
 
         return false;

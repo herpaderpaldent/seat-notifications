@@ -27,9 +27,24 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
 use Seat\Web\Http\Controllers\Controller;
 
+/**
+ * Class BaseNotificationChannelController.
+ * @package Herpaderpaldent\Seat\SeatNotifications\Http\Controllers
+ */
 abstract class BaseNotificationChannelController extends Controller
 {
-    abstract public function getSettingsView() :string;
+    /**
+     * @return string
+     */
+    abstract public function getSettingsView() : string;
 
+    /**
+     * @return string
+     */
     abstract public function getRegistrationView() : string;
+
+    /**
+     * @return array
+     */
+    abstract public function getChannels() : array;
 }

@@ -27,19 +27,33 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack;
 
 use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannelController;
 
+/**
+ * Class SlackNotificationChannelController.
+ * @package Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack
+ */
 class SlackNotificationChannelController extends BaseNotificationChannelController
 {
-    public function getSettingsView() :string
+    /**
+     * @return string
+     */
+    public function getSettingsView() : string
     {
         return 'seatnotifications::slack.settings';
     }
 
-    public function getRegistrationView() :string
+    /**
+     * @return string
+     */
+    public function getRegistrationView() : string
     {
         return 'seatnotifications::slack.registration';
     }
 
-    public function getChannels()
+    /**
+     * @return array
+     * @throws \Seat\Services\Exceptions\SettingException
+     */
+    public function getChannels() : array
     {
         if(is_null(setting('herpaderp.seatnotifications.slack.credentials.token', true)))
             return ['slack' => []];
@@ -64,12 +78,14 @@ class SlackNotificationChannelController extends BaseNotificationChannelControll
 
         }
 
-        return ['slack' => $response->map(function ($item) {
-            return collect([
-                'name' => $item->name,
-                'id' => $item->id,
-                'private_channel' => $item->is_group,
-            ]);
-        })];
+        return [
+            'slack' => $response->map(function ($item) {
+                return collect([
+                    'name' => $item->name,
+                    'id' => $item->id,
+                    'private_channel' => $item->is_group,
+                ]);
+            }),
+        ];
     }
 }

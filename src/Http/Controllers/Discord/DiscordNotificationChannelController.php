@@ -27,19 +27,33 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord;
 
 use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationChannelController;
 
+/**
+ * Class DiscordNotificationChannelController.
+ * @package Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord
+ */
 class DiscordNotificationChannelController extends BaseNotificationChannelController
 {
+    /**
+     * @return string
+     */
     public function getSettingsView() : string
     {
         return 'seatnotifications::discord.settings';
     }
 
+    /**
+     * @return string
+     */
     public function getRegistrationView() : string
     {
         return 'seatnotifications::discord.registration';
     }
 
-    public function getChannels()
+    /**
+     * @return array
+     * @throws \Seat\Services\Exceptions\SettingException
+     */
+    public function getChannels() : array
     {
         if(is_null(setting('herpaderp.seatnotifications.discord.credentials.bot_token', true)))
             return ['discord' => []];
@@ -62,7 +76,8 @@ class DiscordNotificationChannelController extends BaseNotificationChannelContro
             cache(['herpaderp.seatnotifications.discord.channels' => $response], now()->addMinutes(5));
         }
 
-        return ['discord' => $response];
-
+        return [
+            'discord' => $response,
+        ];
     }
 }

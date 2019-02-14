@@ -53,14 +53,14 @@ Route::group([
         'prefix' => 'discord',
     ], function () {
 
-        include __DIR__ . '/Routes/NotificationChannel/Discord.php';
+        include __DIR__ . '/NotificationChannel/Discord.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],
             'prefix' => 'configuration',
         ], function () {
 
-            include __DIR__ . '/Routes/Configuration/Discord.php';
+            include __DIR__ . '/Configuration/Discord.php';
         }
         );
     });
@@ -70,14 +70,14 @@ Route::group([
         'prefix' => 'slack',
     ], function () {
 
-        include __DIR__ . '/Routes/NotificationChannel/Slack.php';
+        include __DIR__ . '/NotificationChannel/Slack.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],
             'prefix' => 'configuration',
         ], function () {
 
-            include __DIR__ . '/Routes/Configuration/Slack.php';
+            include __DIR__ . '/Configuration/Slack.php';
         }
         );
     });
@@ -87,10 +87,9 @@ Route::group([
         'prefix' => 'notifications',
     ], function () {
 
-        include __DIR__ . '/Routes/Notification/RefreshToken.php';
-        include __DIR__ . '/Routes/Notification/KillMail.php';
+        include __DIR__ . '/Notification/RefreshToken.php';
+        include __DIR__ . '/Notification/KillMail.php';
 
     });
 
-}
-);
+});

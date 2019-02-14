@@ -29,7 +29,7 @@ use Seat\Web\Http\Controllers\Controller;
 
 abstract class BaseNotificationChannelController extends Controller
 {
-    abstract protected function getSettingsView() :string;
+    abstract public function getSettingsView() :string;
 
-    abstract protected function getRegistrationView() : string;
+    abstract public function getRegistrationView() : string;
 }

@@ -2,39 +2,32 @@
 
 @if($RefreshTokenController->isAvailable())
 
-  @if( $RefreshTokenController->isDisabledButton('private', 'discord'))
-    <a href="" type="button" class="btn btn-app disabled">
-      <i class="fa fa-bullhorn"></i>Discord
-    </a>
-  @elseif(! $RefreshTokenController->isSubscribed('private', 'discord'))
-    <a href=" {{ route('seatnotifications.refresh_token.subscribe.user', ['via' => 'discord']) }}" type="button"
-       class="btn btn-app">
-      <i class="fa fa-bullhorn"></i>Discord
-    </a>
-  @else
-    <a href=" {{ route('seatnotifications.refresh_token.unsubscribe.user', ['via' => 'discord']) }}" type="button"
-       class="btn btn-app">
-      <span class="badge bg-green"><i class="fa fa-check"></i></span>
-      <i class="fa fa-bullhorn"></i>Discord
-    </a>
-  @endif
+  @foreach(config('services.seat-notification-channel') as $key => $provider)
 
-  @if( $RefreshTokenController->isDisabledButton('private','slack'))
-    <a href="" type="button" class="btn btn-app disabled">
-      <i class="fa fa-slack"></i>Slack
-    </a>
-  @elseif(! $RefreshTokenController->isSubscribed('private', 'slack'))
-    <a href=" {{ route('seatnotifications.refresh_token.subscribe.user', ['via' => 'slack']) }}" type="button"
-       class="btn btn-app">
-      <i class="fa fa-slack"></i>Slack
-    </a>
-  @else
-    <a href=" {{ route('seatnotifications.refresh_token.unsubscribe.user', ['via' => 'slack']) }}" type="button"
-       class="btn btn-app">
-      <span class="badge bg-green"><i class="fa fa-check"></i></span>
-      <i class="fa fa-slack"></i>Slack
-    </a>
-  @endif
+    @if(! $provider::isSupportingPrivateNotifications())
+      @continue
+    @endif
+
+    @if($RefreshTokenController->isDisabledButton('private', $key))
+      <button type="button" class="btn btn-app disabled">
+        <i class="fa {{ $provider::getButtonIconClass() }}"></i> {{ $provider::getButtonLabel() }}
+      </button>
+    @elseif(! $RefreshTokenController->isSubscribed('private', $key))
+      <a href="{{ route('seatnotifications.refresh_token.subscribe.user', ['via' => $key]) }}" type="button"
+         class="btn btn-app">
+        <i class="fa {{ $provider::getButtonIconClass() }}"></i> {{ $provider::getButtonLabel() }}
+      </a>
+    @else
+      <a href=" {{ route('seatnotifications.refresh_token.unsubscribe.user', ['via' => $key]) }}" type="button"
+         class="btn btn-app">
+        <span class="badge bg-green">
+          <i class="fa fa-check"></i>
+        </span>
+        <i class="fa {{ $provider::getButtonIconClass() }}"></i>{{ $provider::getButtonLabel() }}
+      </a>
+    @endif
+
+  @endforeach
 
 @else
 

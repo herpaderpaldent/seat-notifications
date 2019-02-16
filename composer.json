@@ -10,12 +10,12 @@
     "require": {
         "php": ">=7.1",
         "laravel/framework": "5.5.*",
-        "eveseat/web": "~3.0.14",
         "erusev/parsedown": "^1.7",
         "textalk/websocket": "1.0.*",
         "restcord/restcord": "^0.3",
         "php-http/curl-client": "^1.7",
-        "jolicode/slack-php-api": "^1.0"
+        "jolicode/slack-php-api": "^1.0",
+        "ext-json": "*"
     },
 
     "license": "MIT",

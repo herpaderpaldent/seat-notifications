@@ -23,28 +23,63 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
-
-use Seat\Web\Http\Controllers\Controller;
+namespace Herpaderpaldent\Seat\SeatNotifications\Providers;
 
 /**
  * Class BaseNotificationChannelController.
- * @package Herpaderpaldent\Seat\SeatNotifications\Http\Controllers
+ * @package Herpaderpaldent\Seat\SeatNotifications\Channels
  */
-abstract class BaseNotificationChannelController extends Controller
+interface INotificationProvider
 {
     /**
+     * The view name which will be used to store the channel settings.
+     *
      * @return string
      */
-    abstract public function getSettingsView() : string;
+    public static function getSettingsView() : string;
 
     /**
      * @return string
      */
-    abstract public function getRegistrationView() : string;
+    public static function getRegistrationView() : string;
+
+    /**
+     * The label which will be applied to the subscription button
+     *
+     * @return string
+     */
+    public static function getButtonLabel() : string;
+
+    /**
+     * The CSS class which have to be append into the subscription button
+     *
+     * @return string
+     */
+    public static function getButtonIconClass() : string;
 
     /**
      * @return array
      */
-    abstract public function getChannels() : array;
+    public static function getChannels() : array;
+
+    /**
+     * Determine if a channel is supporting private notifications.
+     *
+     * @return bool
+     */
+    public static function isSupportingPrivateNotifications() : bool;
+
+    /**
+     * Determine if a channel is supporting public notifications.
+     *
+     * @return bool
+     */
+    public static function isSupportingPublicNotifications() : bool;
+
+    /**
+     * Determine if a channel has been properly setup
+     *
+     * @return bool
+     */
+    public static function isSetup(): bool;
 }

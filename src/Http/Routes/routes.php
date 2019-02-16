@@ -49,6 +49,23 @@ Route::group([
     });
 
     Route::group([
+        'namespace' => 'Discourse',
+        'prefix' => 'discourse',
+    ], function () {
+
+        //include __DIR__ . '/NotificationChannel/Discourse.php';
+
+        Route::group([
+            'middleware' => ['bouncer:seatnotifications.configuration'],
+            'prefix' => 'configuration',
+        ], function () {
+
+            include __DIR__ . '/Configuration/Discourse.php';
+        }
+        );
+    });
+
+    Route::group([
         'namespace' => 'Discord',
         'prefix' => 'discord',
     ], function () {

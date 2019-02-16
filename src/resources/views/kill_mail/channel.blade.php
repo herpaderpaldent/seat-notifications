@@ -1,45 +1,43 @@
-@inject('KillMailController', 'Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\KillMailController')
+@inject('killMailController', 'Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\KillMailController')
 
-@if($KillMailController->isAvailable())
-  
-  @if( $KillMailController->isDisabledButton('channel', 'discord') )
-    <a href="" type="button" class="btn btn-app disabled">
-      <i class="fa fa-bullhorn"></i>Discord
-    </a>
-  @elseif(! $KillMailController->isSubscribed('channel', 'discord'))
-    <a href="" type="button" class="btn btn-app" data-toggle="modal"
-       data-target="#discord-channel-killMail-modal">
-      <i class="fa fa-bullhorn"></i>Discord
-    </a>
-    @include('seatnotifications::kill_mail.partials.discord-channel-modal', ['corporations' => $KillMailController->getAvailableCorporations('channel', 'discord'), 'delivery_channel' => null])
-  @else
-    <a href="" type="button" class="btn btn-app" data-toggle="modal"
-       data-target="#discord-channel-killMail-modal">
-      <span class="badge bg-green"><i class="fa fa-check"></i></span>
-      <i class="fa fa-bullhorn"></i>Discord
-    </a>
-    @include('seatnotifications::kill_mail.partials.discord-channel-modal', ['corporations' => $KillMailController->getAvailableCorporations('channel', 'discord'), 'delivery_channel' => $KillMailController->getChannelChannelId('discord', 'kill_mail')])
-  @endif
+@if($killMailController->isAvailable())
 
-  @if( $KillMailController->isDisabledButton('channel', 'slack'))
-    <a href="" type="button" class="btn btn-app disabled">
-      <i class="fa fa-slack"></i>Slack
-    </a>
-  @elseif(! $KillMailController->isSubscribed('channel', 'slack'))
-    <a href="" type="button" class="btn btn-app" data-toggle="modal"
-       data-target="#slack-channel-killMail-modal">
-      <i class="fa fa-slack"></i>Slack
-    </a>
-    @include('seatnotifications::kill_mail.partials.slack-channel-modal', ['corporations' => $KillMailController->getAvailableCorporations('channel', 'slack'), 'delivery_channel' => null])
-    {{--@include('seatnotifications::kill_mail.partials.slack-channel-modal', ['corporations' => $KillMailController->getAvailableCorporations('channel', 'slack')])--}}
-  @else
-    <a href="" type="button" class="btn btn-app" data-toggle="modal"
-       data-target="#slack-channel-killMail-modal">
-      <span class="badge bg-green"><i class="fa fa-check"></i></span>
-      <i class="fa fa-slack"></i>Slack
-    </a>
-    @include('seatnotifications::kill_mail.partials.slack-channel-modal', ['corporations' => $KillMailController->getAvailableCorporations('channel', 'slack'), 'delivery_channel' => $KillMailController->getChannelChannelId('slack', 'kill_mail')])
-  @endif
+  @foreach(config('services.seat-notification-channel') as $key => $provider)
+
+    @if ($killMailController->isDisabledButton('channel', $key))
+      <button type="button" class="btn btn-app disabled">
+        <i class="fa {{ $provider::getButtonIconClass() }}"></i> {{ $provider::getButtonLabel() }}
+      </button>
+    @elseif(! $killMailController->isSubscribed('channel', $key))
+      <button type="button" class="btn btn-app" data-toggle="modal" data-target="#{{ $key }}-channel-kill-mail-modal">
+        <i class="fa {{ $provider::getButtonIconClass() }}"></i> {{ $provider::getButtonLabel() }}
+      </button>
+
+      @include('seatnotifications::kill_mail.partials.channel-modal', [
+        'corporations' => $killMailController->getAvailableCorporations('channel', $key),
+        'delivery_channel' => 0,
+        'provider_key' => $key,
+        'provider_label' => $provider::getButtonLabel(),
+      ])
+
+    @else
+      <button type="button" class="btn btn-app" data-toggle="modal" data-target="#{{ $key }}-channel-kill-mail-modal">
+        <span class="badge bg-green">
+          <i class="fa fa-check"></i>
+        </span>
+        <i class="fa {{ $provider::getButtonIconClass() }}"></i> {{ $provider::getButtonLabel() }}
+      </button>
+
+      @include('seatnotifications::kill_mail.partials.channel-modal', [
+        'corporations' => $killMailController->getAvailableCorporations('channel', $key),
+        'delivery_channel' => $killMailController->getChannelChannelId($key, 'kill_mail'),
+        'provider_key' => $key,
+        'provider_label' => $provider::getButtonLabel(),
+      ])
+
+    @endif
+
+  @endforeach
 
 @else
 

@@ -48,14 +48,7 @@ class SeatNotificationsController extends Controller
 
     public function index()
     {
-        $notification_channels = collect([]);
-        $classes = config('services.seat-notification-channel');
-
-        foreach ($classes as $class) {
-            $notification_channels->push(
-                 (new $class)->getRegistrationView()
-            );
-        }
+        $notification_channels = config('services.seat-notification-channel');
 
         return view('seatnotifications::index', compact('notification_channels'));
     }
@@ -107,15 +100,27 @@ class SeatNotificationsController extends Controller
         return $notifications;
     }
 
+    /**
+     * @return Collection
+     */
     private function getNotificationChannelCollection() : Collection
     {
-        $notification_channels = collect([]);
+        $notification_channels = collect();
         $classes = config('services.seat-notification-channel');
 
-        foreach ($classes as $class) {
-            $notification_channels->push(
-                (new $class)->getChannels()
-            );
+        // for each registered provider, retrieve available channels
+        foreach ($classes as $key => $class) {
+            $provider = new $class;
+
+            // ensure the provider is properly setup
+            // otherwise, skip the entry
+            if (! $provider::isSetup())
+                continue;
+
+            // append the provider channels to the available channels list
+            $notification_channels->push([
+                $key => $provider->getChannels(),
+            ]);
         }
 
         return $notification_channels;

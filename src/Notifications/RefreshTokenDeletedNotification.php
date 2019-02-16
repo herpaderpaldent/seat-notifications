@@ -25,9 +25,9 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
 
-use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordNotificationProvider;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
-use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackNotificationProvider;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Eveapi\Models\RefreshToken;
@@ -76,12 +76,12 @@ class RefreshTokenDeletedNotification extends BaseNotification
             case 'discord':
                 array_push($this->tags, 'discord');
 
-                return [DiscordChannel::class];
+                return [DiscordNotificationProvider::class];
                 break;
             case 'slack':
                 array_push($this->tags, 'slack');
 
-                return [SlackChannel::class];
+                return [SlackNotificationProvider::class];
                 break;
             default:
                 return [''];

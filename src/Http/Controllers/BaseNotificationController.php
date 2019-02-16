@@ -45,7 +45,6 @@ abstract class BaseNotificationController extends Controller
 
     public function subscribeToChannel($channel_id, $via, $notification, $is_channel = false, $affiliation = null) : bool
     {
-
         try {
             SeatNotificationRecipient::firstOrCreate(
                 ['channel_id' => $channel_id], ['notification_channel' => $via, 'is_channel' => $is_channel]
@@ -78,23 +77,23 @@ abstract class BaseNotificationController extends Controller
             return true;
 
         } catch (Exception $e) {
-
             return false;
         }
     }
 
+    // TODO : switch to generic stuff
     public function getPrivateChannel($channel) : ?string
     {
-        $channel_id = null;
+        $binding_entity = null;
         $group_id = auth()->user()->group->id;
 
         if ($channel === 'discord')
-            $channel_id = DiscordUser::find($group_id)->channel_id;
+            $binding_entity = DiscordUser::find($group_id);
 
         if ($channel === 'slack')
-            $channel_id = SlackUser::find($group_id)->channel_id;
+            $binding_entity = SlackUser::find($group_id);
 
-        return $channel_id;
+        return is_null($binding_entity) ? 0 : $binding_entity->channel_id;
     }
 
     public function getChannelChannelId(string $channel, string $notification) : ?string
@@ -104,12 +103,12 @@ abstract class BaseNotificationController extends Controller
             ->filter(function ($notification) use ($channel) {
                 return $notification->recipients->is_channel && $notification->recipients->notification_channel === $channel;
             })
-            ->first()->channel_id;
+            ->first()
+            ->channel_id;
     }
 
     public function getCorporations(string $view, string $channel, string $notification)
     {
-
         $subscribed_corporations = [];
 
         if($this->getSubscribtionStatus($channel, $view, $notification)) {
@@ -142,7 +141,6 @@ abstract class BaseNotificationController extends Controller
                     'subscribed' => in_array($corporation->corporation_id, $subscribed_corporations),
                     ];
             })->toArray();
-
     }
 
     /**
@@ -179,34 +177,23 @@ abstract class BaseNotificationController extends Controller
         return false;
     }
 
-    public function isSlackSetup() : bool
-    {
-        if(is_null(setting('herpaderp.seatnotifications.slack.credentials.token', true)))
-            return false;
-
-        return true;
-    }
-
-    public function isDiscordSetup() : bool
-    {
-        if(is_null(setting('herpaderp.seatnotifications.discord.credentials.bot_token', true)))
-            return false;
-
-        return true;
-    }
-
+    /**
+     * Determine if a channel is properly setup
+     *
+     * @param string $channel
+     * @return bool
+     */
     public function isChannelSetup(string $channel) : bool
     {
+        // retrieve the list of notification channels
+        $classes = config('services.seat-notification-channel');
 
-        if($channel === 'slack')
-            if($this->isSlackSetup())
-                return true;
+        // in case the requested channel is not registered, assume it is not setup
+        if (! array_key_exists($channel, $classes))
+            return false;
 
-        if($channel === 'discord')
-            if($this->isDiscordSetup())
-                return true;
-
-        return false;
+        // request the setup status to the channel
+        return $classes[$channel]::isSetup();
     }
 
     public function getSubscribtionStatus(string $channel, string $view, string $notification) : bool
@@ -218,12 +205,10 @@ abstract class BaseNotificationController extends Controller
             return $this->getChannelSubscriptionStatus($channel, $notification);
 
         return false;
-
     }
 
     public function getPrivateSubscriptionStatus(string $channel, string $notification) : bool
     {
-
         $channel_id = $this->getPrivateChannel($channel);
 
         return SeatNotification::where('channel_id', $channel_id)
@@ -242,17 +227,4 @@ abstract class BaseNotificationController extends Controller
             })
             ->isNotEmpty();
     }
-
-    /*public function getChannelSubscribedCorporations(string $channel, string $notification)
-    {
-        return SeatNotification::where('name', $notification)
-            ->get()
-            ->filter(function ($notification) use ($channel) {
-                return $notification->recipients->is_channel && $notification->recipients->notification_channel === $channel;
-            })
-            ->map(function ($notification) {
-                return $notification->affiliations()->corporations;
-            })
-            ->flatten();
-    }*/
 }

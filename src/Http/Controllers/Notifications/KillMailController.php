@@ -36,16 +36,34 @@ class KillMailController extends BaseNotificationController
 {
     use Corporation;
 
+    /**
+     * TODO : replace by property
+     *
+     * @return string
+     * @deprecated
+     */
     public function getNotification() : string
     {
         return 'seatnotifications::kill_mail.notification';
     }
 
+    /**
+     * TODO : replace by generic built view based on channel provider unique identifier and notification unique identifier
+     *
+     * @return string
+     * @deprecated
+     */
     public function getPrivateView() : string
     {
         return 'seatnotifications::kill_mail.private';
     }
 
+    /**
+     * TODO : replace by generic built view based on channel provider unique identifier and notification unique identifier
+     *
+     * @return string
+     * @deprecated
+     */
     public function getChannelView() : string
     {
 
@@ -127,6 +145,10 @@ class KillMailController extends BaseNotificationController
         return $this->isDisabled($channel, $view, 'seatnotifications.kill_mail');
     }
 
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function isAvailable() : bool
     {
         return $this->hasPermission('seatnotifications.kill_mail');

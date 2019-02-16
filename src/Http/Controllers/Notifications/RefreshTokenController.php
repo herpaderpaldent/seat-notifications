@@ -29,43 +29,60 @@ use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\BaseNotificationCont
 
 class RefreshTokenController extends BaseNotificationController
 {
+    /**
+     * TODO : replace by property
+     *
+     * @return string
+     * @deprecated
+     */
     public function getNotification() : string
     {
         return 'seatnotifications::refresh_token.notification';
     }
 
+    /**
+     * TODO : replace by generic built view based on channel provider unique identifier and notification unique identifier
+     *
+     * @return string
+     * @deprecated
+     */
     public function getPrivateView() : string
     {
         return 'seatnotifications::refresh_token.private';
     }
 
+    /**
+     * TODO : replace by generic built view based on channel provider unique identifier and notification unique identifier
+     *
+     * @return string
+     * @deprecated
+     */
     public function getChannelView() : string
     {
-
         return 'seatnotifications::refresh_token.channel';
     }
 
-    public function subscribeDm($via)
+    public function subscribeDirectMessage($via)
     {
         $channel_id = $this->getPrivateChannel($via);
 
-        if(is_null($channel_id))
+        if (is_null($channel_id))
             return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
 
-        if($this->subscribeToChannel($channel_id, $via, 'refresh_token'))
+        if ($this->subscribeToChannel($channel_id, $via, 'refresh_token'))
             return redirect()->back()->with('success', 'You are going to be notified if someone deletes his refresh_token.');
 
         return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
     }
 
-    public function unsubscribeDm($via)
+    public function unsubscribeDirectMessage($via)
     {
         $channel_id = $this->getPrivateChannel($via);
 
-        if(is_null($channel_id))
+        if (is_null($channel_id))
             return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
 
-        if($this->unsubscribeFromChannel($channel_id, 'refresh_token'))
+        if ($this->unsubscribeFromChannel($channel_id, 'refresh_token'))
             return redirect()->back()->with('success', 'You are no longer going to be notified about deleted refresh_tokens.');
 
         return redirect()->back()->with('error', 'Something went wrong, please assure you have setup your personal delivery channel correctly.');
@@ -73,11 +90,10 @@ class RefreshTokenController extends BaseNotificationController
 
     public function subscribeChannel()
     {
-
         $via = (string) request('via');
         $channel_id = (string) request('channel_id');
 
-        if(is_null($channel_id) || is_null($channel_id))
+        if (is_null($channel_id) || is_null($channel_id))
             return abort(500);
 
         if($this->subscribeToChannel($channel_id, $via, 'refresh_token', true))
@@ -90,10 +106,10 @@ class RefreshTokenController extends BaseNotificationController
     {
         $channel_id = $this->getChannelChannelId($channel, 'refresh_token');
 
-        if(is_null($channel_id))
+        if (is_null($channel_id))
             return abort(500);
 
-        if($this->unsubscribeFromChannel($channel_id, 'refresh_token'))
+        if ($this->unsubscribeFromChannel($channel_id, 'refresh_token'))
             return redirect()->back()->with('success', 'Channel will not receive refresh_token notifications from this point on.');
 
         return abort(500);
@@ -109,6 +125,10 @@ class RefreshTokenController extends BaseNotificationController
         return $this->isDisabled($channel, $view, 'seatnotifications.refresh_token');
     }
 
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function isAvailable() : bool
     {
         return $this->hasPermission('seatnotifications.refresh_token');

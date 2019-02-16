@@ -26,8 +26,9 @@
 return [
 
     'seat-notification-channel' => [
-        'discord'   => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordNotificationChannelController::class,
-        'slack'     => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack\SlackNotificationChannelController::class,
+        'discourse' => Herpaderpaldent\Seat\SeatNotifications\Providers\DiscourseNotificationProvider::class,
+        'discord'   => Herpaderpaldent\Seat\SeatNotifications\Providers\DiscordNotificationProvider::class,
+        'slack'     => Herpaderpaldent\Seat\SeatNotifications\Providers\SlackNotificationProvider::class,
     ],
     'seat-notification' => [
         'refresh_token' => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController::class,

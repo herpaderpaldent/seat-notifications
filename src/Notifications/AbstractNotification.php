@@ -3,6 +3,7 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
 
 use Herpaderpaldent\Seat\SeatNotifications\Drivers\INotificationDriver;
+use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotification;
 
 /**
  * Class AbstractNotification
@@ -21,6 +22,22 @@ abstract class AbstractNotification
         $config_key = sprintf('services.seat-notification-channel.%s', $driver_id);
 
         return config($config_key);
+    }
+
+    /**
+     * TODO : is it an helper ?
+     * Determine if a notification has been subscribed for a specific driver.
+     * @param string $driver_id
+     * @return bool
+     */
+    final public static function isSubscribed(string $driver_id): bool
+    {
+        return SeatNotification::where('name', get_called_class())
+                               ->get()
+                               ->filter(function ($notification) use ($driver_id) {
+                                   return $notification->recipients->notification_channel === $driver_id;
+                               })
+                               ->isNotEmpty();
     }
 
     /**

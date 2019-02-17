@@ -42,6 +42,13 @@ interface INotification
     public static function getDriver(string $driver_id): string;
 
     /**
+     * Determine if a notification has been subscribed for a specific driver.
+     * @param string $driver_id
+     * @return bool
+     */
+    public static function isSubscribed(string $driver_id): bool;
+
+    /**
      * Return a list of implementing class foreach registered providers.
      * @return array
      */

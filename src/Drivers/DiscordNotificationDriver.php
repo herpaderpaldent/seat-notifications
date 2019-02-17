@@ -1,12 +1,12 @@
 <?php
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Providers;
+namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
 /**
  * Class DiscordChannel
  * @package Herpaderpaldent\Seat\SeatNotifications\Http\Channels\Discord
  */
-class DiscordNotificationProvider implements INotificationProvider
+class DiscordNotificationDriver implements INotificationDriver
 {
 
     /**
@@ -79,7 +79,7 @@ class DiscordNotificationProvider implements INotificationProvider
      *
      * @return bool
      */
-    public static function isSupportingPrivateNotifications(): bool
+    public static function allowPersonalNotifications(): bool
     {
         return true;
     }
@@ -89,7 +89,7 @@ class DiscordNotificationProvider implements INotificationProvider
      *
      * @return bool
      */
-    public static function isSupportingPublicNotifications(): bool
+    public static function allowPublicNotifications(): bool
     {
         return true;
     }

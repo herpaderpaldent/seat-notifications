@@ -23,13 +23,13 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Providers;
+namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
 /**
  * Class BaseNotificationChannelController.
  * @package Herpaderpaldent\Seat\SeatNotifications\Channels
  */
-interface INotificationProvider
+interface INotificationDriver
 {
     /**
      * The view name which will be used to store the channel settings.
@@ -67,14 +67,14 @@ interface INotificationProvider
      *
      * @return bool
      */
-    public static function isSupportingPrivateNotifications() : bool;
+    public static function allowPersonalNotifications() : bool;
 
     /**
      * Determine if a channel is supporting public notifications.
      *
      * @return bool
      */
-    public static function isSupportingPublicNotifications() : bool;
+    public static function allowPublicNotifications() : bool;
 
     /**
      * Determine if a channel has been properly setup

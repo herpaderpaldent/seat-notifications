@@ -1,8 +1,8 @@
 <?php
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Providers;
+namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
-class SlackNotificationProvider implements INotificationProvider
+class SlackNotificationDriver implements INotificationDriver
 {
     /**
      * The view name which will be used to store the channel settings.
@@ -71,9 +71,9 @@ class SlackNotificationProvider implements INotificationProvider
      *
      * @return bool
      */
-    public static function isSupportingPrivateNotifications(): bool
+    public static function allowPersonalNotifications(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -81,7 +81,7 @@ class SlackNotificationProvider implements INotificationProvider
      *
      * @return bool
      */
-    public static function isSupportingPublicNotifications(): bool
+    public static function allowPublicNotifications(): bool
     {
         return true;
     }

@@ -10,28 +10,6 @@
             <div class="box box-primary">
                 <div class="box-header">
                     <i class="fa fa-comment"></i>
-                    <h3 class="box-title">Register</h3>
-                </div>
-                <div class="box-body">
-                    <p>Register to your preferred notification channel.</p>
-
-                  @foreach($notification_channels as $channel)
-                    @if ($channel::isSupportingPrivateNotifications())
-                      @include($channel::getRegistrationView())
-                    @endif
-                  @endforeach
-
-                </div>
-                <!-- /.box -->
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box box-primary">
-                <div class="box-header">
-                    <i class="fa fa-comment"></i>
                     <h3 class="box-title">Available Notifications</h3>
                 </div>
                 <div class="box-body">
@@ -40,8 +18,8 @@
                         <thead>
                           <tr>
                               <th>Notification</th>
-                              <th>Private</th>
-                              <th>Channel</th>
+                              <th>Personal</th>
+                              <th>Public</th>
                           </tr>
                         </thead>
                     </table>
@@ -62,8 +40,8 @@
         },
         columns     : [
           {data: 'notification'},
-          {data: 'private', className: 'text-center'},
-          {data: 'channel', className: 'text-center'},
+          {data: 'personal', className: 'text-center'},
+          {data: 'public', className: 'text-center'},
         ],
         drawCallback : function () {
           $(".select2").select2({

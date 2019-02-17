@@ -56,48 +56,35 @@ class SeatNotificationsController extends Controller
     public function getNotifications()
     {
         $notifications = $this->getNotificationCollection();
-        $available_channels = $this->getNotificationChannelCollection();
+        //$available_channels = $this->getNotificationChannelCollection();
 
         return DataTables::of($notifications)
             ->editColumn('notification', function ($row) {
-                if(! empty($row['private']))
-                    return view($row['notification']);
-
-                return '';
+                return view('seatnotifications::partials.notification', compact('row'));
             })
-            ->editColumn('private', function ($row) {
+            ->editColumn('personal', function ($row) {
+                if (! $row::isPersonal())
+                    return 'Not available';
 
-                if(! empty($row['private']))
-                    return view($row['private']);
-
-                return '';
+                return view('seatnotifications::partials.personal', compact('row'));
             })
-            ->editColumn('channel', function ($row) use ($available_channels) {
+            ->editColumn('public', function ($row) {
+                if (! $row::isPublic())
+                    return 'Not available';
 
-                if(! empty($row['channel']))
-                    return view($row['channel'], compact('available_channels'));
-
-                return '';
+                return view('seatnotifications::partials.public', compact('row'));
             })
-            ->rawColumns(['notification', 'private', 'channel'])
+            ->rawColumns(['notification', 'personal', 'public'])
             ->make(true);
     }
 
-    private function getNotificationCollection() : Collection
+    /**
+     * Return the class list of available notification
+     * @return array
+     */
+    private function getNotificationCollection() : array
     {
-        $notifications = collect([]);
-        $classes = config('services.seat-notification');
-
-        foreach ($classes as $class) {
-            $class = (new $class);
-            $notifications->push([
-                'notification' => $class->getNotification(),
-                'private' => $class->getPrivateView(),
-                'channel' => $class->getChannelView(),
-            ]);
-        }
-
-        return $notifications;
+        return array_keys(config('services.seat-notification', []));
     }
 
     /**

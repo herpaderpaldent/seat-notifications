@@ -1,6 +1,6 @@
 <?php
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Providers;
+namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
  * Class DiscourseChannel.
  * @package Herpaderpaldent\Seat\SeatNotifications\Providers\Discourse
  */
-class DiscourseNotificationProvider implements INotificationProvider
+class DiscourseNotificationDriver implements INotificationDriver
 {
     /**
      * The view name which will be used to store the channel settings.
@@ -67,7 +67,7 @@ class DiscourseNotificationProvider implements INotificationProvider
      *
      * @return bool
      */
-    public static function isSupportingPrivateNotifications(): bool
+    public static function allowPersonalNotifications(): bool
     {
         return false;
     }
@@ -77,7 +77,7 @@ class DiscourseNotificationProvider implements INotificationProvider
      *
      * @return bool
      */
-    public static function isSupportingPublicNotifications(): bool
+    public static function allowPublicNotifications(): bool
     {
         return true;
     }

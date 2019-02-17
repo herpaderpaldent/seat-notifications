@@ -48,6 +48,21 @@ Route::group([
         ]);
     });
 
+    Route::post('/subscribe', [
+        'as' => 'seatnotifications.notification.subscribe.channel',
+        'uses' => 'SeatNotificationsController@postSubcribe',
+    ]);
+
+    Route::get('/unsubscribe', [
+        'as' => 'seatnotifications.notification.unsubscribe.channel',
+        'uses' => 'SeatNotificationsController@getUnsubscribe',
+    ]);
+
+    Route::get('/channels', [
+        'as' => 'seatnotifications.driver.channels',
+        'uses' => 'SeatNotificationsController@getChannels',
+    ]);
+
     Route::group([
         'namespace' => 'Discourse',
         'prefix' => 'discourse',
@@ -60,7 +75,7 @@ Route::group([
             'prefix' => 'configuration',
         ], function () {
 
-            include __DIR__ . '/Configuration/Discourse.php';
+            //include __DIR__ . '/Configuration/Discourse.php';
         }
         );
     });
@@ -70,14 +85,14 @@ Route::group([
         'prefix' => 'discord',
     ], function () {
 
-        include __DIR__ . '/NotificationChannel/Discord.php';
+        //include __DIR__ . '/NotificationChannel/Discord.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],
             'prefix' => 'configuration',
         ], function () {
 
-            include __DIR__ . '/Configuration/Discord.php';
+            //include __DIR__ . '/Configuration/Discord.php';
         }
         );
     });
@@ -87,14 +102,14 @@ Route::group([
         'prefix' => 'slack',
     ], function () {
 
-        include __DIR__ . '/NotificationChannel/Slack.php';
+        //include __DIR__ . '/NotificationChannel/Slack.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],
             'prefix' => 'configuration',
         ], function () {
 
-            include __DIR__ . '/Configuration/Slack.php';
+            //include __DIR__ . '/Configuration/Slack.php';
         }
         );
     });

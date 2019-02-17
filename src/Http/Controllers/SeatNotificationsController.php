@@ -25,6 +25,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Seat\Web\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;
@@ -76,6 +77,26 @@ class SeatNotificationsController extends Controller
             })
             ->rawColumns(['notification', 'personal', 'public'])
             ->make(true);
+    }
+
+    /**
+     * @param string $driver_id
+     * @return array
+     */
+    public function getChannels(Request $request) : array
+    {
+        // retrieve configured drivers
+        $drivers = config('services.seat-notification-channel');
+
+        // validate query parameter against valid drivers list
+        $request->validate([
+            'driver' => 'required|string|in:' . implode(',', array_keys($drivers)),
+        ]);
+
+        $driver_id = $request->query('driver');
+
+        // return the list of channels published by the requested provider
+        return $drivers[$driver_id]::isSetup() ? $drivers[$driver_id]::getChannels() : [];
     }
 
     /**

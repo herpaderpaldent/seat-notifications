@@ -25,6 +25,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
+use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Seat\Web\Http\Controllers\Controller;
@@ -32,26 +33,45 @@ use Yajra\DataTables\DataTables;
 
 class SeatNotificationsController extends Controller
 {
-    public function config()
-    {
-
-        $notification_channels = collect([]);
-        $classes = config('services.seat-notification-channel');
-
-        foreach ($classes as $class) {
-            $notification_channels->push(
-                (new $class)->getSettingsView()
-            );
-        }
-
-        return view('seatnotifications::seatnotifications.config', compact('notification_channels'));
-    }
-
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $notification_channels = config('services.seat-notification-channel');
 
         return view('seatnotifications::index', compact('notification_channels'));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postSubscribe(Request $request)
+    {
+        // retrieve configured drivers
+        $drivers = array_keys(config('services.seat-notification-channel'));
+
+        // retrieve registered notifications
+        $notifications = array_keys(config('services.seat-notification'));
+
+        $request->validate([
+            'driver'       => 'required|string|in:' . implode(',', $drivers),
+            'notification' => 'required|string|in:' . implode(',', $notifications),
+            'channel_id'   => 'required',
+        ]);
+
+        // create a subscription
+        SeatNotificationRecipient::firstOrCreate([
+            'channel_id'           => $request->input('channel_id'),
+            'notification_channel' => $request->input('driver'),
+        ])
+        ->notifications()
+        ->create([
+            'name' => $request->input('notification')
+        ]);
+
+        return redirect()->back()->with('success', 'You have successfully subscribed to notification.');
     }
 
     public function getNotifications()

@@ -50,8 +50,8 @@
     });
 
     $('#notifications-driver-channels').on('show.bs.modal', function (event) {
-        $(this).find('span[rel="driver-name"]').text(event.relatedTarget.dataset.name);
-        $(this).find('input[name="via"]').val(event.relatedTarget.dataset.name);
+        $(this).find('span[rel="driver"]').text(event.relatedTarget.dataset.name);
+        $(this).find('input[name="driver"]').val(event.relatedTarget.dataset.name);
         $(this).find('input[name="notification"]').val(event.relatedTarget.dataset.notification);
 
         $('#available-channels').select2({

@@ -5,14 +5,14 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title">Subscribe to <span rel="notification-name"></span> (<span rel="driver-name"></span>)</h4>
+        <h4 class="modal-title">Subscribe to <span rel="notification"></span> (<span rel="driver"></span>)</h4>
       </div>
       {{-- /.modal-header --}}
       <div class="modal-body">
         <form id="subscribe-to-notification" role="form" action="{{ route('seatnotifications.notification.subscribe.channel') }}" method="post">
           {{ csrf_field() }}
 
-          <input type="hidden" name="via" value="" />
+          <input type="hidden" name="driver" value="" />
           <input type="hidden" name="notification" value="" />
 
           <div class="form-group">

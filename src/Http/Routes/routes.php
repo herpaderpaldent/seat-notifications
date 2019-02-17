@@ -44,13 +44,13 @@ Route::group([
 
         Route::get('/configuration', [
             'as'         => 'seatnotifications.configuration',
-            'uses'       => 'SeatNotificationsController@config',
+            'uses'       => 'SettingsController@index',
         ]);
     });
 
     Route::post('/subscribe', [
         'as' => 'seatnotifications.notification.subscribe.channel',
-        'uses' => 'SeatNotificationsController@postSubcribe',
+        'uses' => 'SeatNotificationsController@postSubscribe',
     ]);
 
     Route::get('/unsubscribe', [
@@ -85,6 +85,10 @@ Route::group([
         'prefix' => 'discord',
     ], function () {
 
+        Route::post('/', [
+            'as' => 'herpaderp.seatnotifications.discord.post.configuration',
+        ]);
+
         //include __DIR__ . '/NotificationChannel/Discord.php';
 
         Route::group([
@@ -102,6 +106,10 @@ Route::group([
         'prefix' => 'slack',
     ], function () {
 
+        Route::post('/', [
+            'as' => 'herpaderp.seatnotifications.slack.post.configuration',
+        ]);
+
         //include __DIR__ . '/NotificationChannel/Slack.php';
 
         Route::group([
@@ -112,6 +120,17 @@ Route::group([
             //include __DIR__ . '/Configuration/Slack.php';
         }
         );
+    });
+
+    Route::group([
+        'namespace' => 'Discourse',
+        'prefix'    => 'discourse',
+    ], function () {
+
+        Route::post('/', [
+            'as' => 'herpaderp.seatnotifications.discourse.post.configuration',
+        ]);
+
     });
 
     Route::group([

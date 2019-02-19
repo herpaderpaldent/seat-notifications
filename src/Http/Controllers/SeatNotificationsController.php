@@ -78,7 +78,7 @@ class SeatNotificationsController extends Controller
     {
 
         if(empty($channel_id)) {
-            session(['herpaderp.seatnotifications.subscribe.notification', $notification]);
+            session(['herpaderp.seatnotifications.subscribe.notification' => $notification]);
 
             return redirect()->route('seatnotifications.register.discord');
         }
@@ -86,7 +86,7 @@ class SeatNotificationsController extends Controller
         if(!$this->subscribe($channel_id, $driver, $notification))
             return redirect()->route('seatnotifications.index')->with('error', 'Something went wrong');
 
-        return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to' . $notification . '.');
+        return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to ' . $notification . '.');
 
     }
 

@@ -88,9 +88,7 @@ class DiscordOAuthController
                 ->with('error', 'An error occurred while exchanging credentials with Discord. ' . $e->getMessage());
         }
 
-        $notification = request()->session()->get('herpaderp.seatnotifications.subscribe.notification');
-
-        request()->session()->forget('herpaderp.seatnotifications.subscribe.notification');
+        $notification = request()->session()->pull('herpaderp.seatnotifications.subscribe.notification');
 
         return redirect()->route('seatnotifications.notification.subscribe.private_channel',[
             'driver' => 'discord',

@@ -90,7 +90,7 @@ class DiscordOAuthController
 
         $notification = request()->session()->pull('herpaderp.seatnotifications.subscribe.notification');
 
-        return redirect()->route('seatnotifications.notification.subscribe.private_channel',[
+        return redirect()->route('seatnotifications.notification.subscribe.private_channel', [
             'driver' => 'discord',
             'notification' => $notification,
             'channel_id' => DiscordUser::find(auth()->user()->group->id)->channel_id,

@@ -89,7 +89,7 @@ class SlackNotificationDriver implements INotificationDriver
     }
 
     /**
-     * Determine if a channel has been properly setup
+     * Determine if a channel has been properly setup.
      *
      * @return bool
      */
@@ -99,7 +99,7 @@ class SlackNotificationDriver implements INotificationDriver
     }
 
     /**
-     * Return driver_id of user
+     * Return driver_id of user.
      *
      * @return string
      */

@@ -2,8 +2,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
 
-use Herpaderpaldent\Seat\SeatNotifications\Drivers\INotificationDriver;
-
 /**
  * Interface INotification.
  * @package Herpaderpaldent\Seat\SeatNotifications\Notifications
@@ -35,7 +33,7 @@ interface INotification
     public static function isPersonal(): bool;
 
     /**
-     * Return the driver class which is related to the requested ID
+     * Return the driver class which is related to the requested ID.
      * @param $driver_id string
      * @return string
      */

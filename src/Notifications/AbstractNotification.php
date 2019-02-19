@@ -2,18 +2,17 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
 
-use Herpaderpaldent\Seat\SeatNotifications\Drivers\INotificationDriver;
 use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotification;
 
 /**
- * Class AbstractNotification
+ * Class AbstractNotification.
  * @package Herpaderpaldent\Seat\SeatNotifications\Notifications
  */
 abstract class AbstractNotification
 {
     /**
      * TODO : is it an helper ?
-     * Return the driver class which is related to the requested ID
+     * Return the driver class which is related to the requested ID.
      * @param $driver_id string
      * @return string
      */

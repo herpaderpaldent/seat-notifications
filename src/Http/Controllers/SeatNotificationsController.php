@@ -61,14 +61,14 @@ class SeatNotificationsController extends Controller
             'channel_id'   => 'required',
         ]);
 
-        if(!$this->subscribe($request->input('channel_id'), $request->input('driver'), $request->input('notification')))
+        if(! $this->subscribe($request->input('channel_id'), $request->input('driver'), $request->input('notification')))
             return redirect()->back()->with('error', 'Something went wrong');
 
         return redirect()->back()->with('success', 'You have successfully subscribed to notification.');
     }
 
     /**
-     * Method to subscribe for private notification
+     * Method to subscribe for private notification.
      *
      * @param string      $driver
      * @param string      $notification
@@ -83,7 +83,7 @@ class SeatNotificationsController extends Controller
             return redirect()->route('seatnotifications.register.discord');
         }
 
-        if(!$this->subscribe($channel_id, $driver, $notification))
+        if(! $this->subscribe($channel_id, $driver, $notification))
             return redirect()->route('seatnotifications.index')->with('error', 'Something went wrong');
 
         return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to' . $notification . '.');
@@ -136,7 +136,7 @@ class SeatNotificationsController extends Controller
     }
 
     /**
-     * Return the class list of available notification
+     * Return the class list of available notification.
      * @return array
      */
     private function getNotificationCollection() : array
@@ -183,12 +183,12 @@ class SeatNotificationsController extends Controller
             SeatNotificationRecipient::firstOrCreate([
                 'channel_id'           => $channel_id,
                 'notification_channel' => $driver,
-                'is_channel'           => $is_channel
+                'is_channel'           => $is_channel,
             ])
                 ->notifications()
                 ->create([
                     'name' => $notification,
-                    'affiliation' => $affiliation
+                    'affiliation' => $affiliation,
                 ]);
 
             return true;

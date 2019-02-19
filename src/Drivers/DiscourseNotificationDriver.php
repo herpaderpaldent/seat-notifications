@@ -83,7 +83,7 @@ class DiscourseNotificationDriver implements INotificationDriver
     }
 
     /**
-     * Determine if a channel has been properly setup
+     * Determine if a channel has been properly setup.
      *
      * @return bool
      */

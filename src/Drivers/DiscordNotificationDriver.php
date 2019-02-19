@@ -2,6 +2,8 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
+use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
+
 /**
  * Class DiscordChannel
  * @package Herpaderpaldent\Seat\SeatNotifications\Http\Channels\Discord
@@ -16,6 +18,7 @@ class DiscordNotificationDriver implements INotificationDriver
      */
     public static function getSettingsView(): string
     {
+
         return 'seatnotifications::discord.settings';
     }
 
@@ -24,22 +27,25 @@ class DiscordNotificationDriver implements INotificationDriver
      */
     public static function getRegistrationView(): string
     {
+
         return 'seatnotifications::discord.registration';
     }
 
     /**
      * @return string
      */
-    public static function getButtonLabel() : string
+    public static function getButtonLabel(): string
     {
+
         return 'Discord';
     }
 
     /**
      * @return string
      */
-    public static function getButtonIconClass() : string
+    public static function getButtonIconClass(): string
     {
+
         return 'fa-bullhorn';
     }
 
@@ -48,7 +54,9 @@ class DiscordNotificationDriver implements INotificationDriver
      */
     public static function getChannels(): array
     {
+
         return cache()->remember('herpaderp.seatnotifications.discord.channels', 5, function () {
+
             $data = collect();
 
             // retrieve a list of channels from the registered Discord
@@ -60,7 +68,7 @@ class DiscordNotificationDriver implements INotificationDriver
 
             // building a simple key/name list which will be return as a valid channels list
             foreach ($channels as $channel) {
-                if($channel->type !== 0)
+                if ($channel->type !== 0)
                     continue;
 
                 $data->push([
@@ -81,6 +89,7 @@ class DiscordNotificationDriver implements INotificationDriver
      */
     public static function allowPersonalNotifications(): bool
     {
+
         return true;
     }
 
@@ -91,6 +100,7 @@ class DiscordNotificationDriver implements INotificationDriver
      */
     public static function allowPublicNotifications(): bool
     {
+
         return true;
     }
 
@@ -101,6 +111,28 @@ class DiscordNotificationDriver implements INotificationDriver
      */
     public static function isSetup(): bool
     {
+
         return ! is_null(setting('herpaderp.seatnotifications.discord.credentials.bot_token', true));
+    }
+
+    /**
+     * Return driver_id of user
+     *
+     * @return string
+     */
+    public static function getPrivateChannel(): ?string
+    {
+
+        return optional(DiscordUser::find(auth()->user()->group->id))->channel_id;
+    }
+
+    /**
+     * Return driver string to pass into recipient table.
+     *
+     * @return string
+     */
+    public static function getDriverIdentifier(): string
+    {
+        return "discord";
     }
 }

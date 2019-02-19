@@ -61,17 +61,33 @@ class SeatNotificationsController extends Controller
             'channel_id'   => 'required',
         ]);
 
-        // create a subscription
-        SeatNotificationRecipient::firstOrCreate([
-            'channel_id'           => $request->input('channel_id'),
-            'notification_channel' => $request->input('driver'),
-        ])
-        ->notifications()
-        ->create([
-            'name' => $request->input('notification')
-        ]);
+        if(!$this->subscribe($request->input('channel_id'), $request->input('driver'), $request->input('notification')))
+            return redirect()->back()->with('error', 'Something went wrong');
 
         return redirect()->back()->with('success', 'You have successfully subscribed to notification.');
+    }
+
+    /**
+     * Method to subscribe for private notification
+     *
+     * @param string      $driver
+     * @param string      $notification
+     * @param string|null $channel_id
+     */
+    public function getSubscribe(string $driver, string $notification, string $channel_id = null)
+    {
+
+        if(empty($channel_id)) {
+            session(['herpaderp.seatnotifications.subscribe.notification', $notification]);
+
+            return redirect()->route('seatnotifications.register.discord');
+        }
+
+        if(!$this->subscribe($channel_id, $driver, $notification))
+            return redirect()->route('seatnotifications.index')->with('error', 'Something went wrong');
+
+        return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to' . $notification . '.');
+
     }
 
     public function getNotifications()
@@ -152,5 +168,35 @@ class SeatNotificationsController extends Controller
         }
 
         return $notification_channels;
+    }
+
+    /**
+     * @param string $channel_id
+     * @param string $driver
+     * @param string $notification
+     */
+    private function subscribe(string $channel_id, string $driver, string $notification, $is_channel = false, $affiliation = null) : bool
+    {
+
+        try {
+            // create a subscription
+            SeatNotificationRecipient::firstOrCreate([
+                'channel_id'           => $channel_id,
+                'notification_channel' => $driver,
+                'is_channel'           => $is_channel
+            ])
+                ->notifications()
+                ->create([
+                    'name' => $notification,
+                    'affiliation' => $affiliation
+                ]);
+
+            return true;
+
+        } catch (Exception $e) {
+
+            return false;
+        }
+
     }
 }

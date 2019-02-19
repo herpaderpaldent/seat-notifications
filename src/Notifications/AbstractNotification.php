@@ -27,17 +27,24 @@ abstract class AbstractNotification
     /**
      * TODO : is it an helper ?
      * Determine if a notification has been subscribed for a specific driver.
+     *
      * @param string $driver_id
+     *
      * @return bool
      */
-    final public static function isSubscribed(string $driver_id): bool
+    final public static function isSubscribed(string $driver_id = null) //: bool
     {
-        return SeatNotification::where('name', get_called_class())
-                               ->get()
-                               ->filter(function ($notification) use ($driver_id) {
-                                   return $notification->recipients->notification_channel === $driver_id;
-                               })
-                               ->isNotEmpty();
+
+        return SeatNotification::where('name', get_called_class()::getName())
+            ->get()
+            ->filter(function ($notification) use ($driver_id) {
+
+                if(is_null($driver_id))
+                    return $notification->recipients->is_channel;
+
+                return $notification->channel_id === $driver_id;
+            })
+            ->isNotEmpty();
     }
 
     /**

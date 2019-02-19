@@ -82,4 +82,11 @@ interface INotificationDriver
      * @return bool
      */
     public static function isSetup(): bool;
+
+    /**
+     * Return channel_id of user
+     *
+     * @return string
+     */
+    public static function getPrivateChannel() : ?string;
 }

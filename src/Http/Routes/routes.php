@@ -53,6 +53,11 @@ Route::group([
         'uses' => 'SeatNotificationsController@postSubscribe',
     ]);
 
+    Route::get('/subscribe/driver/{driver}/notification/{notification}/channel_id/{channel_id?}', [
+        'as' => 'seatnotifications.notification.subscribe.private_channel',
+        'uses' => 'SeatNotificationsController@getSubscribe',
+    ]);
+
     Route::get('/unsubscribe', [
         'as' => 'seatnotifications.notification.unsubscribe.channel',
         'uses' => 'SeatNotificationsController@getUnsubscribe',
@@ -68,7 +73,7 @@ Route::group([
         'prefix' => 'discourse',
     ], function () {
 
-        //include __DIR__ . '/NotificationChannel/Discourse.php';
+        //include __DIR__ . './NotificationChannel/Discourse.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],
@@ -89,7 +94,7 @@ Route::group([
             'as' => 'herpaderp.seatnotifications.discord.post.configuration',
         ]);
 
-        //include __DIR__ . '/NotificationChannel/Discord.php';
+        include __DIR__ . '/NotificationChannel/Discord.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],

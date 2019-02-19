@@ -88,8 +88,15 @@ class DiscordOAuthController
                 ->with('error', 'An error occurred while exchanging credentials with Discord. ' . $e->getMessage());
         }
 
-        return redirect()->route('seatnotifications.index')
-            ->with('success', 'Now we know who to notify and you can subscribe to any of the available notifications.');
+        $notification = request()->session()->get('herpaderp.seatnotifications.subscribe.notification');
+
+        request()->session()->forget('herpaderp.seatnotifications.subscribe.notification');
+
+        return redirect()->route('seatnotifications.notification.subscribe.private_channel',[
+            'driver' => 'discord',
+            'notification' => $notification,
+            'channel_id' => DiscordUser::find(auth()->user()->group->id)->channel_id,
+            ]);
     }
 
     /**

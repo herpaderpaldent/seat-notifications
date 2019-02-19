@@ -5,12 +5,11 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
 
 /**
- * Class DiscordChannel
+ * Class DiscordChannel.
  * @package Herpaderpaldent\Seat\SeatNotifications\Http\Channels\Discord
  */
 class DiscordNotificationDriver implements INotificationDriver
 {
-
     /**
      * The view name which will be used to store the channel settings.
      *
@@ -105,7 +104,7 @@ class DiscordNotificationDriver implements INotificationDriver
     }
 
     /**
-     * Determine if a channel has been properly setup
+     * Determine if a channel has been properly setup.
      *
      * @return bool
      */
@@ -116,7 +115,7 @@ class DiscordNotificationDriver implements INotificationDriver
     }
 
     /**
-     * Return driver_id of user
+     * Return driver_id of user.
      *
      * @return string
      */
@@ -133,6 +132,6 @@ class DiscordNotificationDriver implements INotificationDriver
      */
     public static function getDriverIdentifier(): string
     {
-        return "discord";
+        return 'discord';
     }
 }

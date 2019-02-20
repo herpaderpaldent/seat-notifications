@@ -54,5 +54,4 @@ class SubscribeRequest extends FormRequest
             'notification' => 'required|string|in:' . implode(',', $notifications),
         ];
     }
-
 }

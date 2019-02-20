@@ -29,8 +29,6 @@ use Exception;
 use GuzzleHttp\Client;
 use Herpaderpaldent\Seat\SeatNotifications\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\SeatNotificationsController;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\SubscribeRequest;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
 use Illuminate\Http\Request;
 use RestCord\DiscordClient;

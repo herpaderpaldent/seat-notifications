@@ -25,6 +25,9 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
+use Herpaderpaldent\Seat\SeatNotifications\Actions\SubscribeAction;
+use Herpaderpaldent\Seat\SeatNotifications\Actions\UnsubscribeAction;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\SubscribeRequest;
 use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -47,47 +50,38 @@ class SeatNotificationsController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postSubscribe(Request $request)
-    {
-        // retrieve configured drivers
-        $drivers = array_keys(config('services.seat-notification-channel'));
-
-        // retrieve registered notifications
-        $notifications = array_keys(config('services.seat-notification'));
-
-        $request->validate([
-            'driver'       => 'required|string|in:' . implode(',', $drivers),
-            'notification' => 'required|string|in:' . implode(',', $notifications),
-            'channel_id'   => 'required',
-        ]);
-
-        if(! $this->subscribe($request->input('channel_id'), $request->input('driver'), $request->input('notification')))
-            return redirect()->back()->with('error', 'Something went wrong');
-
-        return redirect()->back()->with('success', 'You have successfully subscribed to notification.');
-    }
-
-    /**
-     * Method to subscribe for private notification.
-     *
-     * @param string      $driver
-     * @param string      $notification
-     * @param string|null $channel_id
-     */
-    public function getSubscribe(string $driver, string $notification, string $channel_id = null)
+    public function postSubscribe(SubscribeRequest $request, SubscribeAction $action)
     {
 
-        if(empty($channel_id)) {
-            session(['herpaderp.seatnotifications.subscribe.notification' => $notification]);
+        if(empty($request->input('client_id'))) {
+            session([
+                'herpaderp.seatnotifications.subscribe.driver' => request()->input('driver'),
+                'herpaderp.seatnotifications.subscribe.notification' => request()->input('notification'),
+            ]);
 
-            return redirect()->route('seatnotifications.register.discord');
+            return redirect()->route($request->input('notification')::getDriver($request->input('driver'))::getPrivateRegistrationRoute());
         }
 
-        if(! $this->subscribe($channel_id, $driver, $notification))
-            return redirect()->route('seatnotifications.index')->with('error', 'Something went wrong');
+        return $action->execute($request->all());
 
-        return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to ' . $notification . '.');
+        //dd($request, $request->input('client_id'), $request->input('driver'), $request->input('notification'));
 
+    }
+
+    public function getUnsubscribe(UnsubscribeAction $unsubscribe_action)
+    {
+
+        if(request()->query('is_channel'))
+            return 'is public';
+
+        $client_id = request()->query('notification')::getDriver(request()->query('driver'))::getPrivateChannel();
+
+        $data = [
+            'client_id' => $client_id,
+            'notification' => request()->query('notification')::getName(),
+        ];
+
+        return $unsubscribe_action->execute($data);
     }
 
     public function getNotifications()
@@ -168,35 +162,5 @@ class SeatNotificationsController extends Controller
         }
 
         return $notification_channels;
-    }
-
-    /**
-     * @param string $channel_id
-     * @param string $driver
-     * @param string $notification
-     */
-    private function subscribe(string $channel_id, string $driver, string $notification, $is_channel = false, $affiliation = null) : bool
-    {
-
-        try {
-            // create a subscription
-            SeatNotificationRecipient::firstOrCreate([
-                'channel_id'           => $channel_id,
-                'notification_channel' => $driver,
-                'is_channel'           => $is_channel,
-            ])
-                ->notifications()
-                ->create([
-                    'name' => $notification,
-                    'affiliation' => $affiliation,
-                ]);
-
-            return true;
-
-        } catch (Exception $e) {
-
-            return false;
-        }
-
     }
 }

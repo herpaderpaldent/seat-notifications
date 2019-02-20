@@ -27,8 +27,12 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord;
 
 use Exception;
 use GuzzleHttp\Client;
+use Herpaderpaldent\Seat\SeatNotifications\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\SeatNotificationsController;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\SubscribeRequest;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
+use Illuminate\Http\Request;
 use RestCord\DiscordClient;
 use RestCord\Model\User\User;
 use UnexpectedValueException;
@@ -36,6 +40,13 @@ use UnexpectedValueException;
 class DiscordOAuthController
 {
     const SCOPES = ['identify'];
+
+    protected $subscribe_action;
+
+    public function __construct(SubscribeAction $subscribe_action)
+    {
+        $this->subscribe_action = $subscribe_action;
+    }
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -88,13 +99,16 @@ class DiscordOAuthController
                 ->with('error', 'An error occurred while exchanging credentials with Discord. ' . $e->getMessage());
         }
 
+        $driver = request()->session()->pull('herpaderp.seatnotifications.subscribe.driver');
         $notification = request()->session()->pull('herpaderp.seatnotifications.subscribe.notification');
 
-        return redirect()->route('seatnotifications.notification.subscribe.private_channel', [
-            'driver' => 'discord',
+        $data = [
+            'driver' => $driver,
             'notification' => $notification,
-            'channel_id' => DiscordUser::find(auth()->user()->group->id)->channel_id,
-            ]);
+            'client_id' => DiscordUser::find(auth()->user()->group->id)->channel_id,
+            ];
+
+        return $this->subscribe_action->execute($data);
     }
 
     /**

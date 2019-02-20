@@ -30,6 +30,7 @@ abstract class AbstractRefreshTokenNotification extends AbstractNotification
      * unique notificiation string.
      *
      * @return string
+     * @deprecated
      */
     final public static function getName(): string
     {

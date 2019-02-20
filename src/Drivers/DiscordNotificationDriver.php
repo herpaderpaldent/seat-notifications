@@ -48,6 +48,11 @@ class DiscordNotificationDriver implements INotificationDriver
         return 'fa-bullhorn';
     }
 
+    public static function getPrivateRegistrationRoute() : string
+    {
+        return 'seatnotifications.register.discord';
+    }
+
     /**
      * @return array
      */

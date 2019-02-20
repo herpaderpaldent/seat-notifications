@@ -25,7 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Actions;
 
-
 use Exception;
 use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
 
@@ -59,5 +58,4 @@ class SubscribeAction
             return redirect()->route('seatnotifications.index')->with('error', 'Something went wrong: ' . $e->getMessage());
         }
     }
-
 }

@@ -129,14 +129,4 @@ class DiscordNotificationDriver implements INotificationDriver
 
         return optional(DiscordUser::find(auth()->user()->group->id))->channel_id;
     }
-
-    /**
-     * Return driver string to pass into recipient table.
-     *
-     * @return string
-     */
-    public static function getDriverIdentifier(): string
-    {
-        return 'discord';
-    }
 }

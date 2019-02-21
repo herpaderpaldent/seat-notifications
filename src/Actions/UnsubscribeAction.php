@@ -45,7 +45,7 @@ class UnsubscribeAction
             if($empty_recipient)
                 SeatNotificationRecipient::find($data['client_id'])->delete();
 
-            return redirect()->route('seatnotifications.index')->with('success', 'You have successfully unsubscribed to ' . $data['notification'] . ' notification.');
+            return redirect()->route('seatnotifications.index')->with('success', 'You have successfully unsubscribed to ' . $data['notification']::getTitle() . ' notification.');
 
         } catch (Exception $e) {
 

@@ -27,17 +27,6 @@ abstract class AbstractRefreshTokenNotification extends AbstractNotification
     }
 
     /**
-     * unique notificiation string.
-     *
-     * @return string
-     * @deprecated
-     */
-    final public static function getName(): string
-    {
-        return 'refresh_token';
-    }
-
-    /**
      * @return bool
      */
     final public static function isPublic(): bool

@@ -51,7 +51,7 @@ class SubscribeAction
                     'affiliation' => $affiliation,
                 ]);
 
-            return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to ' . $notification . ' notification.');
+            return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to ' . $notification::getTitle() . ' notification.');
 
         } catch (Exception $e) {
 

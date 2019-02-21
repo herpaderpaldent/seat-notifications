@@ -77,7 +77,7 @@ class SeatNotificationsController extends Controller
 
         $data = [
             'client_id' => $client_id,
-            'notification' => request()->query('notification')::getName(),
+            'notification' => request()->query('notification'),
         ];
 
         return $unsubscribe_action->execute($data);

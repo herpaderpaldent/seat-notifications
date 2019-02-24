@@ -44,14 +44,14 @@ interface INotificationDriver
     public static function getRegistrationView() : string;
 
     /**
-     * The label which will be applied to the subscription button
+     * The label which will be applied to the subscription button.
      *
      * @return string
      */
     public static function getButtonLabel() : string;
 
     /**
-     * The CSS class which have to be append into the subscription button
+     * The CSS class which have to be append into the subscription button.
      *
      * @return string
      */
@@ -77,9 +77,16 @@ interface INotificationDriver
     public static function allowPublicNotifications() : bool;
 
     /**
-     * Determine if a channel has been properly setup
+     * Determine if a channel has been properly setup.
      *
      * @return bool
      */
     public static function isSetup(): bool;
+
+    /**
+     * Return channel_id of user.
+     *
+     * @return string
+     */
+    public static function getPrivateChannel() : ?string;
 }

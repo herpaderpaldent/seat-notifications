@@ -2,6 +2,8 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
+use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
+
 class SlackNotificationDriver implements INotificationDriver
 {
     /**
@@ -87,12 +89,22 @@ class SlackNotificationDriver implements INotificationDriver
     }
 
     /**
-     * Determine if a channel has been properly setup
+     * Determine if a channel has been properly setup.
      *
      * @return bool
      */
     public static function isSetup(): bool
     {
         return ! is_null(setting('herpaderp.seatnotifications.slack.credentials.token', true));
+    }
+
+    /**
+     * Return driver_id of user.
+     *
+     * @return string
+     */
+    public static function getPrivateChannel() : string
+    {
+        return SlackUser::find(auth()->user()->group->id)->channel_id;
     }
 }

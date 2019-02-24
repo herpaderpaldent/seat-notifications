@@ -68,7 +68,7 @@ Route::group([
         'prefix' => 'discourse',
     ], function () {
 
-        //include __DIR__ . '/NotificationChannel/Discourse.php';
+        //include __DIR__ . './NotificationChannel/Discourse.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],
@@ -89,7 +89,7 @@ Route::group([
             'as' => 'herpaderp.seatnotifications.discord.post.configuration',
         ]);
 
-        //include __DIR__ . '/NotificationChannel/Discord.php';
+        include __DIR__ . '/NotificationChannel/Discord.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],

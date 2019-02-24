@@ -28,7 +28,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord;
 use Exception;
 use GuzzleHttp\Client;
 use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\ValidateOAuth;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\ValidateOAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use RestCord\DiscordClient;

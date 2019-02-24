@@ -23,11 +23,11 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validation;
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validations;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ValidateSlackOAuth extends FormRequest
+class SubscribeRequest extends FormRequest
 {
     /**
      * @return bool
@@ -42,10 +42,16 @@ class ValidateSlackOAuth extends FormRequest
      */
     public function rules()
     {
+
+        // retrieve configured drivers
+        $drivers = array_keys(config('services.seat-notification-channel'));
+
+        // retrieve registered notifications
+        $notifications = array_keys(config('services.seat-notification'));
+
         return [
-            'slack-configuration-client'       => 'required|string',
-            'slack-configuration-secret'       => 'required|string',
-            'slack-configuration-verification' => 'required|string',
+            'driver'       => 'required|string|in:' . implode(',', $drivers),
+            'notification' => 'required|string|in:' . implode(',', $notifications),
         ];
     }
 }

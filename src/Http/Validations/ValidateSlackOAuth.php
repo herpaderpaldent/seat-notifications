@@ -23,33 +23,29 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Actions;
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validations;
 
-use Exception;
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotification;
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
+use Illuminate\Foundation\Http\FormRequest;
 
-class UnsubscribeAction
+class ValidateSlackOAuth extends FormRequest
 {
-    public function execute(array $data)
+    /**
+     * @return bool
+     */
+    public function authorize()
     {
-        try {
-            SeatNotification::where('channel_id', $data['client_id'])
-                ->where('name', $data['notification'])
-                ->delete();
+        return true;
+    }
 
-            $empty_recipient = SeatNotificationRecipient::find($data['client_id'])
-                ->notifications
-                ->isEmpty();
-
-            if($empty_recipient)
-                SeatNotificationRecipient::find($data['client_id'])->delete();
-
-            return redirect()->route('seatnotifications.index')->with('success', 'You have successfully unsubscribed to ' . $data['notification']::getTitle() . ' notification.');
-
-        } catch (Exception $e) {
-
-            return redirect()->route('seatnotifications.index')->with('error', 'Something went wrong: ' . $e->getMessage());
-        }
+    /**
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'slack-configuration-client'       => 'required|string',
+            'slack-configuration-secret'       => 'required|string',
+            'slack-configuration-verification' => 'required|string',
+        ];
     }
 }

@@ -23,11 +23,11 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validation;
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validations;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SubscribeRequest extends FormRequest
+class ValidateOAuth extends FormRequest
 {
     /**
      * @return bool
@@ -42,16 +42,10 @@ class SubscribeRequest extends FormRequest
      */
     public function rules()
     {
-
-        // retrieve configured drivers
-        $drivers = array_keys(config('services.seat-notification-channel'));
-
-        // retrieve registered notifications
-        $notifications = array_keys(config('services.seat-notification'));
-
         return [
-            'driver'       => 'required|string|in:' . implode(',', $drivers),
-            'notification' => 'required|string|in:' . implode(',', $notifications),
+            'discord-configuration-client' => 'required|string',
+            'discord-configuration-secret' => 'required|string',
+            'discord-configuration-bot'    => 'required|string',
         ];
     }
 }

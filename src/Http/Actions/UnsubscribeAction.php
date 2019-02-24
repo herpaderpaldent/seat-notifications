@@ -23,35 +23,29 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Actions;
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
 use Exception;
+use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotification;
 use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
 
-class SubscribeAction
+class UnsubscribeAction
 {
     public function execute(array $data)
     {
-        $client_id = $data['client_id']; // $request->input('client_id');
-        $driver = $data['driver']; //$request->input('driver');
-        $notification = $data['notification']; //request->input('notification');
-        $is_channel = array_key_exists('is_channel', $data) ? $data['is_channel'] : false;
-        $affiliation = array_key_exists('affiliation', $data) ? $data['affiliation'] : null;
-
         try {
-            // create a subscription
-            SeatNotificationRecipient::firstOrCreate([
-                'channel_id'           => $client_id,
-                'notification_channel' => $driver,
-                'is_channel'           => $is_channel,
-            ])
-                ->notifications()
-                ->create([
-                    'name' => $notification,
-                    'affiliation' => $affiliation,
-                ]);
+            SeatNotification::where('channel_id', $data['client_id'])
+                ->where('name', $data['notification'])
+                ->delete();
 
-            return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to ' . $notification::getTitle() . ' notification.');
+            $empty_recipient = SeatNotificationRecipient::find($data['client_id'])
+                ->notifications
+                ->isEmpty();
+
+            if($empty_recipient)
+                SeatNotificationRecipient::find($data['client_id'])->delete();
+
+            return redirect()->route('seatnotifications.index')->with('success', 'You have successfully unsubscribed to ' . $data['notification']::getTitle() . ' notification.');
 
         } catch (Exception $e) {
 

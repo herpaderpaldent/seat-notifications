@@ -31,7 +31,7 @@ abstract class AbstractNotification
      *
      * @return bool
      */
-    final public static function isSubscribed(string $driver_id) //: bool
+    final public static function isSubscribed(string $driver_id): bool
     {
 
         return SeatNotification::where('name', get_called_class())

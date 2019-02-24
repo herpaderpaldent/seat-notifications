@@ -49,10 +49,10 @@
       ]
     });
 
-    /*$('#notifications-driver-channels').on('show.bs.modal', function (event) {
-        $(this).find('span[rel="driver"]').text(event.relatedTarget.dataset.name);
-        $(this).find('span[rel="notification"]').text(event.relatedTarget.dataset.notification);
-        $(this).find('input[name="driver"]').val(event.relatedTarget.dataset.name);
+    $('#notifications-driver-channels').on('show.bs.modal', function (event) {
+        $(this).find('span[rel="driver"]').text(event.relatedTarget.dataset.driver);
+        $(this).find('span[rel="notification"]').text(event.relatedTarget.dataset.title);
+        $(this).find('input[name="driver"]').val(event.relatedTarget.dataset.driver);
         $(this).find('input[name="notification"]').val(event.relatedTarget.dataset.notification);
 
         $('#available-channels').select2({
@@ -61,7 +61,7 @@
                 dataType: 'json',
                 data: function (params) {
                     return {
-                        'driver': event.relatedTarget.dataset.name
+                        'driver': event.relatedTarget.dataset.driver
                     };
                 },
                 processResults: function (data, params) {
@@ -81,6 +81,6 @@
             },
             width: '100%'
         });
-    });*/
+    });
   </script>
 @endpush

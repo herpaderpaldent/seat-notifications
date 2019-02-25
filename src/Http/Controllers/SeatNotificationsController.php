@@ -25,9 +25,9 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
-use Herpaderpaldent\Seat\SeatNotifications\Actions\SubscribeAction;
-use Herpaderpaldent\Seat\SeatNotifications\Actions\UnsubscribeAction;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\SubscribeRequest;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\UnsubscribeAction;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\SubscribeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Seat\Web\Http\Controllers\Controller;

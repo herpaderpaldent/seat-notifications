@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validation;
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validations;
 
 use Illuminate\Foundation\Http\FormRequest;
 

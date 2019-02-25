@@ -2,6 +2,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
 
 /**
@@ -128,5 +129,16 @@ class DiscordNotificationDriver implements INotificationDriver
     {
 
         return optional(DiscordUser::find(auth()->user()->group->id))->channel_id;
+    }
+
+    /**
+     * Returns the notification channel configuration for Notifications
+     *
+     * @return array
+     */
+    public static function getViaChannel() : array
+    {
+
+        return [DiscordChannel::class];
     }
 }

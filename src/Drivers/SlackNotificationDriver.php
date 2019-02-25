@@ -103,8 +103,18 @@ class SlackNotificationDriver implements INotificationDriver
      *
      * @return string
      */
-    public static function getPrivateChannel() : string
+    public static function getPrivateChannel() : ?string
     {
         return SlackUser::find(auth()->user()->group->id)->channel_id;
+    }
+
+    /**
+     * Return the route key which have to be used in a private notification registration flow.
+     *
+     * @return string
+     */
+    public static function getPrivateRegistrationRoute(): ?string
+    {
+        return null;
     }
 }

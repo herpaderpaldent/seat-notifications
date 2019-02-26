@@ -26,24 +26,24 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Actions;
 
 use Exception;
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotification;
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 
 class UnsubscribeAction
 {
     public function execute(array $data)
     {
         try {
-            SeatNotification::where('channel_id', $data['client_id'])
+            NotificationSubscription::where('channel_id', $data['client_id'])
                 ->where('name', $data['notification'])
                 ->delete();
 
-            $empty_recipient = SeatNotificationRecipient::find($data['client_id'])
+            $empty_recipient = NotificationRecipient::find($data['client_id'])
                 ->notifications
                 ->isEmpty();
 
             if($empty_recipient)
-                SeatNotificationRecipient::find($data['client_id'])->delete();
+                NotificationRecipient::find($data['client_id'])->delete();
 
             return redirect()->route('seatnotifications.index')->with('success', 'You have successfully unsubscribed to ' . $data['notification']::getTitle() . ' notification.');
 

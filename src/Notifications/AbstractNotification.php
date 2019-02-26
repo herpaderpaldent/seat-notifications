@@ -2,7 +2,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotification;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
 
 /**
  * Class AbstractNotification.
@@ -34,7 +34,7 @@ abstract class AbstractNotification
     final public static function isSubscribed(string $driver_id) //: bool
     {
 
-        return SeatNotification::where('name', get_called_class())
+        return NotificationSubscription::where('name', get_called_class())
             ->get()
             ->filter(function ($notification) use ($driver_id) {
 

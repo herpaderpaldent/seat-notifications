@@ -30,7 +30,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class SeatNotificationRecipient extends Model
+class NotificationRecipient extends Model
 {
     use Notifiable;
 
@@ -41,10 +41,6 @@ class SeatNotificationRecipient extends Model
      */
     protected $table = 'herpaderp_seat_notification_recipients';
 
-    public $primaryKey = 'channel_id';
-
-    public $keyType = 'string';
-
     public $incrementing = false;
 
     /**
@@ -52,7 +48,7 @@ class SeatNotificationRecipient extends Model
      *
      * @var array
      */
-    protected $fillable = ['channel_id', 'notification_channel', 'is_channel'];
+    protected $fillable = ['channel_id', 'driver', 'group_id'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Relations\HasOne|null
@@ -71,7 +67,7 @@ class SeatNotificationRecipient extends Model
 
     public function notifications()
     {
-        return $this->hasMany(SeatNotification::class, 'channel_id', 'channel_id');
+        return $this->hasMany(NotificationSubscription::class, 'channel_id', 'channel_id');
     }
 
     /**

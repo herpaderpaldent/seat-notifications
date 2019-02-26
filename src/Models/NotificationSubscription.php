@@ -27,22 +27,22 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SeatNotification extends Model
+class NotificationSubscription extends Model
 {
     /**
      * The table associated with the model.
-     *herpaderp_seat_notification_notification_recipients.
+     * herpaderp_seat_notification_notification_recipients.
      * @var string
      */
-    protected $table = 'herpaderp_seat_notification_notification_recipients';
+    protected $table = 'herpaderp_seat_notification_subscriptions';
 
     public $incrementing = false;
 
-    protected $fillable = ['channel_id', 'name', 'affiliation'];
+    protected $fillable = ['recipient_id', 'notification', 'affiliation'];
 
     public function recipients()
     {
-        return $this->belongsTo(SeatNotificationRecipient::class, 'channel_id', 'channel_id');
+        return $this->belongsTo(NotificationRecipient::class, 'id', 'recipient_id');
     }
 
     public function affiliations()

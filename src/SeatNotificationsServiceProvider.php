@@ -51,7 +51,7 @@ class SeatNotificationsServiceProvider extends AbstractSeatPlugin
 
         $this->addRoutes();
         $this->addViews();
-        $this->add_migrations();
+        //$this->add_migrations();
         //$this->addTranslations();
 
         $this->addDiscordContainer();

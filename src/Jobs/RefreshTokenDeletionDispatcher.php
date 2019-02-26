@@ -25,7 +25,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Jobs;
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 use Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshTokenDeletedNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
@@ -64,7 +64,7 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
         Redis::funnel('soft_delete:refresh_token_' . $this->refresh_token->user->id)->limit(1)->then(function () {
             logger()->info('SoftDelete detected of ' . $this->refresh_token->user->name);
 
-            $recipients = SeatNotificationRecipient::all()
+            $recipients = NotificationRecipient::all()
                 ->filter(function ($recipient) {
                     return $recipient->shouldReceive('refresh_token');
                 });

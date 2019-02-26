@@ -26,7 +26,7 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Actions;
 
 use Exception;
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 
 class SubscribeAction
 {
@@ -40,7 +40,7 @@ class SubscribeAction
 
         try {
             // create a subscription
-            SeatNotificationRecipient::firstOrCreate([
+            NotificationRecipient::firstOrCreate([
                 'channel_id'           => $client_id,
                 'notification_channel' => $driver,
                 'is_channel'           => $is_channel,

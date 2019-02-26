@@ -25,7 +25,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Jobs;
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 use Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMailNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
@@ -77,7 +77,7 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
         Redis::funnel('killmail_id:' . $this->killmail_id)->limit(1)->then(function () {
             logger()->debug('Killmail notification for ID: ' . $this->killmail_id);
 
-            $recipients = SeatNotificationRecipient::all()
+            $recipients = NotificationRecipient::all()
                 ->filter(function ($recepient) {
                     return $recepient->shouldReceive('kill_mail', $this->getFilteredCorporationIds());
                 });

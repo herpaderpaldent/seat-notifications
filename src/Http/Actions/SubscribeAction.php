@@ -32,22 +32,21 @@ class SubscribeAction
 {
     public function execute(array $data)
     {
-        $client_id = $data['client_id']; // $request->input('client_id');
+        $driver_id = $data['driver_id']; // $request->input('driver_id');
         $driver = $data['driver']; //$request->input('driver');
         $notification = $data['notification']; //request->input('notification');
-        $is_channel = array_key_exists('is_channel', $data) ? $data['is_channel'] : false;
+        $group_id = array_key_exists('group_id', $data) ? $data['group_id'] : null;
         $affiliation = array_key_exists('affiliation', $data) ? $data['affiliation'] : null;
 
         try {
+
             // create a subscription
-            NotificationRecipient::firstOrCreate([
-                'channel_id'           => $client_id,
-                'notification_channel' => $driver,
-                'is_channel'           => $is_channel,
-            ])
-                ->notifications()
+            NotificationRecipient::firstOrCreate(
+                ['driver_id' => $driver_id, 'driver' => $driver], ['group_id' => $group_id]
+            )
+                ->subscriptions()
                 ->create([
-                    'name' => $notification,
+                    'notification' => $notification,
                     'affiliation' => $affiliation,
                 ]);
 

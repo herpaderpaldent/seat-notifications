@@ -36,13 +36,15 @@ class NotificationSubscription extends Model
      */
     protected $table = 'herpaderp_seat_notification_subscriptions';
 
+    protected $primaryKey = 'recipient_id';
+
+    protected $fillable = ['notification', 'affiliation'];
+
     public $incrementing = false;
 
-    protected $fillable = ['recipient_id', 'notification', 'affiliation'];
-
-    public function recipients()
+    public function recipient()
     {
-        return $this->belongsTo(NotificationRecipient::class, 'id', 'recipient_id');
+        return $this->belongsTo(NotificationRecipient::class, 'recipient_id', 'id');
     }
 
     public function affiliations()

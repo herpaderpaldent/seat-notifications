@@ -25,7 +25,7 @@
 
 return [
     'seat-notification-channel' => [
-        'discourse' => Herpaderpaldent\Seat\SeatNotifications\Drivers\DiscourseNotificationDriver::class,
+        //'discourse' => Herpaderpaldent\Seat\SeatNotifications\Drivers\DiscourseNotificationDriver::class,
         'discord'   => Herpaderpaldent\Seat\SeatNotifications\Drivers\DiscordNotificationDriver::class,
         'slack'     => Herpaderpaldent\Seat\SeatNotifications\Drivers\SlackNotificationDriver::class,
     ],

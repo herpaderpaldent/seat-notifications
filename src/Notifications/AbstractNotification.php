@@ -33,15 +33,14 @@ abstract class AbstractNotification
      */
     final public static function isSubscribed(string $driver_id) //: bool
     {
-
-        return NotificationSubscription::where('name', get_called_class())
+        return NotificationSubscription::where('notification', get_called_class())
             ->get()
             ->filter(function ($notification) use ($driver_id) {
 
                 if(is_null($driver_id))
-                    return $notification->recipients->is_channel;
+                    return is_null($notification->recipient->group_id);
 
-                return $notification->channel_id === $driver_id;
+                return $notification->recipient->driver_id === $driver_id;
             })
             ->isNotEmpty();
     }

@@ -85,9 +85,10 @@ Route::group([
         'prefix' => 'discord',
     ], function () {
 
-        Route::post('/', [
+        /*Route::post('/', [
             'as' => 'herpaderp.seatnotifications.discord.post.configuration',
-        ]);
+            'uses' => 'DiscordServerController@postConfiguration',
+        ]);*/
 
         include __DIR__ . '/NotificationChannel/Discord.php';
 
@@ -96,7 +97,7 @@ Route::group([
             'prefix' => 'configuration',
         ], function () {
 
-            //include __DIR__ . '/Configuration/Discord.php';
+            include __DIR__ . '/Configuration/Discord.php';
         }
         );
     });

@@ -18,12 +18,12 @@ class Version2Migrations extends Migration
 
         Schema::create('herpaderp_seat_notification_recipients', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('channel_id');
+            $table->string('driver_id');
             $table->string('driver');
             $table->integer('group_id')->nullable()->default(null);
             $table->timestamps();
 
-            $table->unique(['channel_id', 'driver'], 'herpaderp_seat_notification_recipients_unique');
+            $table->unique(['driver_id', 'driver'], 'herpaderp_seat_notification_recipients_unique');
         });
 
         Schema::create('herpaderp_seat_notification_subscriptions', function (Blueprint $table) {
@@ -36,6 +36,8 @@ class Version2Migrations extends Migration
                 ->references('id')
                 ->on('herpaderp_seat_notification_recipients')
                 ->onDelete('cascade');
+
+            $table->unique(['recipient_id', 'notification'], 'herpaderp_seat_notification_subscriptions_unique');
         });
     }
 

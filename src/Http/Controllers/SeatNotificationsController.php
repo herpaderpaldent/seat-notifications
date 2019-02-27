@@ -52,7 +52,7 @@ class SeatNotificationsController extends Controller
     public function postSubscribe(SubscribeRequest $request, SubscribeAction $action)
     {
 
-        if(empty($request->input('client_id'))) {
+        if(empty($request->input('driver_id'))) {
             session([
                 'herpaderp.seatnotifications.subscribe.driver' => request()->input('driver'),
                 'herpaderp.seatnotifications.subscribe.notification' => request()->input('notification'),
@@ -70,13 +70,14 @@ class SeatNotificationsController extends Controller
     public function getUnsubscribe(UnsubscribeAction $unsubscribe_action)
     {
 
-        if(request()->query('is_channel'))
+        if(request()->query('is_public'))
             return 'is public';
 
-        $client_id = request()->query('notification')::getDriver(request()->query('driver'))::getPrivateChannel();
+        $driver_id = request()->query('notification')::getDriver(request()->query('driver'))::getPrivateChannel();
 
         $data = [
-            'client_id' => $client_id,
+            'driver' => request()->query('driver'),
+            'driver_id' => $driver_id,
             'notification' => request()->query('notification'),
         ];
 

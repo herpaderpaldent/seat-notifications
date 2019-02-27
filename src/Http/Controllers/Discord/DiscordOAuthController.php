@@ -102,7 +102,8 @@ class DiscordOAuthController
         $data = [
             'driver' => $driver,
             'notification' => $notification,
-            'client_id' => DiscordUser::find(auth()->user()->group->id)->channel_id,
+            'driver_id' => DiscordUser::find(auth()->user()->group->id)->channel_id,
+            'group_id' => auth()->user()->group->id,
             ];
 
         return $this->subscribe_action->execute($data);

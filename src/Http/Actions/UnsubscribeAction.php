@@ -34,16 +34,29 @@ class UnsubscribeAction
     public function execute(array $data)
     {
         try {
-            NotificationSubscription::where('channel_id', $data['client_id'])
-                ->where('name', $data['notification'])
-                ->delete();
 
-            $empty_recipient = NotificationRecipient::find($data['client_id'])
-                ->notifications
+            NotificationRecipient::where('driver_id', $data['driver_id'])
+                ->where('driver', $data['driver'])
+                ->first()
+                ->subscriptions
+                ->filter(function ($subscription) use ($data) {
+                    return $subscription->notification === $data['notification'];
+                })
+                ->each(function ($subscription) {
+                    $subscription->delete();
+                });
+
+            $empty_recipient = NotificationRecipient::where('driver_id', $data['driver_id'])
+                ->where('driver', $data['driver'])
+                ->first()
+                ->subscriptions
                 ->isEmpty();
 
             if($empty_recipient)
-                NotificationRecipient::find($data['client_id'])->delete();
+                NotificationRecipient::where('driver_id', $data['driver_id'])
+                    ->where('driver', $data['driver'])
+                    ->first()
+                    ->delete();
 
             return redirect()->route('seatnotifications.index')->with('success', 'You have successfully unsubscribed to ' . $data['notification']::getTitle() . ' notification.');
 

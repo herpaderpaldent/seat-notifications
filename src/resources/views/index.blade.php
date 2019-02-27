@@ -49,7 +49,7 @@
       ]
     });
 
-    $('#notifications-driver-channels').on('show.bs.modal', function (event) {
+    /*$('#notifications-driver-channels').on('show.bs.modal', function (event) {
         $(this).find('span[rel="driver"]').text(event.relatedTarget.dataset.name);
         $(this).find('span[rel="notification"]').text(event.relatedTarget.dataset.notification);
         $(this).find('input[name="driver"]').val(event.relatedTarget.dataset.name);
@@ -81,6 +81,6 @@
             },
             width: '100%'
         });
-    });
+    });*/
   </script>
 @endpush

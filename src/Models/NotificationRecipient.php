@@ -29,6 +29,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Seat\Web\Models\Group;
 
 class NotificationRecipient extends Model
 {
@@ -48,12 +49,10 @@ class NotificationRecipient extends Model
      *
      * @var array
      */
-    protected $fillable = ['channel_id', 'driver', 'group_id'];
+    protected $fillable = ['driver_id', 'driver', 'group_id'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Relations\HasOne|null
-     */
-    public function notification_user()
+
+    /*public function notification_user()
     {
 
         if($this->notification_channel === 'discord')
@@ -63,27 +62,29 @@ class NotificationRecipient extends Model
             return $this->belongsTo(SlackUser::class, 'channel_id', 'channel_id');
 
         return null;
-    }
+    }*/
 
-    public function notifications()
+    public function subscriptions()
     {
-        return $this->hasMany(NotificationSubscription::class, 'channel_id', 'channel_id');
+        return $this->hasMany(NotificationSubscription::class, 'recipient_id', 'id');
     }
 
     /**
      * Returns a boolean if a certain Recipient should receive a given notification.
      *
-     * @param string $notification Name of the notification that should be checked.
+     * @param string     $notification Name of the notification that should be checked.
+     *
+     * @param array|null $ids
      *
      * @return bool
      */
     public function shouldReceive(string $notification, array $ids = null) : bool
     {
 
-        return $this->notifications
+        return $this->subscriptions
             ->filter(function ($seat_notification) use ($notification) {
 
-                return $seat_notification->name === $notification;
+                return $seat_notification->notifications === $notification;
             })
             ->filter(function ($seat_notification) use ($ids) {
 
@@ -112,19 +113,26 @@ class NotificationRecipient extends Model
      */
     public function recipient() : string
     {
-        if(is_null($this->notification_user))
+        if(is_null($this->group_id))
             return 'channel';
 
-        $main_character = $this->notification_user->group->main_character->name;
+        $main_character = Group::find($this->group_id)->main_character->name;
 
         if (is_null($main_character)) {
             logger()->warning('Group has no main character set. Attempt to make assignation based on first attached character.', [
-                'group_id' => $this->notification_user->group->id,
+                'group_id' => $this->group_id,
             ]);
-            $main_character = $this->notification_user->group->users->first()->character->name;
+            $main_character = Group::find($this->group_id)->users->first()->character->name;
         }
 
         return $main_character;
+    }
 
+    public function isChannel() : bool
+    {
+        if(is_null($this->group_id))
+            return true;
+
+        return false;
     }
 }

@@ -26,7 +26,6 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
 use Exception;
-use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 
 class UnsubscribeAction

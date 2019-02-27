@@ -27,8 +27,8 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord;
 
 use Exception;
 use GuzzleHttp\Client;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Caches\RedisRateLimitProvider;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
 use RestCord\DiscordClient;
 use RestCord\Model\User\User;

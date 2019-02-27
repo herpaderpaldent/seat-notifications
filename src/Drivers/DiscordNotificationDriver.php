@@ -132,7 +132,7 @@ class DiscordNotificationDriver implements INotificationDriver
     }
 
     /**
-     * Returns the notification channel configuration for Notifications
+     * Returns the notification channel configuration for Notifications.
      *
      * @return array
      */

@@ -51,7 +51,6 @@ class NotificationRecipient extends Model
      */
     protected $fillable = ['driver_id', 'driver', 'group_id'];
 
-
     /*public function notification_user()
     {
 

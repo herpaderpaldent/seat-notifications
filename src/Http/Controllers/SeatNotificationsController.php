@@ -60,6 +60,8 @@ class SeatNotificationsController extends Controller
             session([
                 'herpaderp.seatnotifications.subscribe.driver' => request()->input('driver'),
                 'herpaderp.seatnotifications.subscribe.notification' => request()->input('notification'),
+                'herpaderp.seatnotifications.subscribe.corporations_filter' => $request->input('corporations_filter'),
+                'herpaderp.seatnotifications.subscribe.characters_filter' => $request->input('characters_filter'),
             ]);
 
             return redirect()->route($request->input('notification')::getDriver($request->input('driver'))::getPrivateRegistrationRoute());

@@ -29,7 +29,7 @@ class Version2Migrations extends Migration
         Schema::create('herpaderp_seat_notification_subscriptions', function (Blueprint $table) {
             $table->integer('recipient_id')->unsigned();
             $table->string('notification');
-            $table->json('affiliation')->nullable()->default(null);
+            $table->json('affiliations')->nullable()->default(null);
             $table->timestamps();
 
             $table->foreign('recipient_id', 'herpaderp_seat_notification_subscriptions_foreign')

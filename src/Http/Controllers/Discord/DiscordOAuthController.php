@@ -98,13 +98,17 @@ class DiscordOAuthController
 
         $driver = request()->session()->pull('herpaderp.seatnotifications.subscribe.driver');
         $notification = request()->session()->pull('herpaderp.seatnotifications.subscribe.notification');
+        $characters_filter = request()->session()->pull('herpaderp.seatnotifications.subscribe.characters_filter');
+        $corporations_filter = request()->session()->pull('herpaderp.seatnotifications.subscribe.corporations_filter');
 
         $data = [
             'driver' => $driver,
             'notification' => $notification,
+            'characters_filter' => $characters_filter,
+            'corporations_filter' => $corporations_filter,
             'driver_id' => DiscordUser::find(auth()->user()->group->id)->channel_id,
             'group_id' => auth()->user()->group->id,
-            ];
+        ];
 
         return $this->subscribe_action->execute($data);
     }

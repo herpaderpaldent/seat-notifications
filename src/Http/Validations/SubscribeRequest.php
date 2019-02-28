@@ -50,8 +50,10 @@ class SubscribeRequest extends FormRequest
         $notifications = array_keys(config('services.seat-notification'));
 
         return [
-            'driver'       => 'required|string|in:' . implode(',', $drivers),
-            'notification' => 'required|string|in:' . implode(',', $notifications),
+            'driver'              => 'required|string|in:' . implode(',', $drivers),
+            'notification'        => 'required|string|in:' . implode(',', $notifications),
+            'characters_filter'   => 'array',
+            'corporations_filter' => 'array',
         ];
     }
 }

@@ -67,6 +67,10 @@ class SeatNotificationsController extends Controller
 
     }
 
+    /**
+     * @param UnsubscribeAction $unsubscribe_action
+     * @return \Illuminate\Http\RedirectResponse|string
+     */
     public function getUnsubscribe(UnsubscribeAction $unsubscribe_action)
     {
 
@@ -84,6 +88,9 @@ class SeatNotificationsController extends Controller
         return $unsubscribe_action->execute($data);
     }
 
+    /**
+     * @return mixed
+     */
     public function getNotifications()
     {
         $notifications = $this->getNotificationCollection();

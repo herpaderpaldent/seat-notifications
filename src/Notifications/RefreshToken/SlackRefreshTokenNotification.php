@@ -12,5 +12,4 @@ class SlackRefreshTokenNotification extends AbstractRefreshTokenNotification
     {
         // TODO: Implement via() method.
     }
-
 }

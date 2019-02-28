@@ -73,5 +73,4 @@ abstract class AbstractRefreshTokenNotification extends AbstractNotification
     }
 
     abstract public function via($notifiable);
-
 }

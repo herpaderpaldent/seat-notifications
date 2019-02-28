@@ -97,6 +97,7 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
         $tags = ['seatnotifications'];
         if (property_exists($this, 'tags'))
             return array_merge($this->tags, $tags);
+
         return $tags;
     }
 
@@ -119,5 +120,4 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
 
         return $main_character;
     }
-
 }

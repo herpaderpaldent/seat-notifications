@@ -1,5 +1,6 @@
 {{-- Check if the notification has been subscribed for the current user --}}
-@if (!is_null($row::getDriver($provider)::getPrivateChannel()) && $row::isSubscribed($row::getDriver($provider)::getPrivateChannel()))
+
+@if (!is_null($row::getDriver($provider)::getPrivateChannel()) && $row::isSubscribed($provider, false))
   <a href="{{ route('seatnotifications.notification.unsubscribe.channel', ['notification' => $row, 'driver' => $provider, 'is_public' => false]) }}" type="button" class="btn btn-app">
     <span class="badge bg-green">
       <i class="fa fa-check"></i>
@@ -16,11 +17,11 @@
     <input type="hidden" name="notification" value="{{ $row }}" />
     <input type="hidden" name="driver_id" value="{{ $row::getDriver($provider)::getPrivateChannel() }}" />
     <input type="hidden" name="group_id" value="{{ auth()->user()->group->id }}" />
-  </form>
 
-  <button type="submit" form="{{ $provider }}-private-subscribe-to-notification" type="button" class="btn btn-app">
-    <i class="fa {{ $row::getDriver($provider)::getButtonIconClass() }}"></i> {{ $row::getDriver($provider)::getButtonLabel() }}
-  </button>
+    <button type="submit" form="{{ $provider }}-private-subscribe-to-notification" type="button" class="btn btn-app">
+      <i class="fa {{ $row::getDriver($provider)::getButtonIconClass() }}"></i> {{ $row::getDriver($provider)::getButtonLabel() }}
+    </button>
+  </form>
 
 {{--Render a disabled button since none of the previous conditions has been met --}}
 

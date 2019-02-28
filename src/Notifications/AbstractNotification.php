@@ -27,20 +27,29 @@ abstract class AbstractNotification
      * TODO : is it an helper ?
      * Determine if a notification has been subscribed for a specific driver.
      *
-     * @param string $driver_id
+     * @param string $driver
+     * @param bool $is_public
      *
      * @return bool
      */
-    final public static function isSubscribed(string $driver_id) //: bool
+    final public static function isSubscribed(string $driver, bool $is_public = true): bool
     {
         return NotificationSubscription::where('notification', get_called_class())
             ->get()
-            ->filter(function ($notification) use ($driver_id) {
+            ->filter(function ($notification) use ($driver, $is_public) {
 
-                if(is_null($driver_id))
+                // check if the requested driver match with the recipient attached to this subscription
+                if ($notification->recipient->driver !== $driver)
+                    return false;
+
+                // if the requested subscription must be public,
+                // check if the current subscription is attached to a recipient without group_id
+                if ($is_public)
                     return is_null($notification->recipient->group_id);
 
-                return $notification->recipient->driver_id === $driver_id;
+                // if the requested subscription must be private,
+                // check if the current subscription is attached to a recipient with the currently authenticated user
+                return $notification->recipient->group_id === auth()->user()->group_id;
             })
             ->isNotEmpty();
     }

@@ -38,8 +38,14 @@ class SubscribeAction
         $group_id = array_key_exists('group_id', $data) ? $data['group_id'] : null;
 
         // retrieve filters and merge them together
-        $characters_filter = $data['characters_filter'] ?: [0];
-        $corporations_filter = $data['corporations_filter'] ?: [0];
+        $characters_filter = [0];
+        $corporations_filter = [0];
+
+        if (array_key_exists('characters_filter', $data))
+            $characters_filter = $data['characters_filter'] ?: [0];
+
+        if (array_key_exists('corporations_filter', $data))
+            $corporations_filter = $data['corporations_filter'] ?: [0];
 
         $affiliations = json_encode([
             'characters' => $characters_filter,

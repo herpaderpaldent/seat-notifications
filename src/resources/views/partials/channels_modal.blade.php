@@ -17,7 +17,7 @@
 
           <div class="form-group">
             <label for="available-channels">Select delivery channel:</label>
-            <select name="channel_id" id="available-channels" class="select2">
+            <select name="driver_id" id="available-channels" class="select2">
               <option></option>
             </select>
             <span class="help-block">

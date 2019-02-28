@@ -123,6 +123,9 @@
       .on('hide.bs.modal', function (event) {
         // hide all filters box from the modal on hide
         $(this).find('.channel-filter').addClass('hidden');
+
+        // reset picked filters
+        $(this).find('.channel-filter .select2').val([]).trigger('change');
       });
   </script>
 @endpush

@@ -82,7 +82,6 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
                     Notification::send($grouped_recipients, (new $notification_class($this->refresh_token)));
                 });
 
-
         }, function () {
 
             logger()->debug('A Soft-Delete job is already running for ' . $this->refresh_token->user->name);

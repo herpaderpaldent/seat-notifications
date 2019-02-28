@@ -41,4 +41,12 @@ abstract class AbstractRefreshTokenNotification extends AbstractNotification
     {
         return true;
     }
+
+    /**
+     * @return array
+     */
+    final public static function getFilters(): ?string
+    {
+        return 'corporations';
+    }
 }

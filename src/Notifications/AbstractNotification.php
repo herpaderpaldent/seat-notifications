@@ -63,4 +63,12 @@ abstract class AbstractNotification
 
         return config($config_key, []);
     }
+
+    /**
+     * @return array
+     */
+    public static function getFilters(): ?string
+    {
+        return null;
+    }
 }

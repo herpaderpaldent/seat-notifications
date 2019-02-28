@@ -33,6 +33,11 @@ Route::group([
         'uses'       => 'SeatNotificationsController@index',
     ]);
 
+    Route::get('/filters', [
+        'as'   => 'seatnotifications.notifications.filters',
+        'uses' => 'SeatNotificationsController@getFilterList',
+    ]);
+
     Route::get('/notifications', [
         'as'         => 'seatnotifications.get.available.notification',
         'uses'       => 'SeatNotificationsController@getNotifications',

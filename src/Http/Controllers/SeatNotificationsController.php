@@ -29,12 +29,16 @@ use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\UnsubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\SubscribeRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Seat\Services\Repositories\Character\Character;
+use Seat\Services\Repositories\Corporation\Corporation;
 use Seat\Web\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;
 
 class SeatNotificationsController extends Controller
 {
+    use Character;
+    use Corporation;
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -130,6 +134,44 @@ class SeatNotificationsController extends Controller
 
         // return the list of channels published by the requested provider
         return $drivers[$driver_id]::isSetup() ? $drivers[$driver_id]::getChannels() : [];
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFilterList(Request $request)
+    {
+        $request->validate([
+            'filter' => 'required|string|in:characters,corporations',
+        ]);
+
+        switch ($request->input('filter')) {
+            case 'characters':
+                return response()->json($this->getAllCharactersWithAffiliations(false)
+                                             ->select('character_id', 'name')
+                                             ->orderBy('name')
+                                             ->get()
+                                             ->map(function ($character) {
+                                                 return [
+                                                     'id'   => $character->character_id,
+                                                     'name' => $character->name,
+                                                 ];
+                                             }));
+            case 'corporations':
+                return response()->json($this->getAllCorporationsWithAffiliationsAndFilters(false)
+                                             ->select('corporation_id', 'name')
+                                             ->orderBy('name')
+                                             ->get()
+                                             ->map(function ($corporation) {
+                                                 return [
+                                                     'id'   => $corporation->corporation_id,
+                                                     'name' => $corporation->name,
+                                                 ];
+                                             }));
+        }
+
+        return response()->json([], 400);
     }
 
     /**

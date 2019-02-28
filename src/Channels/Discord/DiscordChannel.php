@@ -39,7 +39,7 @@ class DiscordChannel
     public function send($notifiable, Notification $notification)
     {
 
-        if (! $channel = $notifiable->channel_id) {
+        if (! $channel = $notifiable->driver_id) {
             return;
         }
 

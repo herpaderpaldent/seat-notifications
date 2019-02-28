@@ -56,7 +56,7 @@ class SlackChannel
     public function send($notifiable, Notification $notification)
     {
 
-        if (! $channel = $notifiable->channel_id) {
+        if (! $channel = $notifiable->driver_id) {
             throw new Exception('Channel could not be found.');
         }
 

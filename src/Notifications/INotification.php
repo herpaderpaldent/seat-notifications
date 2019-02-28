@@ -53,7 +53,7 @@ interface INotification
     public static function getDiversImplementations(): array;
 
     /**
-     * Determine a list of control filters
+     * Determine a list of control filters.
      * @return string
      */
     public static function getFilters(): ?string;

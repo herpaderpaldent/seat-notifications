@@ -77,14 +77,9 @@ class SeatNotificationsController extends Controller
     public function getUnsubscribe(UnsubscribeAction $unsubscribe_action)
     {
 
-        if(request()->query('is_public'))
-            return 'is public';
-
-        $driver_id = request()->query('notification')::getDriver(request()->query('driver'))::getPrivateChannel();
-
         $data = [
             'driver' => request()->query('driver'),
-            'driver_id' => $driver_id,
+            'group_id' => request()->query('is_public') ? null : auth()->user()->group_id,
             'notification' => request()->query('notification'),
         ];
 

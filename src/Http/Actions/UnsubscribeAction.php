@@ -34,7 +34,7 @@ class UnsubscribeAction
     {
         try {
 
-            NotificationRecipient::where('driver_id', $data['driver_id'])
+            NotificationRecipient::where('group_id', $data['group_id'])
                 ->where('driver', $data['driver'])
                 ->first()
                 ->subscriptions
@@ -45,14 +45,14 @@ class UnsubscribeAction
                     $subscription->delete();
                 });
 
-            $empty_recipient = NotificationRecipient::where('driver_id', $data['driver_id'])
+            $empty_recipient = NotificationRecipient::where('group_id', $data['group_id'])
                 ->where('driver', $data['driver'])
                 ->first()
                 ->subscriptions
                 ->isEmpty();
 
             if($empty_recipient)
-                NotificationRecipient::where('driver_id', $data['driver_id'])
+                NotificationRecipient::where('group_id', $data['group_id'])
                     ->where('driver', $data['driver'])
                     ->first()
                     ->delete();

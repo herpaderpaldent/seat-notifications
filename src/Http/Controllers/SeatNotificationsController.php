@@ -62,9 +62,6 @@ class SeatNotificationsController extends Controller
         }
 
         return $action->execute($request->all());
-
-        //dd($request, $request->input('client_id'), $request->input('driver'), $request->input('notification'));
-
     }
 
     /**
@@ -94,7 +91,6 @@ class SeatNotificationsController extends Controller
     public function getNotifications()
     {
         $notifications = $this->getNotificationCollection();
-        //$available_channels = $this->getNotificationChannelCollection();
 
         return DataTables::of($notifications)
             ->editColumn('notification', function ($row) {
@@ -143,31 +139,5 @@ class SeatNotificationsController extends Controller
     private function getNotificationCollection() : array
     {
         return array_keys(config('services.seat-notification', []));
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getNotificationChannelCollection() : Collection
-    {
-        $notification_channels = collect();
-        $classes = config('services.seat-notification-channel');
-
-        // for each registered provider, retrieve available channels
-        foreach ($classes as $key => $class) {
-            $provider = new $class;
-
-            // ensure the provider is properly setup
-            // otherwise, skip the entry
-            if (! $provider::isSetup())
-                continue;
-
-            // append the provider channels to the available channels list
-            $notification_channels->push([
-                $key => $provider->getChannels(),
-            ]);
-        }
-
-        return $notification_channels;
     }
 }

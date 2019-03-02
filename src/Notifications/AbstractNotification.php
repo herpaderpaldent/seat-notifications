@@ -108,7 +108,7 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
      * @var array
      */
     protected $colors = [
-        'danger' => ['hex' => '#dd4b39', 'dec' => '14502713']
+        'danger' => ['hex' => '#dd4b39', 'dec' => '14502713'],
     ];
 
     /**

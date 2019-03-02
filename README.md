@@ -60,6 +60,10 @@ Notification::send($receipients, (new RefreshTokenDeletedNotification($refresh_t
 
 where `$receipients` are a collection of modal that should receive the notification and `$refresh_token` is the deleted `refresh_token` that is passed to the constructor. In this example we use an Observer to send notifications: [Observer](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/Observers/RefreshTokenObserver.php).
 
+### Architecture
+
+![uml_diagram](https://yuml.me/diagram/scruffy/class/[%3C%3CINotification%3E%3E%7Bbg:deepskyblue%7D]%5E-.-[AbstractNotification%7Bbg:deepskyblue%7D],[AbstractNotification]%5E[AbstractRefreshTokenNotification],[AbstractRefreshTokenNotification]%5E[DiscordRefreshTokenNotification%7Bbg:yellowgreen%7D],[AbstractRefreshTokenNotification%7Bbg:yellowgreen%7D]%5E[SlackRefreshTokenNotification%7Bbg:yellowgreen%7D],[AbstractNotification]++-%3E[%3C%3CINotificationDriver%3E%3E],[%3C%3CINotificationDriver%3E%3E]%5E-.-[DiscordNotificationDriver%7Bbg:lightseagreen%7D],[%3C%3CINotificationDriver%3E%3E%7Bbg:lightseagreen%7D]%5E-.-[SlackNotificationDriver%7Bbg:lightseagreen%7D],[AbstractNotification]uses%20-.-%3E[NotificationSubscription%7Bbg:orange%7D],[NotificationSubscription]++-%3E[NotificationRecipient%7Bbg:orange%7D],[NotificationRecipient]++-1%3E[Group%7Bbg:tomato%7D],[Group]++-%3E[User%7Bbg:tomato%7D])
+
 ### Add new channels
 
 If you have written a new notification channel that you would like to use for sending notifications to your users you might extend `config/services.php` similar to the provided example:

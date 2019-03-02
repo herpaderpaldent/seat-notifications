@@ -39,7 +39,7 @@ class DiscordRefreshTokenNotification extends AbstractRefreshTokenNotification
             ->embed(function ($embed) use ($character) {
                 $embed->title('**A SeAT users refresh token was removed!**')
                     ->thumbnail($this->image)
-                    ->color('16711680')
+                    ->color($this->color('danger', 'dec'))
                     ->field('Character', $character, true)
                     ->field('Corporation', $this->corporation, true)
                     ->field('Main Character', $this->main_character, false);

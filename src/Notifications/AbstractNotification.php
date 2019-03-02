@@ -105,6 +105,13 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
     protected $tags = [];
 
     /**
+     * @var array
+     */
+    protected $colors = [
+        'danger' => ['hex' => '#dd4b39', 'dec' => '14502713']
+    ];
+
+    /**
      * The number of times the job may be attempted.
      *
      * @var int
@@ -146,5 +153,11 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
         }
 
         return $main_character;
+    }
+
+    public function color(string $color, string $type) : string
+    {
+        return $this->colors[$color][$type];
+
     }
 }

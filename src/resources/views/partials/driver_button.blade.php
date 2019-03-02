@@ -1,7 +1,7 @@
 {{-- Check if the notification has been subscribed for the current provider --}}
 
-@if ($row::isSubscribed($provider))
-  <a href="{{ route('seatnotifications.notification.unsubscribe.channel', ['notification' => $row, 'driver' => $provider, 'is_public' => true]) }}" type="button" class="btn btn-app">
+@if (!is_null($row::getDriver($provider)::getPublicDriverId($row)) && $row::isSubscribed($row::getDriver($provider)::getPublicDriverId($row)))
+  <a href="{{ route('seatnotifications.notification.unsubscribe.channel', ['notification' => $row, 'driver' => $provider, 'driver_id' => $row::getDriver($provider)::getPublicDriverId($row)]) }}" type="button" class="btn btn-app">
     <span class="badge bg-green">
       <i class="fa fa-check"></i>
     </span>

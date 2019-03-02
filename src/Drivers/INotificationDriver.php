@@ -84,11 +84,18 @@ interface INotificationDriver
     public static function isSetup(): bool;
 
     /**
-     * Return channel_id of user.
+     * Return driver_id of user.
      *
      * @return string
      */
     public static function getPrivateChannel() : ?string;
+
+    /**
+     * Return channel_id of user.
+     *
+     * @return string
+     */
+    public static function getPublicDriverId(string $notification) : ?string;
 
     /**
      * Return the route key which have to be used in a private notification registration flow.

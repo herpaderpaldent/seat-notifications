@@ -79,7 +79,7 @@ class SeatNotificationsController extends Controller
 
         $data = [
             'driver' => request()->query('driver'),
-            'group_id' => request()->query('is_public') ? null : auth()->user()->group_id,
+            'driver_id' => request()->query('driver_id'),
             'notification' => request()->query('notification'),
         ];
 

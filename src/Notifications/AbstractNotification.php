@@ -2,6 +2,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
 
+use Herpaderpaldent\Seat\SeatNotifications\Exceptions\UnknownDriverException;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -70,6 +71,32 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
         $config_key = sprintf('services.seat-notification.%s', get_called_class());
 
         return config($config_key, []);
+    }
+
+    /**
+     * Return the class of a specific provider implementation.
+     *
+     * @param string $provider
+     *
+     * @return string
+     * @throws \Herpaderpaldent\Seat\SeatNotifications\Exceptions\UnknownDriverException
+     * @example
+     * ```
+     *   ProviderANotificationImplementationClass
+     * ```
+     */
+    final public static function getDiverImplementation(string $provider): string
+    {
+        try {
+            // build the configuration key related to the notification
+            $config_key = sprintf('services.seat-notification.%s.%s', get_called_class(), $provider);
+
+            return config($config_key, []);
+        } catch (\Throwable $exception) {
+
+            // throw exception if implementation is not found.
+            throw new UnknownDriverException($provider);
+        }
     }
 
     /**

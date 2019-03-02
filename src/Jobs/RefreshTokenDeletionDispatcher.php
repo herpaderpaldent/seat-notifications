@@ -76,8 +76,8 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
 
             $recipients->groupBy('driver')
                 ->each(function ($grouped_recipients) {
-                    $driver = $grouped_recipients->first()->driver;
-                    $notification_class = AbstractRefreshTokenNotification::getDiversImplementations()[$driver];
+                    $driver = (string) $grouped_recipients->first()->driver;
+                    $notification_class = AbstractRefreshTokenNotification::getDiverImplementation($driver);
 
                     Notification::send($grouped_recipients, (new $notification_class($this->refresh_token)));
                 });

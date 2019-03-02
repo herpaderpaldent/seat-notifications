@@ -56,7 +56,7 @@ class SeatNotificationsController extends Controller
     public function postSubscribe(SubscribeRequest $request, SubscribeAction $action)
     {
 
-        if (! empty($request->input('group_id')) && empty($request->input('driver_id'))) {
+        if (empty($request->input('driver_id'))) {
             session([
                 'herpaderp.seatnotifications.subscribe.driver' => request()->input('driver'),
                 'herpaderp.seatnotifications.subscribe.notification' => request()->input('notification'),

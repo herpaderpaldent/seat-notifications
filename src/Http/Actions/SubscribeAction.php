@@ -41,9 +41,17 @@ class SubscribeAction
         try {
 
             // create a subscription
-            NotificationRecipient::firstOrCreate(
+            $recipient = NotificationRecipient::firstOrCreate(
                 ['driver_id' => $driver_id, 'driver' => $driver], ['group_id' => $group_id]
-            )
+            );
+
+            // Little hack so that to provide proper subscription flow.
+            if(empty($recipient->id))
+                $recipient = NotificationRecipient::firstOrCreate(
+                    ['driver_id' => $driver_id, 'driver' => $driver], ['group_id' => $group_id]
+                );
+
+            $recipient
                 ->subscriptions()
                 ->create([
                     'notification' => $notification,

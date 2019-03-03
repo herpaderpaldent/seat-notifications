@@ -3,6 +3,8 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken;
 
 use Herpaderpaldent\Seat\SeatNotifications\Notifications\AbstractNotification;
+use Seat\Eveapi\Models\Corporation\CorporationInfo;
+use Seat\Eveapi\Models\RefreshToken;
 
 /**
  * Class AbstractRefreshTokenNotification.
@@ -41,4 +43,34 @@ abstract class AbstractRefreshTokenNotification extends AbstractNotification
     {
         return true;
     }
+
+    /**
+     * @var array
+     */
+    protected $tags = ['refresh_token'];
+
+    public $user_name;
+
+    public $image;
+
+    public $main_character;
+
+    public $corporation;
+
+    public $refresh_token;
+
+    public function __construct(RefreshToken $refresh_token)
+    {
+        parent::__construct();
+
+        $this->refresh_token = $refresh_token;
+        $this->user_name = $refresh_token->user->name;
+        $this->image = 'https://imageserver.eveonline.com/Character/' . $refresh_token->character_id . '_128.jpg';
+        $this->main_character = $this->getMainCharacter($refresh_token->user->group)->name;
+        $this->corporation = optional(CorporationInfo::find($refresh_token->user->character->corporation_id))->name ?: 'NPC Corporation';
+
+        array_push($this->tags, 'user_name:' . $this->user_name);
+    }
+
+    abstract public function via($notifiable);
 }

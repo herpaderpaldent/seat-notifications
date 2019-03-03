@@ -83,7 +83,7 @@ class NotificationRecipient extends Model
         return $this->subscriptions
             ->filter(function ($seat_notification) use ($notification) {
 
-                return $seat_notification->notifications === $notification;
+                return $seat_notification->notification === $notification;
             })
             ->filter(function ($seat_notification) use ($ids) {
 

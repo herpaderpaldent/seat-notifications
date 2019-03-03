@@ -2,14 +2,23 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications;
 
+use Herpaderpaldent\Seat\SeatNotifications\Exceptions\UnknownDriverException;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Seat\Web\Models\Group;
 
 /**
  * Class AbstractNotification.
  * @package Herpaderpaldent\Seat\SeatNotifications\Notifications
  */
-abstract class AbstractNotification
+abstract class AbstractNotification extends Notification implements ShouldQueue
 {
+    use Queueable, SerializesModels, InteractsWithQueue;
+
     /**
      * TODO : is it an helper ?
      * Return the driver class which is related to the requested ID.
@@ -62,5 +71,94 @@ abstract class AbstractNotification
         $config_key = sprintf('services.seat-notification.%s', get_called_class());
 
         return config($config_key, []);
+    }
+
+    /**
+     * Return the class of a specific provider implementation.
+     *
+     * @param string $provider
+     *
+     * @return string
+     * @throws \Herpaderpaldent\Seat\SeatNotifications\Exceptions\UnknownDriverException
+     * @example
+     * ```
+     *   ProviderANotificationImplementationClass
+     * ```
+     */
+    final public static function getDriverImplementation(string $provider): string
+    {
+
+            // build the configuration key related to the notification
+            $config_key = sprintf('services.seat-notification.%s', get_called_class());
+
+            $implementations = config($config_key, []);
+
+            if (array_key_exists($provider, $implementations))
+                return $implementations[$provider];
+
+            // throw exception if implementation is not found.
+            throw new UnknownDriverException($provider);
+    }
+
+    /**
+     * @var array
+     */
+    protected $tags = [];
+
+    /**
+     * @var array
+     */
+    const COLORS = [
+        'danger' => ['hex' => '#dd4b39', 'dec' => '14502713'],
+    ];
+
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 5;
+
+    /**
+     * Assign this job a tag so that Horizon can categorize and allow
+     * for specific tags to be monitored.
+     *
+     * If a job specifies the tags property, that is added.
+     *
+     * @return array
+     */
+    public function tags(): array
+    {
+        $tags = ['seatnotifications'];
+        if (property_exists($this, 'tags'))
+            return array_merge($this->tags, $tags);
+
+        return $tags;
+    }
+
+    public function __construct()
+    {
+        $this->queue = 'high';
+        $this->connection = 'redis';
+    }
+
+    public function getMainCharacter(Group $group)
+    {
+        $main_character = $group->main_character;
+
+        if (is_null($main_character)) {
+            logger()->warning('Group has no main character set. Attempt to make assignation based on first attached character.', [
+                'group_id' => $group->id,
+            ]);
+            $main_character = $group->users->first()->character;
+        }
+
+        return $main_character;
+    }
+
+    public function color(string $color, string $type) : string
+    {
+        return self::COLORS[$color][$type];
+
     }
 }

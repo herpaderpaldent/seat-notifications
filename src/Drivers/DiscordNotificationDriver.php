@@ -9,7 +9,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
  * Class DiscordChannel.
  * @package Herpaderpaldent\Seat\SeatNotifications\Http\Channels\Discord
  */
-class DiscordNotificationDriver implements INotificationDriver
+class DiscordNotificationDriver extends AbstractNotificationDriver
 {
     /**
      * The view name which will be used to store the channel settings.

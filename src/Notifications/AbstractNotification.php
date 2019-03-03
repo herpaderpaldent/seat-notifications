@@ -87,16 +87,17 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
      */
     final public static function getDiverImplementation(string $provider): string
     {
-        try {
-            // build the configuration key related to the notification
-            $config_key = sprintf('services.seat-notification.%s.%s', get_called_class(), $provider);
 
-            return config($config_key, []);
-        } catch (\Throwable $exception) {
+            // build the configuration key related to the notification
+            $config_key = sprintf('services.seat-notification.%s', get_called_class());
+
+            $implementations = config($config_key, []);
+
+            if (array_key_exists($provider, $implementations))
+                return $implementations[$provider];
 
             // throw exception if implementation is not found.
             throw new UnknownDriverException($provider);
-        }
     }
 
     /**

@@ -25,6 +25,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
+use Herpaderpaldent\Seat\SeatNotifications\Exceptions\ImplementPrivateFlowException;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\UnsubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\SubscribeRequest;
@@ -63,6 +64,9 @@ class SeatNotificationsController extends Controller
                 'herpaderp.seatnotifications.subscribe.corporations_filter' => $request->input('corporations_filter'),
                 'herpaderp.seatnotifications.subscribe.characters_filter' => $request->input('characters_filter'),
             ]);
+
+            if ($request->input('notification')::getDriver($request->input('driver'))::getRegistrationRoute() === null)
+                throw new ImplementPrivateFlowException($request->input('driver'));
 
             return redirect()->route($request->input('notification')::getDriver($request->input('driver'))::getPrivateRegistrationRoute());
         }

@@ -15,16 +15,6 @@ class DiscordRefreshTokenNotification extends AbstractRefreshTokenNotification
     const DANGER_COLOR = '14502713';
 
     /**
-     * Determine if channel has personal notification setup.
-     *
-     * @return bool
-     */
-    public static function hasPersonalNotification() : bool
-    {
-        return true;
-    }
-
-    /**
      * @param $notifiable
      * @return array
      */

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
 /**
@@ -9,7 +8,6 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
  */
 abstract class AbstractNotificationDriver implements INotificationDriver
 {
-
     /**
      * Determine if a channel is supporting private notifications.
      *

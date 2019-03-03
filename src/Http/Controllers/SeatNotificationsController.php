@@ -28,6 +28,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\UnsubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\SubscribeRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Seat\Services\Repositories\Character\Character;
 use Seat\Services\Repositories\Corporation\Corporation;
@@ -117,7 +118,7 @@ class SeatNotificationsController extends Controller
      * @param string $driver_id
      * @return array
      */
-    public function getChannels(Request $request) : array
+    public function getChannels(Request $request) : JsonResponse
     {
         // retrieve configured drivers
         $drivers = config('services.seat-notification-channel');
@@ -130,7 +131,7 @@ class SeatNotificationsController extends Controller
         $driver_id = $request->query('driver');
 
         // return the list of channels published by the requested provider
-        return $drivers[$driver_id]::isSetup() ? $drivers[$driver_id]::getChannels() : [];
+        return $drivers[$driver_id]::isSetup() ? response()->json($drivers[$driver_id]::getChannels()) : response()->json([]);
     }
 
     /**

@@ -79,13 +79,13 @@ class DiscordNotificationDriver implements INotificationDriver
                     continue;
 
                 $data->push([
-                    'id'              => $channel->id,
+                    'id'              => (string) $channel->id,
                     'name'            => $channel->name,
                     'private_channel' => false,
                 ]);
             }
 
-            return $data->all();
+            return $data->toArray();
         });
     }
 

@@ -51,18 +51,6 @@ class NotificationRecipient extends Model
      */
     protected $fillable = ['driver_id', 'driver', 'group_id'];
 
-    /*public function notification_user()
-    {
-
-        if($this->notification_channel === 'discord')
-            return $this->belongsTo(DiscordUser::class, 'channel_id', 'channel_id');
-
-        if($this->notification_channel === 'slack')
-            return $this->belongsTo(SlackUser::class, 'channel_id', 'channel_id');
-
-        return null;
-    }*/
-
     public function subscriptions()
     {
         return $this->hasMany(NotificationSubscription::class, 'recipient_id', 'id');
@@ -87,6 +75,7 @@ class NotificationRecipient extends Model
             })
             ->filter(function ($seat_notification) use ($ids) {
 
+                //TODO: Refactor this with KillMailDispatcher
                 if($ids === null)
                     return true;
 

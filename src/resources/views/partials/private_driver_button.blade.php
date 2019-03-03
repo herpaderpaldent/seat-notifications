@@ -17,11 +17,10 @@
     <input type="hidden" name="notification" value="{{ $row }}" />
     <input type="hidden" name="driver_id" value="{{ $row::getDriver($provider)::getPrivateChannel() }}" />
     <input type="hidden" name="group_id" value="{{ auth()->user()->group->id }}" />
-
-    <button type="submit" form="{{ $provider }}-private-subscribe-to-notification" type="button" class="btn btn-app">
-      <i class="fa {{ $row::getDriver($provider)::getButtonIconClass() }}"></i> {{ $row::getDriver($provider)::getButtonLabel() }}
-    </button>
   </form>
+  <button type="submit" form="{{ $provider }}-private-subscribe-to-notification" type="button" class="btn btn-app">
+    <i class="fa {{ $row::getDriver($provider)::getButtonIconClass() }}"></i> {{ $row::getDriver($provider)::getButtonLabel() }}
+  </button>
 
 {{--Render a disabled button since none of the previous conditions has been met --}}
 

@@ -41,12 +41,12 @@ class DiscordRefreshTokenNotification extends AbstractRefreshTokenNotification
      */
     public function toDiscord($notifiable)
     {
-        $character = sprintf('[%s](%s)',
-            $this->user_name,
-            route('configuration.users.edit', ['user_id' => $this->refresh_token->character_id]));
-
         return (new DiscordMessage)
-            ->embed(function ($embed) use ($character) {
+            ->embed(function ($embed) {
+                $character = sprintf('[%s](%s)',
+                    $this->user_name,
+                    route('configuration.users.edit', ['user_id' => $this->refresh_token->character_id]));
+
                 $embed->title('**A SeAT users refresh token was removed!**')
                     ->thumbnail($this->image)
                     ->color(self::DANGER_COLOR)

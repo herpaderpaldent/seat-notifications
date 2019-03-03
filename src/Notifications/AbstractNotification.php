@@ -108,7 +108,7 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
     /**
      * @var array
      */
-    protected $colors = [
+    const COLORS = [
         'danger' => ['hex' => '#dd4b39', 'dec' => '14502713'],
     ];
 
@@ -158,7 +158,7 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
 
     public function color(string $color, string $type) : string
     {
-        return $this->colors[$color][$type];
+        return self::COLORS[$color][$type];
 
     }
 }

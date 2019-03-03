@@ -79,7 +79,7 @@ interface INotificationDriver
     public static function isSetup(): bool;
 
     /**
-     * Return channel_id of user.
+     * Return driver_id of user.
      *
      * @return string
      */

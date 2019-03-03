@@ -71,7 +71,7 @@ class SlackNotificationDriver extends AbstractNotificationDriver
      */
     public static function allowPersonalNotifications(): bool
     {
-        return false;
+        return true;
     }
 
     /**

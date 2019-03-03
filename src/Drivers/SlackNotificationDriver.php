@@ -101,6 +101,11 @@ class SlackNotificationDriver extends AbstractNotificationDriver
      */
     public static function getPrivateChannel() : ?string
     {
-        return SlackUser::find(auth()->user()->group->id)->channel_id;
+        $slack_user = SlackUser::find(auth()->user()->group_id);
+
+        if (is_null($slack_user))
+            return null;
+
+        return $slack_user->channel_id;
     }
 }

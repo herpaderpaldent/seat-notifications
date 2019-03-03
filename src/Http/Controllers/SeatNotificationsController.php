@@ -65,7 +65,7 @@ class SeatNotificationsController extends Controller
                 'herpaderp.seatnotifications.subscribe.characters_filter' => $request->input('characters_filter'),
             ]);
 
-            if ($request->input('notification')::getDriver($request->input('driver'))::getRegistrationRoute() === null)
+            if ($request->input('notification')::getDriver($request->input('driver'))::getPrivateRegistrationRoute() === null)
                 throw new ImplementPrivateFlowException($request->input('driver'));
 
             return redirect()->route($request->input('notification')::getDriver($request->input('driver'))::getPrivateRegistrationRoute());

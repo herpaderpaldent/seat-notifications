@@ -56,7 +56,7 @@
       </div>
       {{-- /.modal-body --}}
       <div class="modal-footer">
-        <a href="{{ route('seatnotifications.notification.unsubscribe.channel') }}" type="button" class="btn btn-danger pull-left">Unsubscribe</a>
+        <button type="button" data-dismiss="modal" class="btn btn-default pull-left">Close</button>
         <button type="submit" form="subscribe-to-notification" class="btn btn-primary">Subscribe</button>
       </div>
       {{-- /.modal-footer --}}

@@ -27,11 +27,22 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
 use Exception;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
 
 class UnsubscribeAction
 {
     public function execute(array $data)
     {
+        $subscription = NotificationSubscription::where('notification', $data['notification'])
+            ->get()
+            ->filter(function ($subscription) use ($data) {
+                return $subscription->recipient->driver === $data['driver'] && $subscription->recipient->group_id === $data['group_id'];
+            })
+            ->first();
+
+        if (! is_null($subscription))
+            $data['driver_id'] = $subscription->recipient->driver_id;
+
         try {
 
             NotificationRecipient::where('driver_id', $data['driver_id'])

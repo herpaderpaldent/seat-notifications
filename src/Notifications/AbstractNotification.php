@@ -85,7 +85,7 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
      *   ProviderANotificationImplementationClass
      * ```
      */
-    final public static function getDiverImplementation(string $provider): string
+    final public static function getDriverImplementation(string $provider): string
     {
 
             // build the configuration key related to the notification

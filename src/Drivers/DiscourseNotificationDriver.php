@@ -156,6 +156,18 @@ class DiscourseNotificationDriver implements INotificationDriver
     }
 
     /**
+     * Return driver_id of public subscription.
+     *
+     * @param string $notification
+     *
+     * @return string
+     */
+    public static function getPublicDriverId(string $notification) : ?string
+    {
+        return null;
+    }
+
+    /**
      * Return the route key which have to be used in a private notification registration flow.
      *
      * @return string

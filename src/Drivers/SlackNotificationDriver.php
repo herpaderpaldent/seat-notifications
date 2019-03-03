@@ -19,14 +19,6 @@ class SlackNotificationDriver implements INotificationDriver
     /**
      * @return string
      */
-    public static function getRegistrationView(): string
-    {
-        return 'seatnotifications::slack.registration';
-    }
-
-    /**
-     * @return string
-     */
     public static function getButtonLabel() : string
     {
         return 'Slack';

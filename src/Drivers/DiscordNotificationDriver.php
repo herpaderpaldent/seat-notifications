@@ -27,15 +27,6 @@ class DiscordNotificationDriver implements INotificationDriver
     /**
      * @return string
      */
-    public static function getRegistrationView(): string
-    {
-
-        return 'seatnotifications::discord.registration';
-    }
-
-    /**
-     * @return string
-     */
     public static function getButtonLabel(): string
     {
 

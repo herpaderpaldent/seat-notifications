@@ -39,11 +39,6 @@ interface INotificationDriver
     public static function getSettingsView() : string;
 
     /**
-     * @return string
-     */
-    public static function getRegistrationView() : string;
-
-    /**
      * The label which will be applied to the subscription button.
      *
      * @return string

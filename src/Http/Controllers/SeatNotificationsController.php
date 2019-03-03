@@ -29,12 +29,16 @@ use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\UnsubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\SubscribeRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+use Seat\Services\Repositories\Character\Character;
+use Seat\Services\Repositories\Corporation\Corporation;
 use Seat\Web\Http\Controllers\Controller;
 use Yajra\DataTables\DataTables;
 
 class SeatNotificationsController extends Controller
 {
+    use Character;
+    use Corporation;
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -52,42 +56,42 @@ class SeatNotificationsController extends Controller
     public function postSubscribe(SubscribeRequest $request, SubscribeAction $action)
     {
 
-        if(empty($request->input('driver_id'))) {
+        if (empty($request->input('driver_id'))) {
             session([
                 'herpaderp.seatnotifications.subscribe.driver' => request()->input('driver'),
                 'herpaderp.seatnotifications.subscribe.notification' => request()->input('notification'),
+                'herpaderp.seatnotifications.subscribe.corporations_filter' => $request->input('corporations_filter'),
+                'herpaderp.seatnotifications.subscribe.characters_filter' => $request->input('characters_filter'),
             ]);
 
             return redirect()->route($request->input('notification')::getDriver($request->input('driver'))::getPrivateRegistrationRoute());
         }
 
         return $action->execute($request->all());
-
-        //dd($request, $request->input('client_id'), $request->input('driver'), $request->input('notification'));
-
     }
 
+    /**
+     * @param UnsubscribeAction $unsubscribe_action
+     * @return \Illuminate\Http\RedirectResponse|string
+     */
     public function getUnsubscribe(UnsubscribeAction $unsubscribe_action)
     {
 
-        if(request()->query('is_public'))
-            return 'is public';
-
-        $driver_id = request()->query('notification')::getDriver(request()->query('driver'))::getPrivateChannel();
-
         $data = [
             'driver' => request()->query('driver'),
-            'driver_id' => $driver_id,
+            'group_id' => request()->query('is_public') ? null : auth()->user()->group_id,
             'notification' => request()->query('notification'),
         ];
 
         return $unsubscribe_action->execute($data);
     }
 
+    /**
+     * @return mixed
+     */
     public function getNotifications()
     {
         $notifications = $this->getNotificationCollection();
-        //$available_channels = $this->getNotificationChannelCollection();
 
         return DataTables::of($notifications)
             ->editColumn('notification', function ($row) {
@@ -130,37 +134,49 @@ class SeatNotificationsController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFilterList(Request $request)
+    {
+        $request->validate([
+            'filter' => 'required|string|in:characters,corporations',
+        ]);
+
+        switch ($request->input('filter')) {
+            case 'characters':
+                return response()->json($this->getAllCharactersWithAffiliations(false)
+                                             ->select('character_id', 'name')
+                                             ->orderBy('name')
+                                             ->get()
+                                             ->map(function ($character) {
+                                                 return [
+                                                     'id'   => $character->character_id,
+                                                     'name' => $character->name,
+                                                 ];
+                                             }));
+            case 'corporations':
+                return response()->json($this->getAllCorporationsWithAffiliationsAndFilters(false)
+                                             ->select('corporation_id', 'name')
+                                             ->orderBy('name')
+                                             ->get()
+                                             ->map(function ($corporation) {
+                                                 return [
+                                                     'id'   => $corporation->corporation_id,
+                                                     'name' => $corporation->name,
+                                                 ];
+                                             }));
+        }
+
+        return response()->json([], 400);
+    }
+
+    /**
      * Return the class list of available notification.
      * @return array
      */
     private function getNotificationCollection() : array
     {
         return array_keys(config('services.seat-notification', []));
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getNotificationChannelCollection() : Collection
-    {
-        $notification_channels = collect();
-        $classes = config('services.seat-notification-channel');
-
-        // for each registered provider, retrieve available channels
-        foreach ($classes as $key => $class) {
-            $provider = new $class;
-
-            // ensure the provider is properly setup
-            // otherwise, skip the entry
-            if (! $provider::isSetup())
-                continue;
-
-            // append the provider channels to the available channels list
-            $notification_channels->push([
-                $key => $provider->getChannels(),
-            ]);
-        }
-
-        return $notification_channels;
     }
 }

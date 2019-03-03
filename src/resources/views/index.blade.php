@@ -49,38 +49,83 @@
       ]
     });
 
-    $('#notifications-driver-channels').on('show.bs.modal', function (event) {
+    $('#notifications-driver-channels')
+      .on('show.bs.modal', function (event) {
         $(this).find('span[rel="driver"]').text(event.relatedTarget.dataset.driver);
         $(this).find('span[rel="notification"]').text(event.relatedTarget.dataset.title);
         $(this).find('input[name="driver"]').val(event.relatedTarget.dataset.driver);
         $(this).find('input[name="notification"]').val(event.relatedTarget.dataset.notification);
 
+        // request a list of available channels to the driver
         $('#available-channels').select2({
-            ajax: {
-                url: '{{ route('seatnotifications.driver.channels') }}',
-                dataType: 'json',
-                data: function (params) {
-                    return {
-                        'driver': event.relatedTarget.dataset.driver
-                    };
-                },
-                processResults: function (data, params) {
-                    return {
-                        results: data,
-                        pagination: {
-                            more: false
-                        }
-                    }
+          ajax: {
+            url: '{{ route('seatnotifications.driver.channels') }}',
+            dataType: 'json',
+            data: function (params) {
+              return {
+                'driver': event.relatedTarget.dataset.driver
+              };
+            },
+            processResults: function (data, params) {
+              return {
+                results: data,
+                pagination: {
+                  more: false
                 }
+              }
+            }
+          },
+          templateResult: function (channel) {
+            return channel.name;
+          },
+          templateSelection: function (channel) {
+            return channel.name;
+          },
+          width: '100%'
+        });
+
+        // check provided filters
+        event.relatedTarget.dataset.filters.split('|').forEach(function (filter) {
+          var select = $('#' + filter + '-filter');
+
+          // show the filter group
+          select.parent('div').removeClass('hidden');
+
+          // init the filter control
+          select.select2({
+            ajax: {
+              url: '{{ route('seatnotifications.notifications.filters') }}',
+              dataType: 'json',
+              data: function (params) {
+                return {
+                  'filter': filter
+                };
+              },
+              processResults: function (data, params) {
+                return {
+                  results: data,
+                  pagination: {
+                    more: false
+                  }
+                }
+              }
             },
-            templateResult: function (channel) {
-                return channel.name;
+            templateResult: function (filter) {
+              return filter.name;
             },
-            templateSelection: function (channel) {
-                return channel.name;
+            templateSelection: function (filter) {
+              return filter.name;
             },
             width: '100%'
+          });
         });
-    });
+      })
+      .on('hide.bs.modal', function (event) {
+        // hide all filters box from the modal on hide
+        $(this).find('.channel-filter').addClass('hidden');
+
+        // reset picked filters
+        $(this).find('.channel-filter .select2').val([]).trigger('change');
+      });
   </script>
 @endpush

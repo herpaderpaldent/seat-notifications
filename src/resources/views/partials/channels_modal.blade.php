@@ -17,7 +17,7 @@
 
           <div class="form-group">
             <label for="available-channels">Select delivery channel:</label>
-            <select name="channel_id" id="available-channels" class="select2">
+            <select name="driver_id" id="available-channels" class="select2">
               <option></option>
             </select>
             <span class="help-block">
@@ -26,6 +26,31 @@
             </span>
           </div>
           {{-- /.form-group --}}
+
+          <div class="form-group hidden channel-filter">
+            <label for="corporations-filter">Select corporation filter:</label>
+            <select name="corporations_filter[]" id="corporations-filter" multiple="multiple" class="select2">
+              <option></option>
+            </select>
+            <span class="help-block">
+              Please specify the list of corporations for which you want receive notification.
+              If you're leaving this field empty, you'll receive notification for all corporations.
+            </span>
+          </div>
+          {{-- /.form-group --}}
+
+          <div class="form-group hidden channel-filter">
+            <label for="characters-filter">Select character filter:</label>
+            <select name="characters_filter[]" id="characters-filter" multiple="multiple" class="select2">
+              <option></option>
+            </select>
+            <span class="help-block">
+              Please specify the list of characters for which you want receive notification.
+              If you're leaving this field empty, you'll receive notification for all characters.
+            </span>
+          </div>
+          {{-- ./form-group --}}
+
         </form>
         {{-- /form --}}
       </div>

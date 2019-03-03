@@ -32,11 +32,25 @@ class SubscribeAction
 {
     public function execute(array $data)
     {
-        $driver_id = $data['driver_id']; // $request->input('driver_id');
-        $driver = $data['driver']; //$request->input('driver');
-        $notification = $data['notification']; //request->input('notification');
+        $driver = $data['driver'];
+        $driver_id = $data['driver_id'];
+        $notification = $data['notification'];
         $group_id = array_key_exists('group_id', $data) ? $data['group_id'] : null;
-        $affiliation = array_key_exists('affiliation', $data) ? $data['affiliation'] : null;
+
+        // retrieve filters and merge them together
+        $characters_filter = [0];
+        $corporations_filter = [0];
+
+        if (array_key_exists('characters_filter', $data))
+            $characters_filter = $data['characters_filter'] ?: [0];
+
+        if (array_key_exists('corporations_filter', $data))
+            $corporations_filter = $data['corporations_filter'] ?: [0];
+
+        $affiliations = json_encode([
+            'characters' => $characters_filter,
+            'corporations' => $corporations_filter,
+        ]);
 
         try {
 
@@ -55,7 +69,7 @@ class SubscribeAction
                 ->subscriptions()
                 ->create([
                     'notification' => $notification,
-                    'affiliation' => $affiliation,
+                    'affiliations' => $affiliations,
                 ]);
 
             return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to ' . $notification::getTitle() . ' notification.');

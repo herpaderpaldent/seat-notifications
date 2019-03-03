@@ -15,9 +15,63 @@ use Seat\Web\Models\Group;
  * Class AbstractNotification.
  * @package Herpaderpaldent\Seat\SeatNotifications\Notifications
  */
-abstract class AbstractNotification extends Notification implements ShouldQueue
+abstract class AbstractNotification extends Notification implements INotification, ShouldQueue
 {
     use Queueable, SerializesModels, InteractsWithQueue;
+
+    /**
+     * @var array
+     */
+    protected $tags = [];
+
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 5;
+
+    /**
+     * AbstractNotification constructor.
+     */
+    public function __construct()
+    {
+        $this->queue = 'high';
+        $this->connection = 'redis';
+    }
+
+    /**
+     * @param Group $group
+     * @return mixed
+     */
+    public function getMainCharacter(Group $group)
+    {
+        $main_character = $group->main_character;
+
+        if (is_null($main_character)) {
+            logger()->warning('Group has no main character set. Attempt to make assignation based on first attached character.', [
+                'group_id' => $group->id,
+            ]);
+            $main_character = $group->users->first()->character;
+        }
+
+        return $main_character;
+    }
+
+    /**
+     * Assign this job a tag so that Horizon can categorize and allow
+     * for specific tags to be monitored.
+     *
+     * If a job specifies the tags property, that is added.
+     *
+     * @return array
+     */
+    public function tags(): array
+    {
+        array_push($this->tags, 'seatnotifications');
+
+        return $this->tags;
+    }
 
     /**
      * TODO : is it an helper ?
@@ -36,20 +90,29 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
      * TODO : is it an helper ?
      * Determine if a notification has been subscribed for a specific driver.
      *
-     * @param string $driver_id
+     * @param string $driver
+     * @param bool $is_public
      *
      * @return bool
      */
-    final public static function isSubscribed(string $driver_id) //: bool
+    final public static function isSubscribed(string $driver, bool $is_public = true): bool
     {
         return NotificationSubscription::where('notification', get_called_class())
             ->get()
-            ->filter(function ($notification) use ($driver_id) {
+            ->filter(function ($notification) use ($driver, $is_public) {
 
-                if(is_null($driver_id))
+                // check if the requested driver match with the recipient attached to this subscription
+                if ($notification->recipient->driver !== $driver)
+                    return false;
+
+                // if the requested subscription must be public,
+                // check if the current subscription is attached to a recipient without group_id
+                if ($is_public)
                     return is_null($notification->recipient->group_id);
 
-                return $notification->recipient->driver_id === $driver_id;
+                // if the requested subscription must be private,
+                // check if the current subscription is attached to a recipient with the currently authenticated user
+                return $notification->recipient->group_id === auth()->user()->group_id;
             })
             ->isNotEmpty();
     }
@@ -87,78 +150,19 @@ abstract class AbstractNotification extends Notification implements ShouldQueue
      */
     final public static function getDriverImplementation(string $provider): string
     {
+        $available_drivers = self::getDiversImplementations();
 
-            // build the configuration key related to the notification
-            $config_key = sprintf('services.seat-notification.%s', get_called_class());
-
-            $implementations = config($config_key, []);
-
-            if (array_key_exists($provider, $implementations))
-                return $implementations[$provider];
-
-            // throw exception if implementation is not found.
+        if (! array_key_exists($provider, $available_drivers))
             throw new UnknownDriverException($provider);
+
+        return $available_drivers[$provider];
     }
 
     /**
-     * @var array
-     */
-    protected $tags = [];
-
-    /**
-     * @var array
-     */
-    const COLORS = [
-        'danger' => ['hex' => '#dd4b39', 'dec' => '14502713'],
-    ];
-
-    /**
-     * The number of times the job may be attempted.
-     *
-     * @var int
-     */
-    public $tries = 5;
-
-    /**
-     * Assign this job a tag so that Horizon can categorize and allow
-     * for specific tags to be monitored.
-     *
-     * If a job specifies the tags property, that is added.
-     *
      * @return array
      */
-    public function tags(): array
+    public static function getFilters(): ?string
     {
-        $tags = ['seatnotifications'];
-        if (property_exists($this, 'tags'))
-            return array_merge($this->tags, $tags);
-
-        return $tags;
-    }
-
-    public function __construct()
-    {
-        $this->queue = 'high';
-        $this->connection = 'redis';
-    }
-
-    public function getMainCharacter(Group $group)
-    {
-        $main_character = $group->main_character;
-
-        if (is_null($main_character)) {
-            logger()->warning('Group has no main character set. Attempt to make assignation based on first attached character.', [
-                'group_id' => $group->id,
-            ]);
-            $main_character = $group->users->first()->character;
-        }
-
-        return $main_character;
-    }
-
-    public function color(string $color, string $type) : string
-    {
-        return self::COLORS[$color][$type];
-
+        return null;
     }
 }

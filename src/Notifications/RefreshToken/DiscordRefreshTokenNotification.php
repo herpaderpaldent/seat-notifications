@@ -12,6 +12,8 @@ use Seat\Web\Models\Group;
  */
 class DiscordRefreshTokenNotification extends AbstractRefreshTokenNotification
 {
+    const DANGER_COLOR = '14502713';
+
     /**
      * Determine if channel has personal notification setup.
      *
@@ -22,6 +24,10 @@ class DiscordRefreshTokenNotification extends AbstractRefreshTokenNotification
         return true;
     }
 
+    /**
+     * @param $notifiable
+     * @return array
+     */
     public function via($notifiable)
     {
         array_push($this->tags, is_null($notifiable->group_id) ? 'to channel' : 'private to: ' . $this->getMainCharacter(Group::find($notifiable->group_id))->name);
@@ -29,6 +35,10 @@ class DiscordRefreshTokenNotification extends AbstractRefreshTokenNotification
         return [DiscordChannel::class];
     }
 
+    /**
+     * @param $notifiable
+     * @return DiscordMessage
+     */
     public function toDiscord($notifiable)
     {
         $character = sprintf('[%s](%s)',
@@ -39,7 +49,7 @@ class DiscordRefreshTokenNotification extends AbstractRefreshTokenNotification
             ->embed(function ($embed) use ($character) {
                 $embed->title('**A SeAT users refresh token was removed!**')
                     ->thumbnail($this->image)
-                    ->color($this->color('danger', 'dec'))
+                    ->color(self::DANGER_COLOR)
                     ->field('Character', $character, true)
                     ->field('Corporation', $this->corporation, true)
                     ->field('Main Character', $this->main_character, false);

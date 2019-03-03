@@ -38,7 +38,7 @@ class NotificationSubscription extends Model
 
     protected $primaryKey = 'recipient_id';
 
-    protected $fillable = ['notification', 'affiliation'];
+    protected $fillable = ['notification', 'affiliations'];
 
     public $incrementing = false;
 

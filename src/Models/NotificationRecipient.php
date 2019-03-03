@@ -25,8 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Models;
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
-use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Seat\Web\Models\Group;

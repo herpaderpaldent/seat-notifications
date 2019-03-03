@@ -26,7 +26,7 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Jobs;
 
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
-use Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshTokenDeletedNotification;
+use Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\AbstractRefreshTokenNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
 use Seat\Eveapi\Models\RefreshToken;
@@ -66,7 +66,7 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
 
             $recipients = NotificationRecipient::all()
                 ->filter(function ($recipient) {
-                    return $recipient->shouldReceive('refresh_token');
+                    return $recipient->shouldReceive(AbstractRefreshTokenNotification::class);
                 });
 
             if($recipients->isEmpty()){
@@ -74,7 +74,14 @@ class RefreshTokenDeletionDispatcher extends SeatNotificationsJobBase
                 $this->delete();
             }
 
-            Notification::send($recipients, (new RefreshTokenDeletedNotification($this->refresh_token)));
+            $recipients->groupBy('driver')
+                ->each(function ($grouped_recipients) {
+                    $driver = (string) $grouped_recipients->first()->driver;
+                    $notification_class = AbstractRefreshTokenNotification::getDiverImplementation($driver);
+
+                    Notification::send($grouped_recipients, (new $notification_class($this->refresh_token)));
+                });
+
         }, function () {
 
             logger()->debug('A Soft-Delete job is already running for ' . $this->refresh_token->user->name);

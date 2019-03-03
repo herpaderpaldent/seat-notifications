@@ -128,7 +128,7 @@ abstract class AbstractNotification extends Notification implements INotificatio
      * ]
      * ```
      */
-    final public static function getDiversImplementations(): array
+    final public static function getDriversImplementations(): array
     {
         // build the configuration key related to the notification
         $config_key = sprintf('services.seat-notification.%s', get_called_class());
@@ -150,7 +150,7 @@ abstract class AbstractNotification extends Notification implements INotificatio
      */
     final public static function getDriverImplementation(string $provider): string
     {
-        $available_drivers = self::getDiversImplementations();
+        $available_drivers = self::getDriversImplementations();
 
         if (! array_key_exists($provider, $available_drivers))
             throw new UnknownDriverException($provider);

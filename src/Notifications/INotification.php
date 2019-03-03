@@ -50,7 +50,7 @@ interface INotification
      * Return a list of implementing class foreach registered providers.
      * @return array
      */
-    public static function getDiversImplementations(): array;
+    public static function getDriversImplementations(): array;
 
     /**
      * Determine a list of control filters.

@@ -28,11 +28,22 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Exceptions;
 use Exception;
 use Throwable;
 
+/**
+ * Class UnknownDriverException.
+ * @package Herpaderpaldent\Seat\SeatNotifications\Exceptions
+ */
 class UnknownDriverException extends Exception
 {
+    /**
+     * UnknownDriverException constructor.
+     * @param string $provider
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
     public function __construct(string $provider, string $message = '', int $code = 0, Throwable $previous = null)
     {
-        $message = sprintf('An unknown driver implemention of %s was requested ', $provider);
+        $message = sprintf('An unknown driver implementation of %s was requested ', $provider);
 
         parent::__construct($message, $code, $previous);
     }

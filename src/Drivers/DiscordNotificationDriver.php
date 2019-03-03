@@ -147,7 +147,7 @@ class DiscordNotificationDriver implements INotificationDriver
             return NotificationRecipient::where('driver', 'discord')
                 ->where('group_id', null)
                 ->get()
-                ->map(function ($recipient) use ($notification){
+                ->map(function ($recipient) use ($notification) {
                     return $recipient
                         ->subscriptions
                         ->filter(function ($subscription) use ($notification) {

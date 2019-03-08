@@ -25,7 +25,7 @@
 
 return [
     'seatnotifications' => [
-        'name'          => 'SeAT Notifications (POC)',
+        'name'          => 'SeAT Notifications',
         'icon'          => 'fa-inbox',
         'route_segment' => 'seatnotifications',
         'permission'    => 'seatnotifications.view',

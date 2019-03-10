@@ -56,32 +56,39 @@
         $(this).find('input[name="driver"]').val(event.relatedTarget.dataset.driver);
         $(this).find('input[name="notification"]').val(event.relatedTarget.dataset.notification);
 
+        var availableChannels = $('#available-channels');
+
         // request a list of available channels to the driver
-        $('#available-channels').select2({
-          ajax: {
-            url: '{{ route('seatnotifications.driver.channels') }}',
-            dataType: 'json',
-            data: function (params) {
-              return {
-                'driver': event.relatedTarget.dataset.driver
-              };
-            },
-            processResults: function (data, params) {
-              return {
-                results: data,
-                pagination: {
-                  more: false
-                }
-              }
-            }
-          },
-          templateResult: function (channel) {
-            return channel.name;
-          },
-          templateSelection: function (channel) {
-            return channel.name;
-          },
+        availableChannels.select2({
           width: '100%'
+        });
+
+        $.ajax({
+          type: 'GET',
+          url: '{{ route('seatnotifications.driver.channels') }}',
+          data: {
+            'driver': event.relatedTarget.dataset.driver,
+            'notification' : event.relatedTarget.dataset.notification
+          },
+        }).then(function (channels) {
+
+          channels.forEach(function (channel) {
+
+            // create the option and append to Select2
+            var option = new Option(channel.name, channel.id, channel.subscribed, channel.subscribed);
+            availableChannels.append(option).trigger('change');
+
+            if (channel.subscribed) {
+
+              // manually trigger the `select2:select` event
+              availableChannels.trigger({
+                type: 'select2:select',
+                params: {
+                  data: channel
+                }
+              });
+            }
+          });
         });
 
         // check provided filters

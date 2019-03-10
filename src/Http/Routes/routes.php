@@ -58,9 +58,9 @@ Route::group([
         'uses' => 'SeatNotificationsController@postSubscribe',
     ]);
 
-    Route::get('/unsubscribe', [
+    Route::post('/unsubscribe', [
         'as' => 'seatnotifications.notification.unsubscribe.channel',
-        'uses' => 'SeatNotificationsController@getUnsubscribe',
+        'uses' => 'SeatNotificationsController@postUnsubscribe',
     ]);
 
     Route::get('/channels', [

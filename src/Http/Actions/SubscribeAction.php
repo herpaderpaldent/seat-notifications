@@ -67,7 +67,7 @@ class SubscribeAction
 
             $recipient
                 ->subscriptions()
-                ->create([
+                ->updateOrCreate([
                     'notification' => $notification,
                     'affiliations' => $affiliations,
                 ]);

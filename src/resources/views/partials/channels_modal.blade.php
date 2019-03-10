@@ -14,6 +14,7 @@
 
           <input type="hidden" name="driver" value="" />
           <input type="hidden" name="notification" value="" />
+          <input type="hidden" name="public" value="true" />
 
           <div class="form-group">
             <label for="available-channels">Select delivery channel:</label>
@@ -56,7 +57,16 @@
       </div>
       {{-- /.modal-body --}}
       <div class="modal-footer">
-        <a href="{{ route('seatnotifications.notification.unsubscribe.channel') }}" type="button" class="btn btn-danger pull-left">Unsubscribe</a>
+
+        <form id="unsubscribe-to-notification" role="form" action="{{ route('seatnotifications.notification.unsubscribe.channel') }}" method="post">
+          {{ csrf_field() }}
+
+          <input type="hidden" name="driver" value="" />
+          <input type="hidden" name="notification" value="" />
+
+        </form>
+        {{-- /form --}}
+        <button type="submit" form="unsubscribe-to-notification" class="btn btn-danger pull-left">Unsubscribe</button>
         <button type="submit" form="subscribe-to-notification" class="btn btn-primary">Subscribe</button>
       </div>
       {{-- /.modal-footer --}}

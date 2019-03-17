@@ -58,7 +58,7 @@
       {{-- /.modal-body --}}
       <div class="modal-footer">
 
-        <form id="unsubscribe-to-notification" role="form" action="{{ route('seatnotifications.notification.unsubscribe.channel') }}" method="post">
+        <form id="unsubscribe-from-notification" role="form" action="{{ route('seatnotifications.notification.unsubscribe.channel') }}" method="post">
           {{ csrf_field() }}
 
           <input type="hidden" name="driver" value="" />
@@ -66,7 +66,7 @@
 
         </form>
         {{-- /form --}}
-        <button type="submit" form="unsubscribe-to-notification" class="btn btn-danger pull-left">Unsubscribe</button>
+        <button type="submit" form="unsubscribe-from-notification" class="btn btn-danger pull-left">Unsubscribe</button>
         <button type="submit" form="subscribe-to-notification" class="btn btn-primary">Subscribe</button>
       </div>
       {{-- /.modal-footer --}}

@@ -90,11 +90,6 @@ Route::group([
         'prefix' => 'discord',
     ], function () {
 
-        /*Route::post('/', [
-            'as' => 'herpaderp.seatnotifications.discord.post.configuration',
-            'uses' => 'DiscordServerController@postConfiguration',
-        ]);*/
-
         include __DIR__ . '/NotificationChannel/Discord.php';
 
         Route::group([
@@ -112,18 +107,18 @@ Route::group([
         'prefix' => 'slack',
     ], function () {
 
-        Route::post('/', [
+        /*Route::post('/', [
             'as' => 'herpaderp.seatnotifications.slack.post.configuration',
-        ]);
+        ]);*/
 
-        //include __DIR__ . '/NotificationChannel/Slack.php';
+        include __DIR__ . '/NotificationChannel/Slack.php';
 
         Route::group([
             'middleware' => ['bouncer:seatnotifications.configuration'],
             'prefix' => 'configuration',
         ], function () {
 
-            //include __DIR__ . '/Configuration/Slack.php';
+            include __DIR__ . '/Configuration/Slack.php';
         }
         );
     });

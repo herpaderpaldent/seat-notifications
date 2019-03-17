@@ -26,6 +26,9 @@
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken;
 
 use Exception;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackChannel;
+use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage;
+use Seat\Web\Models\Group;
 
 /**
  * Class SlackRefreshTokenNotification.
@@ -33,12 +36,51 @@ use Exception;
  */
 class SlackRefreshTokenNotification extends AbstractRefreshTokenNotification
 {
+    const DANGER_COLOR = '#dd4b39';
+
+    /**
+     * Determine if channel has personal notification setup.
+     *
+     * @return bool
+     */
+    public static function hasPersonalNotification() : bool
+    {
+        return true;
+    }
+
     /**
      * @param $notifiable
      * @throws Exception
      */
     public function via($notifiable)
     {
-        throw new Exception('Not implemented function.');
+        array_push($this->tags, is_null($notifiable->group_id) ? 'to channel' : 'private to: ' . $this->getMainCharacter(Group::find($notifiable->group_id))->name);
+
+        return [SlackChannel::class];
+    }
+
+    /**
+     * @param $notifiable
+     *
+     * @return \Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        return (new SlackMessage)
+            ->attachment(function ($attachment) {
+
+                $character = sprintf('<%s|%s>',
+                    route('configuration.users.edit', ['user_id' => $this->refresh_token->character_id]),
+                    $this->user_name);
+
+                $attachment->title('RefreshTokenDeleted')
+                    ->color(self::DANGER_COLOR)
+                    ->fields([
+                        'Character' => $character,
+                        'Corporation' => $this->corporation,
+                        'Main Character' => $this->main_character,
+                    ])
+                    ->thumb($this->image);
+            });
     }
 }

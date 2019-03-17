@@ -173,7 +173,6 @@ class DiscordNotificationDriver implements INotificationDriver
 
             return null;
         }
-
     }
 
     /**

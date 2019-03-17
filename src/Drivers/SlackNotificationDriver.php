@@ -25,6 +25,8 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
+use Exception;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 
 class SlackNotificationDriver implements INotificationDriver
@@ -74,12 +76,12 @@ class SlackNotificationDriver implements INotificationDriver
 
             foreach ($channels as $channel)
                 $response->push([
-                    'name'            => $channel->name,
                     'id'              => $channel->id,
+                    'name'            => $channel->name,
                     'private_channel' => $channel->is_group,
                 ]);
 
-            return $response;
+            return $response->toArray();
         });
     }
 
@@ -90,7 +92,7 @@ class SlackNotificationDriver implements INotificationDriver
      */
     public static function allowPersonalNotifications(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -120,7 +122,7 @@ class SlackNotificationDriver implements INotificationDriver
      */
     public static function getPrivateChannel() : ?string
     {
-        return SlackUser::find(auth()->user()->group->id)->channel_id;
+        return optional(SlackUser::find(auth()->user()->group->id))->channel_id;
     }
 
     /**
@@ -132,7 +134,23 @@ class SlackNotificationDriver implements INotificationDriver
      */
     public static function getPublicDriverId(string $notification) : ?string
     {
-        return null;
+        try {
+
+            return NotificationRecipient::where('driver', 'slack')
+                ->where('group_id', null)
+                ->get()
+                ->map(function ($recipient) use ($notification) {
+                    return $recipient
+                        ->subscriptions
+                        ->filter(function ($subscription) use ($notification) {
+                            return $subscription->notification === $notification;
+                        });
+                })
+                ->flatten()->first()->recipient->driver_id;
+        } catch (Exception $e) {
+
+            return null;
+        }
     }
 
     /**
@@ -142,6 +160,6 @@ class SlackNotificationDriver implements INotificationDriver
      */
     public static function getPrivateRegistrationRoute(): ?string
     {
-        return null;
+        return 'seatnotifications.register.slack';
     }
 }

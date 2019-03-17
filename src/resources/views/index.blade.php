@@ -60,8 +60,10 @@
 
         // request a list of available channels to the driver
         availableChannels.select2({
-          width: '100%'
+          width: '100%',
         });
+
+        availableChannels.select2('data', null);
 
         $.ajax({
           type: 'GET',
@@ -73,6 +75,11 @@
         }).then(function (channels) {
 
           channels.forEach(function (channel) {
+
+            var channel_name = channel.name;
+
+            if (channel.private_channel === "true")
+              channel_name += " (private)";
 
             // create the option and append to Select2
             var option = new Option(channel.name, channel.id, channel.subscribed, channel.subscribed);
@@ -128,6 +135,9 @@
         });
       })
       .on('hide.bs.modal', function (event) {
+        // cleanup received channels
+        $(this).find('option').remove().append('<option></option>');
+
         // hide all filters box from the modal on hide
         $(this).find('.channel-filter').addClass('hidden');
 

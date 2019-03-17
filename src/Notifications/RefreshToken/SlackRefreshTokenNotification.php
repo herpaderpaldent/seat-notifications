@@ -34,6 +34,16 @@ use Exception;
 class SlackRefreshTokenNotification extends AbstractRefreshTokenNotification
 {
     /**
+     * Determine if channel has personal notification setup.
+     *
+     * @return bool
+     */
+    public static function hasPersonalNotification() : bool
+    {
+        return true;
+    }
+
+    /**
      * @param $notifiable
      * @throws Exception
      */

@@ -25,7 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
-
 class AddSubscriptionStatus
 {
     protected $get_public_driver_id;
@@ -55,5 +54,4 @@ class AddSubscriptionStatus
 
         return $data->toArray();
     }
-
 }

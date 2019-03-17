@@ -25,7 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
-
 class BuildAffiliationJSONAction
 {
     public function execute(array $data)
@@ -38,11 +37,10 @@ class BuildAffiliationJSONAction
             $corporations_filter = null;
 
             if (array_key_exists('characters_filter', $data))
-                $characters_filter = $data['characters_filter'] ? : [0];
+                $characters_filter = $data['characters_filter'] ?: [0];
 
             if (array_key_exists('corporations_filter', $data))
-                $corporations_filter = $data['corporations_filter'] ? : [0];
-
+                $corporations_filter = $data['corporations_filter'] ?: [0];
 
             $affiliations = json_encode(array_filter([
                 'characters'   => $characters_filter,
@@ -55,5 +53,4 @@ class BuildAffiliationJSONAction
 
         return null;
     }
-
 }

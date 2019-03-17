@@ -25,7 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
-
 use Exception;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 
@@ -43,13 +42,13 @@ class GetPublicDriverId
         $driver_id = null;
 
         try {
-            $driver_id =  NotificationRecipient::where('driver', $this->driver)
+            $driver_id = NotificationRecipient::where('driver', $this->driver)
                 ->where('group_id', null)
                 ->get()
                 ->map(function ($recipient) {
                     return $recipient
                         ->subscriptions
-                        ->filter(function ($subscription){
+                        ->filter(function ($subscription) {
                             return $subscription->notification === $this->notification;
                         });
                 })
@@ -60,11 +59,9 @@ class GetPublicDriverId
 
         } catch (Exception $exception) {
 
-
         }
 
         return $driver_id;
 
     }
-
 }

@@ -80,7 +80,7 @@ class SeatNotificationsController extends Controller
         /*
          * If user updates his previously subscribed public notification
          */
-        if ($request->input('public') === 'true' && !empty($get_public_driver_id->execute($request->all()))) {
+        if ($request->input('public') === 'true' && ! empty($get_public_driver_id->execute($request->all()))) {
 
             // update driver_id with previously subscribed driver_id
             $data = $request->all();

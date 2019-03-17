@@ -30,27 +30,19 @@ use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 
 class SubscribeAction
 {
+    protected $affiliation_JSON_action;
+
+    public function __construct(BuildAffiliationJSONAction $affiliation_JSON_action)
+    {
+        $this->affiliation_JSON_action = $affiliation_JSON_action;
+    }
+
     public function execute(array $data)
     {
         $driver = $data['driver'];
         $driver_id = $data['driver_id'];
         $notification = $data['notification'];
         $group_id = array_key_exists('group_id', $data) ? $data['group_id'] : null;
-
-        // retrieve filters and merge them together
-        $characters_filter = [0];
-        $corporations_filter = [0];
-
-        if (array_key_exists('characters_filter', $data))
-            $characters_filter = $data['characters_filter'] ?: [0];
-
-        if (array_key_exists('corporations_filter', $data))
-            $corporations_filter = $data['corporations_filter'] ?: [0];
-
-        $affiliations = json_encode([
-            'characters' => $characters_filter,
-            'corporations' => $corporations_filter,
-        ]);
 
         try {
 
@@ -69,7 +61,7 @@ class SubscribeAction
                 ->subscriptions()
                 ->updateOrCreate([
                     'notification' => $notification,
-                    'affiliations' => $affiliations,
+                    'affiliations' => $this->affiliation_JSON_action->execute($data),
                 ]);
 
             return redirect()->route('seatnotifications.index')->with('success', 'You have successfully subscribed to ' . $notification::getTitle() . ' notification.');

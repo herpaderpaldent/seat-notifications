@@ -25,8 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Models;
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
-use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Seat\Web\Models\Group;
@@ -50,18 +48,6 @@ class NotificationRecipient extends Model
      * @var array
      */
     protected $fillable = ['driver_id', 'driver', 'group_id'];
-
-    /*public function notification_user()
-    {
-
-        if($this->notification_channel === 'discord')
-            return $this->belongsTo(DiscordUser::class, 'channel_id', 'channel_id');
-
-        if($this->notification_channel === 'slack')
-            return $this->belongsTo(SlackUser::class, 'channel_id', 'channel_id');
-
-        return null;
-    }*/
 
     public function subscriptions()
     {
@@ -87,6 +73,7 @@ class NotificationRecipient extends Model
             })
             ->filter(function ($seat_notification) use ($ids) {
 
+                //TODO: Refactor this with KillMailDispatcher
                 if($ids === null)
                     return true;
 

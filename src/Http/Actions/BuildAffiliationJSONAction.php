@@ -23,22 +23,34 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken;
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
-use Exception;
-
-/**
- * Class SlackRefreshTokenNotification.
- * @package Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken
- */
-class SlackRefreshTokenNotification extends AbstractRefreshTokenNotification
+class BuildAffiliationJSONAction
 {
-    /**
-     * @param $notifiable
-     * @throws Exception
-     */
-    public function via($notifiable)
+    public function execute(array $data)
     {
-        throw new Exception('Not implemented function.');
+
+        if (array_key_exists('characters_filter', $data) || array_key_exists('corporations_filter', $data)) {
+
+            // retrieve filters and merge them together
+            $characters_filter = null;
+            $corporations_filter = null;
+
+            if (array_key_exists('characters_filter', $data))
+                $characters_filter = $data['characters_filter'] ?: [0];
+
+            if (array_key_exists('corporations_filter', $data))
+                $corporations_filter = $data['corporations_filter'] ?: [0];
+
+            $affiliations = json_encode(array_filter([
+                'characters'   => $characters_filter,
+                'corporations' => $corporations_filter,
+            ]));
+
+            return $affiliations;
+
+        }
+
+        return null;
     }
 }

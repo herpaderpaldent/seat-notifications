@@ -1,12 +1,18 @@
 {{-- Check if the notification has been subscribed for the current provider --}}
 
 @if (!is_null($row::getDriver($provider)::getPublicDriverId($row)) && $row::isSubscribed($row::getDriver($provider)::getPublicDriverId($row)))
-  <a href="{{ route('seatnotifications.notification.unsubscribe.channel', ['notification' => $row, 'driver' => $provider, 'driver_id' => $row::getDriver($provider)::getPublicDriverId($row)]) }}" type="button" class="btn btn-app">
+  <button type="button" data-driver="{{ $provider }}" data-notification="{{ $row }}" data-title="{{ $row::getTitle() }}" data-filters="{{ $row::getFilters() }}" data-toggle="modal" data-target="#notifications-driver-channels" class="btn btn-app">
     <span class="badge bg-green">
       <i class="fa fa-check"></i>
     </span>
     <i class="fa {{ $row::getDriver($provider)::getButtonIconClass() }}"></i> {{ $row::getDriver($provider)::getButtonLabel() }}
-  </a>
+  </button>
+  {{--<a href="{{ route('seatnotifications.notification.unsubscribe.channel', ['notification' => $row, 'driver' => $provider, 'driver_id' => $row::getDriver($provider)::getPublicDriverId($row)]) }}" type="button" class="btn btn-app">
+    <span class="badge bg-green">
+      <i class="fa fa-check"></i>
+    </span>
+    <i class="fa {{ $row::getDriver($provider)::getButtonIconClass() }}"></i> {{ $row::getDriver($provider)::getButtonLabel() }}
+  </a>--}}
 
 {{-- Check if the current provider has been set --}}
 

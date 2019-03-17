@@ -23,22 +23,35 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken;
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
-use Exception;
-
-/**
- * Class SlackRefreshTokenNotification.
- * @package Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken
- */
-class SlackRefreshTokenNotification extends AbstractRefreshTokenNotification
+class AddSubscriptionStatus
 {
-    /**
-     * @param $notifiable
-     * @throws Exception
-     */
-    public function via($notifiable)
+    protected $get_public_driver_id;
+
+    public function __construct(GetPublicDriverId $get_public_driver_id)
     {
-        throw new Exception('Not implemented function.');
+        $this->get_public_driver_id = $get_public_driver_id;
+    }
+
+    public function execute(array $request, array $channels)
+    {
+
+        $public_driver_id = $this->get_public_driver_id->execute($request);
+
+        if (empty($public_driver_id))
+            return $channels;
+
+        $data = collect($channels)->map(function ($channel) use ($public_driver_id) {
+
+            return [
+                'id'              => $channel['id'],
+                'name'            => $channel['name'],
+                'private_channel' => false,
+                'subscribed'      => $channel['id'] === $public_driver_id,
+            ];
+        });
+
+        return $data->toArray();
     }
 }

@@ -107,10 +107,6 @@ Route::group([
         'prefix' => 'slack',
     ], function () {
 
-        /*Route::post('/', [
-            'as' => 'herpaderp.seatnotifications.slack.post.configuration',
-        ]);*/
-
         include __DIR__ . '/NotificationChannel/Slack.php';
 
         Route::group([

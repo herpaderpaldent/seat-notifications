@@ -82,7 +82,7 @@
               channel_name += " (private)";
 
             // create the option and append to Select2
-            var option = new Option(channel.name, channel.id, channel.subscribed, channel.subscribed);
+            var option = new Option(channel_name, channel.id, channel.subscribed, channel.subscribed);
             availableChannels.append(option).trigger('change');
 
             if (channel.subscribed) {

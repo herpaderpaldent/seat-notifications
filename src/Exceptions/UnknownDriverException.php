@@ -32,7 +32,7 @@ class UnknownDriverException extends Exception
 {
     public function __construct(string $provider, string $message = '', int $code = 0, Throwable $previous = null)
     {
-        $message = sprintf('An unknown driver implemention of %s was requested ', $provider);
+        $message = sprintf('An unknown driver implementation of %s was requested ', $provider);
 
         parent::__construct($message, $code, $previous);
     }

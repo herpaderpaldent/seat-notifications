@@ -23,13 +23,6 @@
  * SOFTWARE.
  */
 
-/**
- * Created by PhpStorm.
- * User: felix
- * Date: 19.03.2019
- * Time: 21:03
- */
-
 namespace Herpaderpaldent\Seat\SeatNotifications\Exceptions;
 
 use Exception;

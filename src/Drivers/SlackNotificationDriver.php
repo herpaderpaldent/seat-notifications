@@ -25,8 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
-use Exception;
-use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 
 class SlackNotificationDriver extends AbstractNotificationDriver
@@ -124,7 +122,6 @@ class SlackNotificationDriver extends AbstractNotificationDriver
     {
         return optional(SlackUser::find(auth()->user()->group->id))->channel_id;
     }
-
 
     /**
      * Return the route key which have to be used in a private notification registration flow.

@@ -29,7 +29,7 @@ use Exception;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 
-class SlackNotificationDriver implements INotificationDriver
+class SlackNotificationDriver extends AbstractNotificationDriver
 {
     /**
      * The view name which will be used to store the channel settings.
@@ -125,33 +125,6 @@ class SlackNotificationDriver implements INotificationDriver
         return optional(SlackUser::find(auth()->user()->group->id))->channel_id;
     }
 
-    /**
-     * Return driver_id of public subscription.
-     *
-     * @param string $notification
-     *
-     * @return string
-     */
-    public static function getPublicDriverId(string $notification) : ?string
-    {
-        try {
-
-            return NotificationRecipient::where('driver', 'slack')
-                ->where('group_id', null)
-                ->get()
-                ->map(function ($recipient) use ($notification) {
-                    return $recipient
-                        ->subscriptions
-                        ->filter(function ($subscription) use ($notification) {
-                            return $subscription->notification === $notification;
-                        });
-                })
-                ->flatten()->first()->recipient->driver_id;
-        } catch (Exception $e) {
-
-            return null;
-        }
-    }
 
     /**
      * Return the route key which have to be used in a private notification registration flow.

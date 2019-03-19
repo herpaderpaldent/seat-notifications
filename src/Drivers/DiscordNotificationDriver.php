@@ -34,7 +34,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
  * Class DiscordChannel.
  * @package Herpaderpaldent\Seat\SeatNotifications\Http\Channels\Discord
  */
-class DiscordNotificationDriver implements INotificationDriver
+class DiscordNotificationDriver extends AbstractNotificationDriver
 {
     /**
      * The view name which will be used to store the channel settings.
@@ -145,34 +145,6 @@ class DiscordNotificationDriver implements INotificationDriver
     {
 
         return optional(DiscordUser::find(auth()->user()->group->id))->channel_id;
-    }
-
-    /**
-     * Return driver_id of public subscription.
-     *
-     * @param string $notification
-     *
-     * @return string
-     */
-    public static function getPublicDriverId(string $notification): ?string
-    {
-        try {
-
-            return NotificationRecipient::where('driver', 'discord')
-                ->where('group_id', null)
-                ->get()
-                ->map(function ($recipient) use ($notification) {
-                    return $recipient
-                        ->subscriptions
-                        ->filter(function ($subscription) use ($notification) {
-                            return $subscription->notification === $notification;
-                        });
-                })
-                ->flatten()->first()->recipient->driver_id;
-        } catch (Exception $e) {
-
-            return null;
-        }
     }
 
     /**

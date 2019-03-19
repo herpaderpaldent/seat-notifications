@@ -33,7 +33,7 @@ class BuildAffiliationJSONAction
         if (array_key_exists('characters_filter', $data) || array_key_exists('corporations_filter', $data)) {
 
             // retrieve filters and merge them together
-            $characters_filter =  null;
+            $characters_filter = null;
             $corporations_filter = null;
 
             if (array_key_exists('characters_filter', $data))

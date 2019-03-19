@@ -25,7 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
-
 use Exception;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 

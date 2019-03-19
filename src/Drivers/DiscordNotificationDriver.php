@@ -25,10 +25,8 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
-use Exception;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Models\Discord\DiscordUser;
-use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 
 /**
  * Class DiscordChannel.

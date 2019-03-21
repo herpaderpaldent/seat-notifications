@@ -26,16 +26,16 @@
 return [
     'seat-notification-channel' => [
         //'discourse' => Herpaderpaldent\Seat\SeatNotifications\Drivers\DiscourseNotificationDriver::class,
-        'discord'   => Herpaderpaldent\Seat\SeatNotifications\Drivers\DiscordNotificationDriver::class,
-        'slack'     => Herpaderpaldent\Seat\SeatNotifications\Drivers\SlackNotificationDriver::class,
+        'discord' => Herpaderpaldent\Seat\SeatNotifications\Drivers\DiscordNotificationDriver::class,
+        'slack'   => Herpaderpaldent\Seat\SeatNotifications\Drivers\SlackNotificationDriver::class,
     ],
-    'seat-notification' => [
+    'seat-notification'         => [
         // notification => [provider => implementation]
         Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\AbstractRefreshTokenNotification::class => [
             'discord' => Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\DiscordRefreshTokenNotification::class,
             'slack'   => Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\SlackRefreshTokenNotification::class,
         ],
-        Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\AbstractKillMailNotification::class => [
+        Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\AbstractKillMailNotification::class         => [
             'discord' => Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\DiscordKillMailNotification::class,
             'slack'   => Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\SlackKillMailNotification::class,
         ],

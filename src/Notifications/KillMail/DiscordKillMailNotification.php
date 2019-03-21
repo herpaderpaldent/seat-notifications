@@ -25,12 +25,11 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail;
 
-
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
 use Seat\Eveapi\Models\Sde\InvType;
 
-class DiscordKillMailNotification extends  AbstractKillMailNotification
+class DiscordKillMailNotification extends AbstractKillMailNotification
 {
     const LOSS_COLOR = '14502713';
 
@@ -38,6 +37,7 @@ class DiscordKillMailNotification extends  AbstractKillMailNotification
 
     public function via($notifiable)
     {
+
         array_push($this->tags, is_null($notifiable->group_id) ? 'to channel' : 'private to: ' . $this->getMainCharacter(Group::find($notifiable->group_id))->name);
 
         return [DiscordChannel::class];
@@ -45,8 +45,10 @@ class DiscordKillMailNotification extends  AbstractKillMailNotification
 
     public function toDiscord($notifiable)
     {
+
         return (new DiscordMessage)
             ->embed(function ($embed) use ($notifiable) {
+
                 $embed->title($this->getNotificationString())
                     ->thumbnail($this->image)
                     ->color($this->is_loss($notifiable) ? self::LOSS_COLOR : self::KILL_COLOR)
@@ -58,8 +60,9 @@ class DiscordKillMailNotification extends  AbstractKillMailNotification
             });
     }
 
-    private function getNotificationString() : string
+    private function getNotificationString(): string
     {
+
         return sprintf('%s just killed %s %s',
             $this->getAttacker(),
             $this->getVictim(),
@@ -67,8 +70,9 @@ class DiscordKillMailNotification extends  AbstractKillMailNotification
         );
     }
 
-    private function getAttacker() :string
+    private function getAttacker(): string
     {
+
         $killmail_attacker = $this->killmail_detail
             ->attackers
             ->where('final_blow', 1)
@@ -83,31 +87,15 @@ class DiscordKillMailNotification extends  AbstractKillMailNotification
         );
     }
 
-    /**
-     * @param int $killmail_id
-     *
-     * @return string
-     */
-    private function getVictim() :string
+    private function getDiscordKMStringPartial($character_id, $corporation_id, $ship_type_id, $alliance_id): string
     {
-        $killmail_victim = $this->killmail_detail->victims;
 
-        return $this->getDiscordKMStringPartial(
-            $killmail_victim->character_id,
-            $killmail_victim->corporation_id,
-            $killmail_victim->ship_type_id,
-            $killmail_victim->alliance_id
-        );
-    }
-
-    private function getDiscordKMStringPartial($character_id, $corporation_id, $ship_type_id, $alliance_id) : string
-    {
         $character = is_null($character_id) ? null : $this->resolveID($character_id);
         $corporation = is_null($corporation_id) ? null : $this->resolveID($corporation_id);
         $alliance = is_null($alliance_id) ? null : strtoupper('<' . $this->resolveID($alliance_id, true) . '>');
         $ship_type = optional(InvType::find($ship_type_id))->typeName;
 
-        if(is_null($character_id))
+        if (is_null($character_id))
             return sprintf('**%s** [%s] %s)',
                 $ship_type,
                 $corporation,
@@ -125,8 +113,22 @@ class DiscordKillMailNotification extends  AbstractKillMailNotification
         return '';
     }
 
-    private function getSystem() : string
+    private function getVictim(): string
     {
+
+        $killmail_victim = $this->killmail_detail->victims;
+
+        return $this->getDiscordKMStringPartial(
+            $killmail_victim->character_id,
+            $killmail_victim->corporation_id,
+            $killmail_victim->ship_type_id,
+            $killmail_victim->alliance_id
+        );
+    }
+
+    private function getSystem(): string
+    {
+
         $solar_system = $this->killmail_detail->solar_system;
 
         return sprintf('[%s (%s)](%s)',

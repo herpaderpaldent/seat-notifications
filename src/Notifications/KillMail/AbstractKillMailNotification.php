@@ -47,6 +47,7 @@ abstract class AbstractKillMailNotification extends AbstractNotification
      */
     public function __construct(int $killmail_id)
     {
+
         parent::__construct();
 
         $this->killmail_detail = KillmailDetail::find($killmail_id);
@@ -61,6 +62,7 @@ abstract class AbstractKillMailNotification extends AbstractNotification
      */
     final public static function getTitle(): string
     {
+
         return 'Kill Mail Notification';
     }
 
@@ -69,6 +71,7 @@ abstract class AbstractKillMailNotification extends AbstractNotification
      */
     final public static function getDescription(): string
     {
+
         return 'Receive a notification about new kill mails.';
     }
 
@@ -77,6 +80,7 @@ abstract class AbstractKillMailNotification extends AbstractNotification
      */
     final public static function isPublic(): bool
     {
+
         return true;
     }
 
@@ -85,6 +89,7 @@ abstract class AbstractKillMailNotification extends AbstractNotification
      */
     final public static function isPersonal(): bool
     {
+
         return false;
     }
 
@@ -93,23 +98,26 @@ abstract class AbstractKillMailNotification extends AbstractNotification
      */
     final public static function getFilters(): ?string
     {
+
         return 'corporations';
     }
 
     /**
      * @param $notifiable
+     *
      * @return mixed
      */
     abstract public function via($notifiable);
 
     public function resolveID($id, $is_alliance = false)
     {
+
         $cached_entry = cache('name_id:' . $id);
 
-        if(! is_null($cached_entry))
+        if (! is_null($cached_entry))
             return $cached_entry;
 
-        if($is_alliance)
+        if ($is_alliance)
             return $this->getAllianceTicker($id);
 
         // Resolve the Esi client library from the IoC
@@ -122,24 +130,28 @@ abstract class AbstractKillMailNotification extends AbstractNotification
         return $name;
     }
 
-    public function getNumberOfAttackers() : int
+    public function getNumberOfAttackers(): int
     {
+
         return $this->killmail_detail->attackers->count();
     }
 
-    public function is_loss($notifiable) : bool
+    public function is_loss($notifiable): bool
     {
+
         return $notifiable
             ->subscriptions
             ->firstwhere('notification', AbstractKillMailNotification::class)
             ->hasAffiliation('corp', $this->killmail_detail->victims->corporation_id);
     }
 
-    public function getValue(int $killmail_id) :string
+    public function getValue(int $killmail_id): string
     {
+
         $value = KillmailVictimItem::where('killmail_id', $killmail_id)
             ->get()
             ->map(function ($item) {
+
                 return Price::find($item->item_type_id);
             })
             ->push(Price::find($this->killmail_detail->victims->ship_type_id))
@@ -159,6 +171,7 @@ abstract class AbstractKillMailNotification extends AbstractNotification
      */
     public function zKillBoardToLink(string $type, int $id)
     {
+
         if (! in_array($type, ['ship', 'character', 'corporation', 'alliance', 'kill', 'system']))
             return '';
 
@@ -167,9 +180,10 @@ abstract class AbstractKillMailNotification extends AbstractNotification
 
     private function getAllianceTicker($id)
     {
+
         $cached_entry = cache('alliance_ticker:' . $id);
 
-        if(! is_null($cached_entry))
+        if (! is_null($cached_entry))
             return $cached_entry;
 
         // Resolve the Esi client library from the IoC

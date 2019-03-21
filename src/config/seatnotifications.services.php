@@ -37,7 +37,7 @@ return [
         ],
         Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\AbstractKillMailNotification::class => [
             'discord' => Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\DiscordKillMailNotification::class,
-            //'slack'   => Herpaderpaldent\Seat\SeatNotifications\Notifications\,
+            'slack'   => Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\SlackKillMailNotification::class,
         ],
 
     ],

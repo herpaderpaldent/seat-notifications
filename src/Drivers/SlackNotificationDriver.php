@@ -27,7 +27,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Drivers;
 
 use Herpaderpaldent\Seat\SeatNotifications\Models\Slack\SlackUser;
 
-class SlackNotificationDriver implements INotificationDriver
+class SlackNotificationDriver extends AbstractNotificationDriver
 {
     /**
      * The view name which will be used to store the channel settings.
@@ -74,12 +74,12 @@ class SlackNotificationDriver implements INotificationDriver
 
             foreach ($channels as $channel)
                 $response->push([
-                    'name'            => $channel->name,
                     'id'              => $channel->id,
+                    'name'            => $channel->name,
                     'private_channel' => $channel->is_group,
                 ]);
 
-            return $response;
+            return $response->toArray();
         });
     }
 
@@ -90,7 +90,7 @@ class SlackNotificationDriver implements INotificationDriver
      */
     public static function allowPersonalNotifications(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -120,19 +120,7 @@ class SlackNotificationDriver implements INotificationDriver
      */
     public static function getPrivateChannel() : ?string
     {
-        return SlackUser::find(auth()->user()->group->id)->channel_id;
-    }
-
-    /**
-     * Return driver_id of public subscription.
-     *
-     * @param string $notification
-     *
-     * @return string
-     */
-    public static function getPublicDriverId(string $notification) : ?string
-    {
-        return null;
+        return optional(SlackUser::find(auth()->user()->group->id))->channel_id;
     }
 
     /**
@@ -142,6 +130,6 @@ class SlackNotificationDriver implements INotificationDriver
      */
     public static function getPrivateRegistrationRoute(): ?string
     {
-        return null;
+        return 'seatnotifications.register.slack';
     }
 }

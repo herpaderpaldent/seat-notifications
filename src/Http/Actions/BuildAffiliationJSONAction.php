@@ -42,6 +42,14 @@ class BuildAffiliationJSONAction
             if (array_key_exists('corporations_filter', $data))
                 $corporations_filter = $data['corporations_filter'] ?: [0];
 
+            // If private subscription has character filter add affiliation from session
+            if (request()->session()->has('herpaderp.seatnotifications.subscribe.characters_filter'))
+                $characters_filter = request()->session()->pull('herpaderp.seatnotifications.subscribe.characters_filter');
+
+            // If private subscription has corporation filter add affiliation from session
+            if (request()->session()->has('herpaderp.seatnotifications.subscribe.corporations_filter'))
+                $corporations_filter = request()->session()->pull('herpaderp.seatnotifications.subscribe.corporations_filter');
+
             $affiliations = json_encode(array_filter([
                 'characters'   => $characters_filter,
                 'corporations' => $corporations_filter,

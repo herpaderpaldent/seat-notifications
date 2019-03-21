@@ -25,6 +25,7 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
+use Herpaderpaldent\Seat\SeatNotifications\Exceptions\ImplementPrivateFlowException;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\AddSubscriptionStatus;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\GetPublicDriverId;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
@@ -72,6 +73,10 @@ class SeatNotificationsController extends Controller
                 'herpaderp.seatnotifications.subscribe.corporations_filter' => $request->input('corporations_filter'),
                 'herpaderp.seatnotifications.subscribe.characters_filter' => $request->input('characters_filter'),
             ]);
+
+            // if no private registration route is setup throw an exception.
+            if ($request->input('notification')::getDriver($request->input('driver'))::getPrivateRegistrationRoute() === null)
+                throw new ImplementPrivateFlowException($request->input('driver'));
 
             // redirect user to driver's private registration route to get private driver_id.
             return redirect()->route($request->input('notification')::getDriver($request->input('driver'))::getPrivateRegistrationRoute());

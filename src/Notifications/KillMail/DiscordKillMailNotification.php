@@ -78,7 +78,6 @@ class DiscordKillMailNotification extends AbstractKillMailNotification
             ->where('final_blow', 1)
             ->first();
 
-
         return $this->getDiscordKMStringPartial(
             $killmail_attacker->character_id,
             $killmail_attacker->corporation_id,
@@ -138,5 +137,4 @@ class DiscordKillMailNotification extends AbstractKillMailNotification
         );
 
     }
-
 }

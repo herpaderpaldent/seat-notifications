@@ -194,6 +194,4 @@ abstract class AbstractKillMailNotification extends AbstractNotification
 
         return $ticker;
     }
-
-
 }

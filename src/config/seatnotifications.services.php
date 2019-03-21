@@ -35,13 +35,10 @@ return [
             'discord' => Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\DiscordRefreshTokenNotification::class,
             'slack'   => Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\SlackRefreshTokenNotification::class,
         ],
-        /*
-        'kill_mail' => [
-            'notification' => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\KillMailController::class,
-            'providers'    => [
-
-            ],
+        Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\AbstractKillMailNotification::class => [
+            'discord' => Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\DiscordKillMailNotification::class,
+            //'slack'   => Herpaderpaldent\Seat\SeatNotifications\Notifications\,
         ],
-        */
+
     ],
 ];

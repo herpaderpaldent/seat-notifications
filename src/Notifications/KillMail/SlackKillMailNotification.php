@@ -25,7 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail;
 
-
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Slack\SlackMessage;
 use Seat\Eveapi\Models\Sde\InvType;
@@ -88,7 +87,6 @@ class SlackKillMailNotification extends AbstractKillMailNotification
             ->where('final_blow', 1)
             ->first();
 
-
         return $this->getSlackKMStringPartial(
             $killmail_attacker->character_id,
             $killmail_attacker->corporation_id,
@@ -145,7 +143,6 @@ class SlackKillMailNotification extends AbstractKillMailNotification
     {
 
         $solar_system = $this->killmail_detail->solar_system;
-
 
         return sprintf('<%s|%s (%s)>',
             $this->zKillBoardToLink('system', $solar_system->itemID),

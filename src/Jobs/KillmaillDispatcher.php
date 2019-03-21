@@ -27,7 +27,6 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Jobs;
 
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 use Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\AbstractKillMailNotification;
-use Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMailNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
 use Seat\Eveapi\Models\Killmails\KillmailDetail;

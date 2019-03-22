@@ -127,6 +127,8 @@ abstract class AbstractKillMailNotification extends AbstractNotification
 
         $name = collect($names)->first()->name;
 
+        cache(['name_id:' . $id => $name], carbon()->addCentury());
+
         return $name;
     }
 

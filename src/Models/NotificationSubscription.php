@@ -49,7 +49,7 @@ class NotificationSubscription extends Model
 
     public function affiliations()
     {
-        return json_decode($this->affiliation);
+        return json_decode($this->affiliations);
     }
 
     public function hasAffiliation(string $type, int $id) : bool

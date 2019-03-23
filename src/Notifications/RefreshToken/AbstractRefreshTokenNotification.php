@@ -123,6 +123,15 @@ abstract class AbstractRefreshTokenNotification extends AbstractNotification
     }
 
     /**
+     * Determine the permission needed to represent driver buttons.
+     * @return string
+     */
+    public static function getPermission(): string
+    {
+        return 'seatnotifications.refresh_token';
+    }
+
+    /**
      * @param $notifiable
      * @return mixed
      */

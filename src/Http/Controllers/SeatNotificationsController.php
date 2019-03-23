@@ -135,13 +135,13 @@ class SeatNotificationsController extends Controller
                 return view('seatnotifications::partials.notification', compact('row'));
             })
             ->editColumn('personal', function ($row) {
-                if (! $row::isPersonal())
+                if (! $row::isPersonal() || ! auth()->user()->has($row::getPermission(), false))
                     return 'Not available';
 
                 return view('seatnotifications::partials.personal', compact('row'));
             })
             ->editColumn('public', function ($row) {
-                if (! $row::isPublic())
+                if (! $row::isPublic() || ! auth()->user()->has($row::getPermission(), false))
                     return 'Not available';
 
                 return view('seatnotifications::partials.public', compact('row'));

@@ -103,6 +103,15 @@ abstract class AbstractKillMailNotification extends AbstractNotification
     }
 
     /**
+     * Determine the permission needed to represent driver buttons.
+     * @return string
+     */
+    public static function getPermission(): string
+    {
+        return 'seatnotifications.kill_mail';
+    }
+
+    /**
      * @param $notifiable
      *
      * @return mixed

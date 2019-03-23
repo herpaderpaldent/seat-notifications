@@ -56,6 +56,12 @@ interface INotification
     public static function isPersonal(): bool;
 
     /**
+     * Determine the permission needed to represent driver buttons.
+     * @return string
+     */
+    public static function getPermission(): string;
+
+    /**
      * Return the driver class which is related to the requested ID.
      * @param $driver_id string
      * @return string

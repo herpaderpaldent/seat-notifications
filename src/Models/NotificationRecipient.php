@@ -73,7 +73,6 @@ class NotificationRecipient extends Model
             })
             ->filter(function ($seat_notification) use ($ids) {
 
-                //TODO: Refactor this with KillMailDispatcher
                 if($ids === null)
                     return true;
 

@@ -31,7 +31,7 @@ use Seat\Eveapi\Models\Sde\InvType;
 
 class DiscordKillMailNotification extends AbstractKillMailNotification
 {
-    const LOSS_COLOR = '14502713';
+    const DANGER_COLOR = '14502713';
 
     const KILL_COLOR = '42586';
 
@@ -51,7 +51,7 @@ class DiscordKillMailNotification extends AbstractKillMailNotification
 
                 $embed->title($this->getNotificationString())
                     ->thumbnail($this->image)
-                    ->color($this->is_loss($notifiable) ? self::LOSS_COLOR : self::KILL_COLOR)
+                    ->color($this->is_loss($notifiable) ? self::DANGER_COLOR : self::KILL_COLOR)
                     ->field('Value', $this->getValue($this->killmail_detail->killmail_id))
                     ->field('Involved Pilots', $this->getNumberOfAttackers(), true)
                     ->field('System', $this->getSystem(), true)

@@ -76,7 +76,7 @@ class NotificationRecipient extends Model
                 if($ids === null)
                     return true;
 
-                if($seat_notification->affiliation === null)
+                if($seat_notification->affiliations === null)
                     return true;
 
                 foreach ($ids as $id) {
@@ -84,7 +84,7 @@ class NotificationRecipient extends Model
                     if(empty($id))
                         return false;
 
-                    if($seat_notification->hasAffiliation('corp', $id))
+                    if($seat_notification->hasAffiliation('corporation', $id))
                         return true;
                 }
 

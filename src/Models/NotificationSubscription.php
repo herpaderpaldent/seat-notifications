@@ -54,7 +54,7 @@ class NotificationSubscription extends Model
 
     public function hasAffiliation(string $type, int $id) : bool
     {
-        if($type === 'corp')
+        if($type === 'corporation')
             return in_array($id, $this->affiliations()->corporations);
 
         return false;

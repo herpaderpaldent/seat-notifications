@@ -27,6 +27,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
 use Exception;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
 
 class UnsubscribeAction
 {
@@ -34,16 +35,18 @@ class UnsubscribeAction
     {
         try {
 
-            NotificationRecipient::where('driver_id', $data['driver_id'])
+            $subscription = NotificationRecipient::where('driver_id', $data['driver_id'])
                 ->where('driver', $data['driver'])
                 ->first()
                 ->subscriptions
                 ->filter(function ($subscription) use ($data) {
                     return $subscription->notification === $data['notification'];
                 })
-                ->each(function ($subscription) {
-                    $subscription->delete();
-                });
+                ->first();
+
+            NotificationSubscription::where('recipient_id', $subscription->recipient_id)
+                ->where('notification', $subscription->notification)
+                ->delete();
 
             $empty_recipient = NotificationRecipient::where('driver_id', $data['driver_id'])
                 ->where('driver', $data['driver'])

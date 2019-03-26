@@ -31,7 +31,6 @@
           <div class="form-group hidden channel-filter">
             <label for="corporations-filter">Select corporation filter:</label>
             <select name="corporations_filter[]" id="corporations-filter" multiple="multiple" class="select2">
-              <option></option>
             </select>
             <span class="help-block">
               Please specify the list of corporations for which you want receive notification.

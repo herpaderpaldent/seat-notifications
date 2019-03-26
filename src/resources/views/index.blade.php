@@ -105,10 +105,60 @@
           // show the filter group
           select.parent('div').removeClass('hidden');
 
-          // init the filter control
+          // request a list of available channels to the driver
           select.select2({
+            width: '100%',
+            placeholder: "test"
+          }).select2('data', null);
+
+          //select.;
+
+          $.ajax({
+            type: 'GET',
+            url : '{{ route('seatnotifications.notifications.filters') }}',
+            data: {
+              'filter'      : filter,
+              'driver'      : event.relatedTarget.dataset.driver,
+              'notification': event.relatedTarget.dataset.notification
+            },
+            beforeSend: function () {
+              select.select2({
+                width: '100%',
+                placeholder: "loading .."
+              })
+            },
+            complete: function (available_affiliations) {
+
+              select.select2({
+                width: '100%',
+              })
+
+            }
+          }).then(function (available_affiliations) {
+
+            available_affiliations.forEach(function (available_affiliation) {
+
+              // create the option and append to Select2
+              var option = new Option(available_affiliation.name, available_affiliation.id, available_affiliation.subscribed, available_affiliation.subscribed);
+              select.append(option).trigger('change');
+
+              if (available_affiliation.subscribed) {
+
+                // manually trigger the `select2:select` event
+                select.trigger({
+                  type: 'select2:select',
+                  params: {
+                    data: available_affiliation
+                  }
+                });
+              }
+            })
+          })
+
+          // init the filter control
+          /*select.select2({
             ajax: {
-              url: '{{ route('seatnotifications.notifications.filters') }}',
+              url: '',
               dataType: 'json',
               data: function (params) {
                 return {
@@ -131,7 +181,7 @@
               return filter.name;
             },
             width: '100%'
-          });
+          });*/
         });
       })
       .on('hide.bs.modal', function (event) {

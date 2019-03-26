@@ -30,6 +30,7 @@ use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\AddSubscriptionStatus;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\GetPublicDriverId;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\UnsubscribeAction;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\FilterRequest;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\SubscribeRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -173,16 +174,14 @@ class SeatNotificationsController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request $filter_request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getFilterList(Request $request)
+    public function getFilterList(FilterRequest $filter_request)
     {
-        $request->validate([
-            'filter' => 'required|string|in:characters,corporations',
-        ]);
 
-        switch ($request->input('filter')) {
+        switch ($filter_request->input('filter')) {
             case 'characters':
                 return response()->json($this->getAllCharactersWithAffiliations(false)
                                              ->select('character_id', 'name')
@@ -192,6 +191,7 @@ class SeatNotificationsController extends Controller
                                                  return [
                                                      'id'   => $character->character_id,
                                                      'name' => $character->name,
+                                                     'subscribed' => false
                                                  ];
                                              }));
             case 'corporations':
@@ -203,6 +203,7 @@ class SeatNotificationsController extends Controller
                                                  return [
                                                      'id'   => $corporation->corporation_id,
                                                      'name' => $corporation->name,
+                                                     'subscribed' => false
                                                  ];
                                              }));
         }

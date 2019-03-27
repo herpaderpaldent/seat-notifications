@@ -60,6 +60,7 @@
 
         // request a list of available channels to the driver
         availableChannels.select2({
+          placeholder: 'loading...',
           width: '100%',
         });
 
@@ -72,6 +73,11 @@
             'driver': event.relatedTarget.dataset.driver,
             'notification' : event.relatedTarget.dataset.notification
           },
+          complete: function () {
+            availableChannels.select2({
+              width: '100%',
+            });
+          }
         }).then(function (channels) {
 
           channels.forEach(function (channel) {

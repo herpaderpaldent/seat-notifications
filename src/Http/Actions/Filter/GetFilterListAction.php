@@ -23,38 +23,40 @@
  * SOFTWARE.
  */
 
-namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validations;
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions\Filter;
 
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Collection;
+use Seat\Services\Repositories\Character\Character;
 
-class FilterRequest extends FormRequest
+
+class GetFilterListAction
 {
+    use Character;
 
-    /**
-     * @return bool
-     */
-    public function authorize()
+    private $get_corporation_filter;
+
+    private $get_character_filter;
+
+    public function __construct(GetCorporationFilter $get_corporation_filter, GetCharacterFilter $get_character_filter)
     {
-        return true;
+        $this->get_corporation_filter = $get_corporation_filter;
+        $this->get_character_filter = $get_character_filter;
     }
 
-    /**
-     * @return array
-     */
-    public function rules()
+    public function execute(array $data) :Collection
     {
-        // retrieve configured drivers
-        $drivers = array_keys(config('services.seat-notification-channel'));
 
-        // retrieve registered notifications
-        $notifications = array_keys(config('services.seat-notification'));
-
-        return [
-            'driver'       => 'required|string|in:' . implode(',', $drivers),
-            'notification' => 'required|string|in:' . implode(',', $notifications),
-            'filter'       => 'required|string|in:characters,corporations',
-        ];
+        switch ($data['filter']) {
+            case 'characters':
+                return $this->get_character_filter->execute($data);
+                break;
+            case 'corporations':
+                return $this->get_corporation_filter->execute($data);
+                break;
+            default:
+                return collect();
+        }
     }
 
 }

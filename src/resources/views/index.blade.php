@@ -100,6 +100,10 @@
 
         // check provided filters
         event.relatedTarget.dataset.filters.split('|').forEach(function (filter) {
+
+          if($.isEmptyObject(filter))
+            return;
+
           var select = $('#' + filter + '-filter');
 
           // show the filter group
@@ -127,12 +131,10 @@
                 placeholder: "loading .."
               })
             },
-            complete: function (available_affiliations) {
-
+            complete: function () {
               select.select2({
                 width: '100%',
               })
-
             }
           }).then(function (available_affiliations) {
 
@@ -154,34 +156,6 @@
               }
             })
           })
-
-          // init the filter control
-          /*select.select2({
-            ajax: {
-              url: '',
-              dataType: 'json',
-              data: function (params) {
-                return {
-                  'filter': filter
-                };
-              },
-              processResults: function (data, params) {
-                return {
-                  results: data,
-                  pagination: {
-                    more: false
-                  }
-                }
-              }
-            },
-            templateResult: function (filter) {
-              return filter.name;
-            },
-            templateSelection: function (filter) {
-              return filter.name;
-            },
-            width: '100%'
-          });*/
         });
       })
       .on('hide.bs.modal', function (event) {

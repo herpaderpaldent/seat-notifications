@@ -25,12 +25,10 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validations;
 
-
 use Illuminate\Foundation\Http\FormRequest;
 
 class FilterRequest extends FormRequest
 {
-
     /**
      * @return bool
      */
@@ -56,5 +54,4 @@ class FilterRequest extends FormRequest
             'filter'       => 'required|string|in:characters,corporations',
         ];
     }
-
 }

@@ -25,12 +25,10 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions\Filter;
 
-
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\GetPublicDriverId;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
 use Illuminate\Support\Collection;
 use Seat\Services\Repositories\Character\Character;
-use Seat\Services\Repositories\Corporation\Corporation;
 
 class GetCharacterFilter
 {
@@ -68,7 +66,6 @@ class GetCharacterFilter
                     });
             });
 
-
         return $this->getAllCharactersWithAffiliations(false)
             ->select('character_id', 'name')
             ->orderBy('name')
@@ -83,5 +80,4 @@ class GetCharacterFilter
             });
 
     }
-
 }

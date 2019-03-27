@@ -25,10 +25,8 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions\Filter;
 
-
 use Illuminate\Support\Collection;
 use Seat\Services\Repositories\Character\Character;
-
 
 class GetFilterListAction
 {
@@ -58,5 +56,4 @@ class GetFilterListAction
                 return collect();
         }
     }
-
 }

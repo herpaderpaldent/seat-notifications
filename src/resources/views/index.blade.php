@@ -112,7 +112,7 @@
           // request a list of available channels to the driver
           select.select2({
             width: '100%',
-            placeholder: "test"
+            placeholder: "loading..."
           }).select2('data', null);
 
           //select.;
@@ -124,12 +124,6 @@
               'filter'      : filter,
               'driver'      : event.relatedTarget.dataset.driver,
               'notification': event.relatedTarget.dataset.notification
-            },
-            beforeSend: function () {
-              select.select2({
-                width: '100%',
-                placeholder: "loading .."
-              })
             },
             complete: function () {
               select.select2({

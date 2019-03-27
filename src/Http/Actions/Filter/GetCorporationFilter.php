@@ -25,7 +25,6 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions\Filter;
 
-
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\GetPublicDriverId;
 use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
 use Illuminate\Support\Collection;
@@ -57,12 +56,11 @@ class GetCorporationFilter
             ->each(function ($subscription) {
                 $affiliations = $subscription->affiliations();
 
-                if(array_key_exists('corporations',$affiliations))
-                    collect($affiliations->corporations)->each( function ($id) {
+                if(array_key_exists('corporations', $affiliations))
+                    collect($affiliations->corporations)->each(function ($id) {
                         $this->subscribed_corporation_ids->push($id);
                     });
             });
-
 
         return $this->getAllCorporationsWithAffiliationsAndFilters(false)
             ->select('corporation_id', 'name')
@@ -72,9 +70,8 @@ class GetCorporationFilter
                 return [
                     'id'   => $corporation->corporation_id,
                     'name' => $corporation->name,
-                    'subscribed' => in_array($corporation->corporation_id, $this->subscribed_corporation_ids->toArray())
+                    'subscribed' => in_array($corporation->corporation_id, $this->subscribed_corporation_ids->toArray()),
                 ];
             });
     }
-
 }

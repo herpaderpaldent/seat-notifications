@@ -2,7 +2,7 @@
 
 @if (!is_null($row::getDriver($provider)::getPrivateChannel()) && $row::isSubscribed($row::getDriver($provider)::getPrivateChannel()))
 
-  <form id="{{ $provider }}-private-unsubscribe-from-notification" action="{{ route('seatnotifications.notification.unsubscribe.channel') }}" method="post">
+  <form id="{{ $provider }}-private-unsubscribe-from-{{ class_basename($row) }}" action="{{ route('seatnotifications.notification.unsubscribe.channel') }}" method="post">
     {{ csrf_field() }}
 
     <input type="hidden" name="driver" value="{{ $provider }}" />
@@ -10,7 +10,7 @@
     <input type="hidden" name="driver_id" value="{{ $row::getDriver($provider)::getPrivateChannel() }}" />
   </form>
 
-  <button type="submit" form="{{ $provider }}-private-unsubscribe-from-notification" type="button" class="btn btn-app">
+  <button type="submit" form="{{ $provider }}-private-unsubscribe-from-{{ class_basename($row) }}" type="button" class="btn btn-app">
       <span class="badge bg-green">
       <i class="fa fa-check"></i>
     </span>
@@ -18,7 +18,7 @@
   </button>
 
 @elseif ($row::getDriver($provider)::isSetup())
-  <form id="{{ $provider }}-private-subscribe-to-notification" action="{{ route('seatnotifications.notification.subscribe.channel') }}" method="post">
+  <form id="{{ $provider }}-private-subscribe-to-{{ class_basename($row) }}" action="{{ route('seatnotifications.notification.subscribe.channel') }}" method="post">
     {{ csrf_field() }}
     <input type="hidden" name="driver" value="{{ $provider }}" />
     <input type="hidden" name="notification" value="{{ $row }}" />
@@ -26,7 +26,7 @@
     <input type="hidden" name="group_id" value="{{ auth()->user()->group->id }}" />
   </form>
 
-  <button type="submit" form="{{ $provider }}-private-subscribe-to-notification" type="button" class="btn btn-app">
+  <button type="submit" form="{{ $provider }}-private-subscribe-to-{{ class_basename($row) }}" type="button" class="btn btn-app">
     <i class="fa {{ $row::getDriver($provider)::getButtonIconClass() }}"></i> {{ $row::getDriver($provider)::getButtonLabel() }}
   </button>
 

@@ -153,7 +153,7 @@ abstract class AbstractKillMailNotification extends AbstractNotification
         return $notifiable
             ->subscriptions
             ->firstwhere('notification', AbstractKillMailNotification::class)
-            ->hasAffiliation('corp', $this->killmail_detail->victims->corporation_id);
+            ->hasAffiliation('corporation', $this->killmail_detail->victims->corporation_id);
     }
 
     public function getValue(int $killmail_id): string

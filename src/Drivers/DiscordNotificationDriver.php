@@ -145,14 +145,4 @@ class DiscordNotificationDriver extends AbstractNotificationDriver
         return optional(DiscordUser::find(auth()->user()->group->id))->channel_id;
     }
 
-    /**
-     * Returns the notification channel configuration for Notifications.
-     *
-     * @return array
-     */
-    public static function getViaChannel() : array
-    {
-
-        return [DiscordChannel::class];
-    }
 }

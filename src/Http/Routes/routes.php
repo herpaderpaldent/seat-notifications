@@ -119,25 +119,4 @@ Route::group([
         );
     });
 
-    Route::group([
-        'namespace' => 'Discourse',
-        'prefix'    => 'discourse',
-    ], function () {
-
-        Route::post('/', [
-            'as' => 'herpaderp.seatnotifications.discourse.post.configuration',
-        ]);
-
-    });
-
-    Route::group([
-        'namespace' => 'Notifications',
-        'prefix' => 'notifications',
-    ], function () {
-
-        include __DIR__ . '/Notification/RefreshToken.php';
-        include __DIR__ . '/Notification/KillMail.php';
-
-    });
-
 });

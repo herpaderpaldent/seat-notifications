@@ -34,8 +34,3 @@ Route::get('/callback/server', [
     'as'   => 'seatnotifications.callback.slack.server',
     'uses' => 'SlackServerOAuthController@callback',
 ]);
-
-Route::get('/channels', [
-    'as'   => 'seatnotifications.get.slack.channels',
-    'uses' => 'SlackNotificationChannelController@getChannels',
-]);

@@ -1,11 +1,11 @@
 # Version 2.0.0
-This major release revamps seat-notifications significantly. Thanks to new co-author @warlof, we majorly refactoring all of seat-notification in order to introduce new notifications from within this package or from a third party application with ease.
+This major release revamps seat-notifications significantly. Thanks to new co-author [warlof](https://github.com/warlof), we majorly refactoring all of seat-notification in order to introduce new notifications from within this package or from a third party application with ease.
 
 ## ATTENTION: 
 1. As this is a major release your subscriptions will be reset. You need to reapply your notifications.
 2. Do not forget to run migrations
 
-Please report any issues on github: https://github.com/herpaderpaldent/seat-notifications/issues.
+Please report any issues on [github](https://github.com/herpaderpaldent/seat-notifications/issues).
 
 # Version 1.1.2
 This version adds some smaller improvements:

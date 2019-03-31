@@ -1,5 +1,5 @@
 # seat-notifications
-With this [SeAT](https://github.com/eveseat/seat) Package you can setup and manage notifications. It is build to be expendend from within the package or from another package. Please read more about it further down.
+With this [SeAT](https://github.com/eveseat/seat) Package you can setup and manage notifications. It is build to be expended from within the package or from another package. Please read more about it further down.
 
 [![Latest Stable Version](https://poser.pugx.org/herpaderpaldent/seat-notifications/v/stable)](https://packagist.org/packages/herpaderpaldent/seat-notifications)
 [![StyleCI](https://github.styleci.io/repos/140680541/shield?branch=master)](https://github.styleci.io/repos/140680541)
@@ -64,26 +64,52 @@ where `$receipients` are a collection of modal that should receive the notificat
 
 ![uml_diagram](https://yuml.me/diagram/scruffy/class/[%3C%3CINotification%3E%3E%7Bbg:deepskyblue%7D]%5E-.-[AbstractNotification%7Bbg:deepskyblue%7D],[AbstractNotification]%5E[AbstractRefreshTokenNotification],[AbstractRefreshTokenNotification]%5E[DiscordRefreshTokenNotification%7Bbg:yellowgreen%7D],[AbstractRefreshTokenNotification%7Bbg:yellowgreen%7D]%5E[SlackRefreshTokenNotification%7Bbg:yellowgreen%7D],[AbstractNotification]++-%3E[%3C%3CINotificationDriver%3E%3E],[%3C%3CINotificationDriver%3E%3E]%5E-.-[DiscordNotificationDriver%7Bbg:lightseagreen%7D],[%3C%3CINotificationDriver%3E%3E%7Bbg:lightseagreen%7D]%5E-.-[SlackNotificationDriver%7Bbg:lightseagreen%7D],[AbstractNotification]uses%20-.-%3E[NotificationSubscription%7Bbg:orange%7D],[NotificationSubscription]++-%3E[NotificationRecipient%7Bbg:orange%7D],[NotificationRecipient]++-1%3E[Group%7Bbg:tomato%7D],[Group]++-%3E[User%7Bbg:tomato%7D])
 
-### Add new channels
+### Add new drivers
 
-If you have written a new notification channel that you would like to use for sending notifications to your users you might extend `config/services.php` similar to the provided example:
+If you have written a new notification driver that you would like to use for sending notifications to your users you might extend `config/services.php` similar to the provided example:
 
 ```
 'seat-notification-channel' => [
-        'discord'   => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordNotificationChannel::class,
+        'discord'   => Herpaderpaldent\Seat\SeatNotifications\Drivers\DiscordNotificationDriver::class,
     ],
 ```
 
-Your channel should extend [BaseNotificationChannel](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/Http/Controllers/BaseNotificationChannel.php)
+Your driver should extend `Herpaderpaldent\Seat\SeatNotifications\Drivers\AbstractNotificationDriver` and should contain;
 
 ```
-namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
-use Seat\Web\Http\Controllers\Controller;
-abstract class BaseNotificationChannel extends Controller
-{
-    abstract protected function getSettingsView();
-    abstract protected function getRegistrationView();
-}
+    /**
+     * The view name which will be used to store the channel settings.
+     *
+     * @return string
+     */
+    public static function getSettingsView() : string;
+
+    /**
+     * The label which will be applied to the subscription button.
+     *
+     * @return string
+     */
+    public static function getButtonLabel() : string;
+
+    /**
+     * The CSS class which have to be append into the subscription button.
+     *
+     * @return string
+     */
+    public static function getButtonIconClass() : string;
+
+    /**
+     * @return array
+     */
+    public static function getChannels() : array;
+
+    /**
+     * Determine if a channel has been properly setup.
+     *
+     * @return bool
+     */
+    public static function isSetup(): bool;
+
 ```
 
 ### Add new notifications
@@ -91,48 +117,83 @@ abstract class BaseNotificationChannel extends Controller
 If you want to extend the available notifications you need to extend the `seat-notification` array in `config/services.php`:
 
 ```
-'seat-notification' => [
-        'refresh_token' => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController::class,
-    ],
+'seat-notification'         => [
+         // notification => [provider => implementation]
+         Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\AbstractRefreshTokenNotification::class => [
+             'discord' => Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\DiscordRefreshTokenNotification::class,
+             'slack'   => Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\SlackRefreshTokenNotification::class,
+         ],
 ```
 
-Your custom notification must contain the following public functions to add your notification to the users notification list:
+Your abstract notification must extend `Herpaderpaldent\Seat\SeatNotifications\Notifications\AbstractNotification` and contain the following methods to add your notification to the users notification list:
 
 ```
-public function getNotification()
-    {
-        return 'seatnotifications::refresh_token.notification';
-    }
-    public function getPrivateView()
-    {
-        return 'seatnotifications::refresh_token.private';
-    }
-    public function getChannelView()
-    {
-        return 'seatnotifications::refresh_token.channel';
-    }
+    /**
+     * Return a title for the notification which will be displayed in UI notification list.
+     * @return string
+     */
+    public static function getTitle(): string;
+
+    /**
+     * Return a description for the notification which will be displayed in UI notification list.
+     * @return string
+     */
+    public static function getDescription(): string;
+
+    /**
+     * Determine if a notification can target public channel (forum category, chat, etc...).
+     * @return bool
+     */
+    public static function isPublic(): bool;
+
+    /**
+     * Determine if a notification can target personal channel (private message, e-mail, etc...).
+     * @return bool
+     */
+    public static function isPersonal(): bool;
+
+    /**
+     * Determine the permission needed to represent driver buttons.
+     * @return string
+     */
+    public static function getPermission(): string;
+
 ```
 
-the functions should return a string containing the name of your view that should be rendered per column.
 
-### Use BaseNotificationController
+### Use Notification Dispatcher
 
-You are absolutely free to handle your own database and recipient logic. However seat-notifications offer you a convinient and easy way to handle your subscribors in [BaseNotificationController.php](https://github.com/herpaderpaldent/seat-notifications/blob/master/src/Http/Controllers/BaseNotificationController.php)
+In order to dispatch notification solely to receiver that subscribed to the notification it is advised to use a custom dispatcher job f.e.:
 
-f.e:
 
 ````php
-public function subscribeToChannel($channel_id, $via, $notification, $is_channel = false, $affiliation = null) : bool
+ public function handle()
     {
-        try {
-            SeatNotificationRecipient::firstOrCreate(
-                ['channel_id' => $channel_id], ['notification_channel' => $via, 'is_channel' => $is_channel]
-            )
-                ->notifications()
-                ->create(['name' => $notification, 'affiliation' => $affiliation]);
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
+        Redis::funnel('soft_delete:refresh_token_' . $this->refresh_token->user->id)->limit(1)->then(function () {
+            logger()->info('SoftDelete detected of ' . $this->refresh_token->user->name);
+
+            $recipients = NotificationRecipient::all()
+                ->filter(function ($recipient) {
+                    return $recipient->shouldReceive(AbstractRefreshTokenNotification::class);
+                });
+
+            if($recipients->isEmpty()){
+                logger()->debug('No Receiver found for this Notification. This job is going to be deleted.');
+                $this->delete();
+            }
+
+            $recipients->groupBy('driver')
+                ->each(function ($grouped_recipients) {
+                    $driver = (string) $grouped_recipients->first()->driver;
+                    $notification_class = AbstractRefreshTokenNotification::getDriverImplementation($driver);
+
+                    Notification::send($grouped_recipients, (new $notification_class($this->refresh_token)));
+                });
+
+        }, function () {
+
+            logger()->debug('A Soft-Delete job is already running for ' . $this->refresh_token->user->name);
+            $this->delete();
+        });
     }
 ````

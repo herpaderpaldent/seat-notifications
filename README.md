@@ -1,5 +1,5 @@
 # seat-notifications
-With this [SeAT](https://github.com/eveseat/seat) Package you can setup and manage notifications. It is build to be expendend from within the package or from another package. Please read more about it further down.
+With this [SeAT](https://github.com/eveseat/seat) Package you can setup and manage notifications. It is build to be expended from within the package or from another package. Please read more about it further down.
 
 [![Latest Stable Version](https://poser.pugx.org/herpaderpaldent/seat-notifications/v/stable)](https://packagist.org/packages/herpaderpaldent/seat-notifications)
 [![StyleCI](https://github.styleci.io/repos/140680541/shield?branch=master)](https://github.styleci.io/repos/140680541)
@@ -104,46 +104,12 @@ Your driver should extend `Herpaderpaldent\Seat\SeatNotifications\Drivers\Abstra
     public static function getChannels() : array;
 
     /**
-     * Determine if a channel is supporting private notifications.
-     *
-     * @return bool
-     */
-    public static function allowPersonalNotifications() : bool;
-
-    /**
-     * Determine if a channel is supporting public notifications.
-     *
-     * @return bool
-     */
-    public static function allowPublicNotifications() : bool;
-
-    /**
      * Determine if a channel has been properly setup.
      *
      * @return bool
      */
     public static function isSetup(): bool;
 
-    /**
-     * Return driver_id of user.
-     *
-     * @return string
-     */
-    public static function getPrivateChannel() : ?string;
-
-    /**
-     * Return channel_id of user.
-     *
-     * @return string
-     */
-    public static function getPublicDriverId(string $notification) : ?string;
-
-    /**
-     * Return the route key which have to be used in a private notification registration flow.
-     *
-     * @return string
-     */
-    public static function getPrivateRegistrationRoute() : ?string;
 ```
 
 ### Add new notifications
@@ -192,37 +158,12 @@ Your abstract notification must extend `Herpaderpaldent\Seat\SeatNotifications\N
      */
     public static function getPermission(): string;
 
-    /**
-     * Return the driver class which is related to the requested ID.
-     * @param $driver_id string
-     * @return string
-     */
-    public static function getDriver(string $driver_id): string;
-
-    /**
-     * Determine if a notification has been subscribed for a specific driver.
-     * @param string $driver_id
-     * @return bool
-     */
-    public static function isSubscribed(string $driver_id): bool;
-
-    /**
-     * Return a list of implementing class foreach registered providers.
-     * @return array
-     */
-    public static function getDiversImplementations(): array;
-
-    /**
-     * Determine a list of control filters.
-     * @return string
-     */
-    public static function getFilters(): ?string;
 ```
 
 
 ### Use Notification Dispatcher
 
-In order to dispatch notification sololy to receiver that subscribed to the notification it is adviced to use a custom dispatcher job f.e.:
+In order to dispatch notification solely to receiver that subscribed to the notification it is advised to use a custom dispatcher job f.e.:
 
 
 ````php

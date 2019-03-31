@@ -144,5 +144,4 @@ class DiscordNotificationDriver extends AbstractNotificationDriver
 
         return optional(DiscordUser::find(auth()->user()->group->id))->channel_id;
     }
-
 }

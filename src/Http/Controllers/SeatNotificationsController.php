@@ -27,9 +27,11 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers;
 
 use Herpaderpaldent\Seat\SeatNotifications\Exceptions\ImplementPrivateFlowException;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\AddSubscriptionStatus;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\Filter\GetFilterListAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\GetPublicDriverId;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\SubscribeAction;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Actions\UnsubscribeAction;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\FilterRequest;
 use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\SubscribeRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -173,41 +175,19 @@ class SeatNotificationsController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param \Herpaderpaldent\Seat\SeatNotifications\Http\Validations\FilterRequest          $filter_request
+     *
+     * @param \Herpaderpaldent\Seat\SeatNotifications\Http\Actions\Filter\GetFilterListAction $get_filter_list_action
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getFilterList(Request $request)
+    public function getFilterList(FilterRequest $filter_request, GetFilterListAction $get_filter_list_action)
     {
-        $request->validate([
-            'filter' => 'required|string|in:characters,corporations',
-        ]);
 
-        switch ($request->input('filter')) {
-            case 'characters':
-                return response()->json($this->getAllCharactersWithAffiliations(false)
-                                             ->select('character_id', 'name')
-                                             ->orderBy('name')
-                                             ->get()
-                                             ->map(function ($character) {
-                                                 return [
-                                                     'id'   => $character->character_id,
-                                                     'name' => $character->name,
-                                                 ];
-                                             }));
-            case 'corporations':
-                return response()->json($this->getAllCorporationsWithAffiliationsAndFilters(false)
-                                             ->select('corporation_id', 'name')
-                                             ->orderBy('name')
-                                             ->get()
-                                             ->map(function ($corporation) {
-                                                 return [
-                                                     'id'   => $corporation->corporation_id,
-                                                     'name' => $corporation->name,
-                                                 ];
-                                             }));
-        }
+        $response = $get_filter_list_action->execute($filter_request->all());
 
-        return response()->json([], 400);
+        return $response->isNotEmpty() ?
+             response()->json($response) : response()->json([], 400);
     }
 
     /**

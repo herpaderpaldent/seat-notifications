@@ -23,14 +23,28 @@
  * SOFTWARE.
  */
 
-//These routes are meant for configuration purposes and require seatnotification.configuration permission
+namespace Herpaderpaldent\Seat\SeatNotifications\Exceptions;
 
-Route::post('/', [
-    'as'   => 'herpaderp.seatnotifications.slack.post.configuration',
-    'uses' => 'SlackServerOAuthController@postConfiguration',
-]);
+use Exception;
+use Throwable;
 
-Route::get('/callback/server', [
-    'as'   => 'seatnotifications.callback.slack.server',
-    'uses' => 'SlackServerOAuthController@callback',
-]);
+/**
+ * Class ImplementPrivateFlowException.
+ * @package Herpaderpaldent\Seat\SeatNotifications\Exceptions
+ */
+class ImplementPrivateFlowException extends Exception
+{
+    /**
+     * ImplementPrivateFlowException constructor.
+     * @param string $provider
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
+    public function __construct(string $provider, string $message = '', int $code = 0, Throwable $previous = null)
+    {
+        $message = sprintf('The private flow has not been fully implemented by the driver %s. ' .
+            'Please ensure getPrivateChannel() and getPrivateRegistrationRoute() are returning a valid value.', $provider);
+        parent::__construct($message, $code, $previous);
+    }
+}

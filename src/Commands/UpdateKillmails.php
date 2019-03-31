@@ -25,7 +25,8 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Commands;
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotification;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationSubscription;
+use Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\AbstractKillMailNotification;
 use Illuminate\Console\Command;
 use Seat\Eveapi\Jobs\Killmails\Character\Detail as CharacterDetail;
 use Seat\Eveapi\Jobs\Killmails\Character\Recent as CharacterRecent;
@@ -43,7 +44,7 @@ class UpdateKillmails extends Command
 
     public function handle()
     {
-        $subscribed_corporations = SeatNotification::where('name', 'kill_mail')
+        $subscribed_corporations = NotificationSubscription::where('notification', AbstractKillMailNotification::class)
             ->get()
             ->map(function ($seat_notification) {
                 return $seat_notification->affiliations()->corporations;

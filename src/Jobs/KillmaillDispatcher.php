@@ -25,8 +25,8 @@
 
 namespace Herpaderpaldent\Seat\SeatNotifications\Jobs;
 
-use Herpaderpaldent\Seat\SeatNotifications\Models\SeatNotificationRecipient;
-use Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMailNotification;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
+use Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\AbstractKillMailNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redis;
 use Seat\Eveapi\Models\Killmails\KillmailDetail;
@@ -77,9 +77,9 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
         Redis::funnel('killmail_id:' . $this->killmail_id)->limit(1)->then(function () {
             logger()->debug('Killmail notification for ID: ' . $this->killmail_id);
 
-            $recipients = SeatNotificationRecipient::all()
+            $recipients = NotificationRecipient::all()
                 ->filter(function ($recepient) {
-                    return $recepient->shouldReceive('kill_mail', $this->getFilteredCorporationIds());
+                    return $recepient->shouldReceive(AbstractKillMailNotification::class, $this->getFilteredCorporationIds());
                 });
 
             logger()->debug('and for corporations: ' . implode(', ', $this->getFilteredCorporationIds()));
@@ -89,7 +89,14 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
                 $this->delete();
             }
 
-            Notification::send($recipients, (new KillMailNotification($this->killmail_id)));
+            $recipients->groupBy('driver')
+                ->each(function ($grouped_recipients) {
+                    $driver = (string) $grouped_recipients->first()->driver;
+                    $notification_class = AbstractKillMailNotification::getDriverImplementation($driver);
+
+                    Notification::send($grouped_recipients, (new $notification_class($this->killmail_id)));
+                });
+
         }, function () {
 
             logger()->debug('A Killmail job is already running for ' . $this->killmail_id);
@@ -108,6 +115,7 @@ class KillmaillDispatcher extends SeatNotificationsJobBase
                 return $attacker->corporation_id;
             });
 
+        //TODO: check if delay if victim corporation_id is not available.
         $victim_corporation_id = optional($this->killmail_detail->victims)->corporation_id;
 
         return $attacker_corporation_ids

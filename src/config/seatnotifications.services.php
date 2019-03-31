@@ -24,14 +24,21 @@
  */
 
 return [
-
     'seat-notification-channel' => [
-        'discord'   => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Discord\DiscordNotificationChannelController::class,
-        'slack'     => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack\SlackNotificationChannelController::class,
+        //'discourse' => Herpaderpaldent\Seat\SeatNotifications\Drivers\DiscourseNotificationDriver::class,
+        'discord' => Herpaderpaldent\Seat\SeatNotifications\Drivers\DiscordNotificationDriver::class,
+        'slack'   => Herpaderpaldent\Seat\SeatNotifications\Drivers\SlackNotificationDriver::class,
     ],
-    'seat-notification' => [
-        'refresh_token' => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\RefreshTokenController::class,
-        'kill_mail' => Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Notifications\KillMailController::class,
-    ],
+    'seat-notification'         => [
+        // notification => [provider => implementation]
+        Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\AbstractRefreshTokenNotification::class => [
+            'discord' => Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\DiscordRefreshTokenNotification::class,
+            'slack'   => Herpaderpaldent\Seat\SeatNotifications\Notifications\RefreshToken\SlackRefreshTokenNotification::class,
+        ],
+        Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\AbstractKillMailNotification::class         => [
+            'discord' => Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\DiscordKillMailNotification::class,
+            'slack'   => Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail\SlackKillMailNotification::class,
+        ],
 
+    ],
 ];

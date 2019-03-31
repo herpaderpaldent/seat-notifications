@@ -23,14 +23,35 @@
  * SOFTWARE.
  */
 
-//These routes are meant for configuration purposes and require seatnotification.configuration permission
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Validations;
 
-Route::post('/', [
-    'as'   => 'herpaderp.seatnotifications.slack.post.configuration',
-    'uses' => 'SlackServerOAuthController@postConfiguration',
-]);
+use Illuminate\Foundation\Http\FormRequest;
 
-Route::get('/callback/server', [
-    'as'   => 'seatnotifications.callback.slack.server',
-    'uses' => 'SlackServerOAuthController@callback',
-]);
+class FilterRequest extends FormRequest
+{
+    /**
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function rules()
+    {
+        // retrieve configured drivers
+        $drivers = array_keys(config('services.seat-notification-channel'));
+
+        // retrieve registered notifications
+        $notifications = array_keys(config('services.seat-notification'));
+
+        return [
+            'driver'       => 'required|string|in:' . implode(',', $drivers),
+            'notification' => 'required|string|in:' . implode(',', $notifications),
+            'filter'       => 'required|string|in:characters,corporations',
+        ];
+    }
+}

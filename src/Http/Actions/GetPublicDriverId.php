@@ -23,14 +23,45 @@
  * SOFTWARE.
  */
 
-//These routes are meant for configuration purposes and require seatnotification.configuration permission
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions;
 
-Route::post('/', [
-    'as'   => 'herpaderp.seatnotifications.slack.post.configuration',
-    'uses' => 'SlackServerOAuthController@postConfiguration',
-]);
+use Exception;
+use Herpaderpaldent\Seat\SeatNotifications\Models\NotificationRecipient;
 
-Route::get('/callback/server', [
-    'as'   => 'seatnotifications.callback.slack.server',
-    'uses' => 'SlackServerOAuthController@callback',
-]);
+class GetPublicDriverId
+{
+    protected $notification;
+
+    protected $driver;
+
+    public function execute(array $request) {
+
+        $this->driver = $request['driver'];
+        $this->notification = $request['notification'];
+
+        $driver_id = null;
+
+        try {
+            $driver_id = NotificationRecipient::where('driver', $this->driver)
+                ->where('group_id', null)
+                ->get()
+                ->map(function ($recipient) {
+                    return $recipient
+                        ->subscriptions
+                        ->filter(function ($subscription) {
+                            return $subscription->notification === $this->notification;
+                        });
+                })
+                ->flatten()
+                ->first()
+                ->recipient
+                ->driver_id;
+
+        } catch (Exception $exception) {
+
+        }
+
+        return $driver_id;
+
+    }
+}

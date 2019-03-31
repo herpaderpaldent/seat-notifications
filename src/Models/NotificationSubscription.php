@@ -23,14 +23,40 @@
  * SOFTWARE.
  */
 
-//These routes are meant for configuration purposes and require seatnotification.configuration permission
+namespace Herpaderpaldent\Seat\SeatNotifications\Models;
 
-Route::post('/', [
-    'as'   => 'herpaderp.seatnotifications.slack.post.configuration',
-    'uses' => 'SlackServerOAuthController@postConfiguration',
-]);
+use Illuminate\Database\Eloquent\Model;
 
-Route::get('/callback/server', [
-    'as'   => 'seatnotifications.callback.slack.server',
-    'uses' => 'SlackServerOAuthController@callback',
-]);
+class NotificationSubscription extends Model
+{
+    /**
+     * The table associated with the model.
+     * herpaderp_seat_notification_notification_recipients.
+     * @var string
+     */
+    protected $table = 'herpaderp_seat_notification_subscriptions';
+
+    protected $primaryKey = 'recipient_id';
+
+    protected $fillable = ['notification', 'affiliations'];
+
+    public $incrementing = false;
+
+    public function recipient()
+    {
+        return $this->belongsTo(NotificationRecipient::class, 'recipient_id', 'id');
+    }
+
+    public function affiliations()
+    {
+        return json_decode($this->affiliations);
+    }
+
+    public function hasAffiliation(string $type, int $id) : bool
+    {
+        if($type === 'corporation')
+            return in_array($id, $this->affiliations()->corporations);
+
+        return false;
+    }
+}

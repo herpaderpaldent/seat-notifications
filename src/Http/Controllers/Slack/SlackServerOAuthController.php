@@ -27,7 +27,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Http\Controllers\Slack;
 
 use Exception;
 use GuzzleHttp\Client;
-use Herpaderpaldent\Seat\SeatNotifications\Http\Validation\ValidateSlackOAuth;
+use Herpaderpaldent\Seat\SeatNotifications\Http\Validations\ValidateSlackOAuth;
 use Illuminate\Http\Request;
 use JoliCode\Slack\ClientFactory;
 

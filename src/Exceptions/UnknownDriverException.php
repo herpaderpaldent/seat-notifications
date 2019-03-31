@@ -23,14 +23,17 @@
  * SOFTWARE.
  */
 
-//These routes are meant for configuration purposes and require seatnotification.configuration permission
+namespace Herpaderpaldent\Seat\SeatNotifications\Exceptions;
 
-Route::post('/', [
-    'as'   => 'herpaderp.seatnotifications.slack.post.configuration',
-    'uses' => 'SlackServerOAuthController@postConfiguration',
-]);
+use Exception;
+use Throwable;
 
-Route::get('/callback/server', [
-    'as'   => 'seatnotifications.callback.slack.server',
-    'uses' => 'SlackServerOAuthController@callback',
-]);
+class UnknownDriverException extends Exception
+{
+    public function __construct(string $provider, string $message = '', int $code = 0, Throwable $previous = null)
+    {
+        $message = sprintf('An unknown driver implementation of %s was requested ', $provider);
+
+        parent::__construct($message, $code, $previous);
+    }
+}

@@ -22,15 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-//These routes are meant for configuration purposes and require seatnotification.configuration permission
-
 Route::post('/', [
-    'as'   => 'herpaderp.seatnotifications.slack.post.configuration',
-    'uses' => 'SlackServerOAuthController@postConfiguration',
-]);
-
-Route::get('/callback/server', [
-    'as'   => 'seatnotifications.callback.slack.server',
-    'uses' => 'SlackServerOAuthController@callback',
+    'as' => 'herpaderp.seatnotifications.discourse.post.configuration',
+    'uses' => 'DiscourseNotificationChannelController@postConfiguration',
 ]);

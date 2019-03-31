@@ -23,14 +23,37 @@
  * SOFTWARE.
  */
 
-//These routes are meant for configuration purposes and require seatnotification.configuration permission
+namespace Herpaderpaldent\Seat\SeatNotifications\Http\Actions\Filter;
 
-Route::post('/', [
-    'as'   => 'herpaderp.seatnotifications.slack.post.configuration',
-    'uses' => 'SlackServerOAuthController@postConfiguration',
-]);
+use Illuminate\Support\Collection;
+use Seat\Services\Repositories\Character\Character;
 
-Route::get('/callback/server', [
-    'as'   => 'seatnotifications.callback.slack.server',
-    'uses' => 'SlackServerOAuthController@callback',
-]);
+class GetFilterListAction
+{
+    use Character;
+
+    private $get_corporation_filter;
+
+    private $get_character_filter;
+
+    public function __construct(GetCorporationFilter $get_corporation_filter, GetCharacterFilter $get_character_filter)
+    {
+        $this->get_corporation_filter = $get_corporation_filter;
+        $this->get_character_filter = $get_character_filter;
+    }
+
+    public function execute(array $data) :Collection
+    {
+
+        switch ($data['filter']) {
+            case 'characters':
+                return $this->get_character_filter->execute($data);
+                break;
+            case 'corporations':
+                return $this->get_corporation_filter->execute($data);
+                break;
+            default:
+                return collect();
+        }
+    }
+}

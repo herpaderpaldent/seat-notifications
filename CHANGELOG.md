@@ -1,3 +1,8 @@
+# Version 2.0.1
+* Little reminder to [warlof](https://github.com/warlof): you own this package as well. Consider using as blueprint for core?
+* Added loading note during ajax call
+* Fix missing class declaration in KillmailNotification causing error for private notification
+
 # Version 2.0.0
 This major release revamps seat-notifications significantly. Thanks to new co-author [warlof](https://github.com/warlof), we majorly refactoring all of seat-notification in order to introduce new notifications from within this package or from a third party application with ease.
 

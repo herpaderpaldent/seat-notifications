@@ -28,6 +28,7 @@ namespace Herpaderpaldent\Seat\SeatNotifications\Notifications\KillMail;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordChannel;
 use Herpaderpaldent\Seat\SeatNotifications\Channels\Discord\DiscordMessage;
 use Seat\Eveapi\Models\Sde\InvType;
+use Seat\Web\Models\Group;
 
 class DiscordKillMailNotification extends AbstractKillMailNotification
 {
@@ -38,7 +39,9 @@ class DiscordKillMailNotification extends AbstractKillMailNotification
     public function via($notifiable)
     {
 
-        array_push($this->tags, is_null($notifiable->group_id) ? 'to channel' : 'private to: ' . $this->getMainCharacter(Group::find($notifiable->group_id))->name);
+        array_push($this->tags, is_null($notifiable->group_id) ?
+            'to channel' :
+            'private to: ' . $this->getMainCharacter(Group::find($notifiable->group_id))->name);
 
         return [DiscordChannel::class];
     }
